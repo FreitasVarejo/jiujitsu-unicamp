@@ -1,0 +1,11 @@
+# Guia de Estilos UI
+- **Cores:**
+  - Primary: `#d26030` (Laranja) - Usar em CTAs e destaques.
+  - Background: `#000000` (Preto) - Cor principal do site.
+  - Surface/Text: `#e4e4e4` (Cinza Claro) - Para textos e fundos de cards.
+- **Tipografia:**
+  - Títulos: Fonte agressiva/esportiva (Sugerido: Oswald ou Roboto Condensed).
+  - Corpo: Fonte legível (Sugerido: Inter ou Roboto).
+- **Componentes:**
+  - Botões: Raio de borda (border-radius) de 4px (estilo sóbrio).
+  - Cards de Membros: Bordas coloridas conforme a cor da faixa.
