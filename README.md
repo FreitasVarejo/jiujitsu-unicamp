@@ -1,16 +1,42 @@
-# React + Vite
+# Jiu Jitsu Unicamp - Protótipo
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Protótipo do site da equipe de Jiu Jitsu da Unicamp, desenvolvido com React, Vite e Tailwind CSS.
 
-Currently, two official plugins are available:
+## 🚀 Como rodar localmente
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Pré-requisitos
+- Node.js (v20+ recomendado)
+- npm
 
-## React Compiler
+### Passos
+1. Instale as dependências:
+   ```bash
+   npm install
+   ```
+2. Inicie o servidor de desenvolvimento:
+   ```bash
+   npm run dev
+   ```
+3. Acesse `http://localhost:5173`
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🐳 Como rodar com Docker
 
-## Expanding the ESLint configuration
+O projeto possui configuração pronta para Docker (Nginx servindo o build estático).
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Build da Imagem
+```bash
+docker build -t jiujitsu-unicamp .
+```
+
+### Rodar o Container
+```bash
+docker run -p 8080:80 jiujitsu-unicamp
+```
+O site estará disponível em `http://localhost:8080`.
+
+## 📂 Estrutura de Pastas (Refatorada)
+
+- `src/layouts`: Componentes de layout (ex: Header, Footer, Wrapper).
+- `src/data`: Dados estáticos da aplicação.
+- `src/pages`: Páginas principais (Rotas).
+- `src/components`: Componentes reutilizáveis.
