@@ -9,7 +9,7 @@ import Loja from './pages/Store';
 
 function App() {
   return (
-    <Router>
+    <Router basename="/jiujitsu-unicamp">
       <Layout>
         <Routes>
           <Route path="/" element={<Home />} />

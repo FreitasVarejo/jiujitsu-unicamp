@@ -1,0 +1,17 @@
+services:
+  web:
+    build: .
+    container_name: jiujitsu-unicamp-web
+    restart: unless-stopped
+    networks:
+      - proxy_net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jiujitsu.rule=Host(`tuts-awards.com`) && PathPrefix(`/jiujitsu-unicamp`)"
+      - "traefik.http.routers.jiujitsu.entrypoints=web"
+      # No strip prefix needed because the app is built with base='/jiujitsu-unicamp/'
+      - "traefik.http.services.jiujitsu.loadbalancer.server.port=80"
+
+networks:
+  proxy_net:
+    external: true
