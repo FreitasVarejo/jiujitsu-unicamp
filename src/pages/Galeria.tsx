@@ -11,10 +11,13 @@ const Galeria = () => {
     return acc;
   }, { ouro: 0, prata: 0, bronze: 0 });
 
-  // Generate placeholder images
+  const mediaBase = import.meta.env.VITE_MEDIA_BASE_URL;
+
+  // Generate images from media folder
   const images = Array.from({ length: 9 }).map((_, i) => ({
     id: i,
-    src: `https://placehold.co/600x400/27272a/d26030?text=Evento+BJJ+${i + 1}`,
+    // Expects images named galeria-1.jpg, galeria-2.jpg, etc. uploaded via FileBrowser
+    src: `${mediaBase}/galeria-${i + 1}.jpg`,
     caption: `Campeonato Regional ${2023 + (i % 3)}`
   }));
 
