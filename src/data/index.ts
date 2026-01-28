@@ -1,4 +1,45 @@
-export const data = {
+export interface Membro {
+  nome: string;
+  faixa: 'Preta' | 'Marrom' | 'Roxa' | 'Azul' | 'Branca';
+  ano: string;
+  curso: string;
+  medalhas: {
+    ouro: number;
+    prata: number;
+    bronze: number;
+  };
+}
+
+export interface Produto {
+  nome: string;
+  preco: string;
+  categoria?: string;
+  obs?: string;
+}
+
+export interface HorarioDiurno {
+  dia: string;
+  comp: string;
+  geral: string;
+  feminino: string;
+}
+
+export interface HorarioNoturno {
+  dia: string;
+  hora: string;
+  tipo: string;
+}
+
+export interface SiteData {
+  equipe: Membro[];
+  produtos: Produto[];
+  horarios: {
+    diurnos: HorarioDiurno[];
+    noturnos: HorarioNoturno[];
+  };
+}
+
+export const data: SiteData = {
   "equipe": [
     { "nome": "Pablo Viana", "faixa": "Preta", "ano": "2022", "curso": "Educação Física", "medalhas": { "ouro": 3, "prata": 1, "bronze": 0 } },
     { "nome": "Lucas Senno", "faixa": "Marrom", "ano": "2024", "curso": "Ciência da Computação", "medalhas": { "ouro": 1, "prata": 2, "bronze": 1 } },

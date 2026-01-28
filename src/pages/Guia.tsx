@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, Info, AlertTriangle, CheckCircle } from 'lucide-react';
 
-const AccordionItem = ({ title, children }) => {
+interface AccordionItemProps {
+  title: string;
+  children: React.ReactNode;
+}
+
+const AccordionItem = ({ title, children }: AccordionItemProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (

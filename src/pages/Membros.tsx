@@ -1,8 +1,8 @@
 import React from 'react';
 import { Medal, User } from 'lucide-react';
-import { data } from '../data';
+import { data, Membro } from '../data';
 
-const beltConfig: Record<string, { weight: number, color: string }> = {
+const beltConfig: Record<Membro['faixa'], { weight: number, color: string }> = {
   'Preta': { weight: 5, color: 'border-zinc-500 shadow-[0_0_15px_rgba(255,255,255,0.1)]' }, // Distinctive look for black belt
   'Marrom': { weight: 4, color: 'border-amber-900' },
   'Roxa': { weight: 3, color: 'border-purple-700' },
