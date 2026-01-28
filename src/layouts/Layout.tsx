@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Instagram, MapPin } from 'lucide-react';
 
-const Layout = ({ children }) => {
+interface LayoutProps {
+  children: ReactNode;
+}
+
+const Layout = ({ children }: LayoutProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
 
@@ -14,7 +18,7 @@ const Layout = ({ children }) => {
     { path: '/loja', label: 'Loja' },
   ];
 
-  const isActive = (path) => location.pathname === path;
+  const isActive = (path: string) => location.pathname === path;
 
   return (
     <div className="min-h-screen flex flex-col bg-background text-surface font-sans">
