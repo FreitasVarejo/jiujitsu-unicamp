@@ -26,6 +26,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.files.rule=Host(`files.jiujitsuunicamp.com.br`)"
       - "traefik.http.routers.files.entrypoints=web"
+      - "traefik.http.services.files.loadbalancer.server.port=80"
 
 networks:
   proxy_net:
