@@ -5,11 +5,27 @@ services:
     restart: unless-stopped
     networks:
       - proxy_net
+    volumes:
+      - ${DATA_PATH:-/home/saul/jiujitsu-data}/media:/usr/share/nginx/html/media
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.jiujitsu.rule=Host(`jiujitsuunicamp.com.br`)"
       - "traefik.http.routers.jiujitsu.entrypoints=web"
       - "traefik.http.services.jiujitsu.loadbalancer.server.port=80"
+
+  files:
+    image: filebrowser/filebrowser
+    container_name: jiujitsu-files
+    restart: unless-stopped
+    networks:
+      - proxy_net
+    volumes:
+      - ${DATA_PATH:-/home/saul/jiujitsu-data}/media:/srv
+      - ${DATA_PATH:-/home/saul/jiujitsu-data}/filebrowser/filebrowser.db:/database.db
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.files.rule=Host(`files.jiujitsuunicamp.com.br`)"
+      - "traefik.http.routers.files.entrypoints=web"
 
 networks:
   proxy_net:
