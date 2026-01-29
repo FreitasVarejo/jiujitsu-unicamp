@@ -12,7 +12,7 @@ const Layout = ({ children }: LayoutProps) => {
 
   const navLinks = [
     { path: '/', label: 'Home' },
-    { path: '/membros', label: 'Membros' },
+    { path: '/membros', label: 'Equipe' },
     { path: '/guia', label: 'Guia' },
     { path: '/galeria', label: 'Galeria' },
     { path: '/loja', label: 'Loja' },

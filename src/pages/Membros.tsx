@@ -1,6 +1,8 @@
 import React from 'react';
-import { Medal, User } from 'lucide-react';
+import { Medal } from 'lucide-react';
 import { data, Membro } from '../data';
+
+const MEDIA_BASE_URL = 'https://jiujitsuunicamp.com.br/media';
 
 const beltConfig: Record<Membro['faixa'], { weight: number, color: string }> = {
   'Preta': { weight: 5, color: 'border-zinc-500 shadow-[0_0_15px_rgba(255,255,255,0.1)]' }, // Distinctive look for black belt
@@ -20,7 +22,7 @@ const Membros = () => {
   return (
     <div className="container mx-auto px-4 py-12">
       <div className="text-center mb-16">
-        <h1 className="text-5xl font-display text-white mb-4">Nossos Atletas</h1>
+        <h1 className="text-5xl font-display text-white mb-4">Nossa Equipe</h1>
         <p className="text-xl text-gray-400 max-w-2xl mx-auto">
           Conheça quem representa a Unicamp nos tatames. História e dedicação construída treino a treino.
         </p>
@@ -39,8 +41,12 @@ const Membros = () => {
                   Faixa {member.faixa}
                 </span>
               </div>
-              <div className="bg-zinc-800 p-2 rounded-full">
-                <User className="text-gray-400" size={24} />
+              <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-zinc-700 bg-zinc-800">
+                <img 
+                    src={`${MEDIA_BASE_URL}/${member.foto}`} 
+                    alt={member.nome}
+                    className="w-full h-full object-cover"
+                />
               </div>
             </div>
 
