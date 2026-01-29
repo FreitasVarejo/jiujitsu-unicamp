@@ -24,13 +24,13 @@ const Membros = () => {
       <div className="text-center mb-16">
         <h1 className="text-5xl font-display text-white mb-4">Nossa Equipe</h1>
         <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-          Conheça quem representa a Unicamp nos tatames. História e dedicação construída treino a treino.
+          Conheça a nossa equipe de professores e instrutores que represemtam a Unicamp.
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {sortedMembers.map((member, index) => (
-          <div 
+          <div
             key={index}
             className={`bg-zinc-900 rounded-lg p-6 border-l-4 ${beltConfig[member.faixa]?.color || 'border-gray-500'} hover:translate-y-[-4px] transition-all duration-300 shadow-lg`}
           >
@@ -42,10 +42,10 @@ const Membros = () => {
                 </span>
               </div>
               <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-zinc-700 bg-zinc-800">
-                <img 
-                    src={`${MEDIA_BASE_URL}/${member.foto}`} 
-                    alt={member.nome}
-                    className="w-full h-full object-cover"
+                <img
+                  src={`${MEDIA_BASE_URL}/${member.foto}`}
+                  alt={member.nome}
+                  className="w-full h-full object-cover"
                 />
               </div>
             </div>
@@ -56,7 +56,6 @@ const Membros = () => {
             </div>
 
             <div className="border-t border-zinc-800 pt-4">
-              <h3 className="text-xs uppercase text-gray-500 font-bold mb-3 tracking-wider">Conquistas Recentes</h3>
               <div className="flex gap-4">
                 <div className="flex items-center gap-1" title="Ouro">
                   <Medal className="text-yellow-400" size={18} />
