@@ -1,11 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './layouts/Layout';
-import Home from './pages/Home';
-import Membros from './pages/Membros';
-import Guia from './pages/Guia';
-import Galeria from './pages/Galeria';
-import Loja from './pages/Store';
+import { Home, Membros, Guia, Galeria, Loja } from './pages';
 
 function App() {
   return (

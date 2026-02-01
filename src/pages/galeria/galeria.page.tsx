@@ -1,6 +1,6 @@
 import React from 'react';
 import { Medal } from 'lucide-react';
-import { data } from '../data';
+import { data } from '@/data';
 
 const Galeria = () => {
   // Calculate total medals

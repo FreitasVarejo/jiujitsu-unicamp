@@ -1,19 +1,20 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Clock, ArrowRight } from 'lucide-react';
-import { data } from '../data';
+import { data } from '@/data';
+import { SectionHeader } from './_components/SectionHeader';
 
 const Home = () => {
+
   return (
     <div className="flex flex-col gap-16 pb-16">
       {/* Hero Section */}
       <section className="relative h-[80vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-black/60 z-10"></div>
-        <div 
-          className="absolute inset-0 bg-cover bg-center z-0" 
+        <div
+          className="absolute inset-0 bg-cover bg-center z-0"
           style={{ backgroundImage: "url('https://placehold.co/1920x1080/1a1a1a/d26030?text=Jiu-Jitsu+Unicamp')" }}
         ></div>
-        
+
         <div className="relative z-20 text-center px-4 max-w-4xl mx-auto">
           <h1 className="text-6xl md:text-8xl font-display font-bold text-white mb-6 tracking-tighter">
             Jiu-Jitsu <span className="text-primary">Unicamp</span>
@@ -22,14 +23,14 @@ const Home = () => {
             Defesa pessoal, competição e comunidade. Junte-se à equipe oficial da universidade.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link 
-              to="/guia" 
+            <Link
+              to="/guia"
               className="px-8 py-4 bg-primary text-white font-display uppercase tracking-widest text-lg hover:bg-orange-700 transition-colors rounded"
             >
               Comece Agora
             </Link>
-            <Link 
-              to="/membros" 
+            <Link
+              to="/membros"
               className="px-8 py-4 border border-white text-white font-display uppercase tracking-widest text-lg hover:bg-white/10 transition-colors rounded"
             >
               Conheça a Equipe
@@ -57,10 +58,7 @@ const Home = () => {
 
       {/* Horários */}
       <section className="container mx-auto px-4">
-        <div className="flex items-center gap-3 mb-8">
-          <Clock className="text-primary" size={32} />
-          <h2 className="text-4xl font-display text-white">Horários de Treino</h2>
-        </div>
+        <SectionHeader title="Horários de Treino" icon={Clock} />
 
         <div className="grid md:grid-cols-2 gap-8">
           {/* Diurnos */}
@@ -100,11 +98,8 @@ const Home = () => {
 
       {/* Localização */}
       <section className="container mx-auto px-4">
-        <div className="flex items-center gap-3 mb-8">
-          <MapPin className="text-primary" size={32} />
-          <h2 className="text-4xl font-display text-white">Localização</h2>
-        </div>
-        
+        <SectionHeader title="Localização" icon={MapPin} />
+
         <div className="grid md:grid-cols-3 gap-8 bg-zinc-900 rounded-lg overflow-hidden border border-zinc-800">
           <div className="p-8 col-span-1 flex flex-col justify-center">
             <h3 className="text-2xl font-display text-white mb-2">Ginásio da FEF</h3>
@@ -118,15 +113,15 @@ const Home = () => {
             </p>
           </div>
           <div className="col-span-1 md:col-span-2 h-64 md:h-auto min-h-[300px]">
-            <iframe 
-              src="https://maps.google.com/maps?q=Av.+Érico+Veríssimo,+701+-+Geraldo,+Campinas+-+SP&t=&z=15&ie=UTF8&iwloc=&output=embed" 
-              width="100%" 
-              height="100%" 
-              frameBorder="0" 
-              style={{ border: 0 }} 
-              allowFullScreen="" 
-              aria-hidden="false" 
-              tabIndex="0"
+            <iframe
+              src="https://maps.google.com/maps?q=Av.+Érico+Veríssimo,+701+-+Geraldo,+Campinas+-+SP&t=&z=15&ie=UTF8&iwloc=&output=embed"
+              width="100%"
+              height="100%"
+              frameBorder="0"
+              style={{ border: 0 }}
+              allowFullScreen
+              aria-hidden={false}
+              tabIndex={0}
               className="filter grayscale invert contrast-125 brightness-75 hover:filter-none transition-all duration-500"
             ></iframe>
           </div>
