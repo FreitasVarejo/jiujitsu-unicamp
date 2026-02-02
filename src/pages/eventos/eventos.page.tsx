@@ -134,12 +134,12 @@ const EventosPage = () => {
                 <div className="h-px bg-zinc-800 flex-grow"></div>
               </div>
 
-              <div className="grid grid-cols-1 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {groupedEventos[year].map((evento: any) => (
                   <Link 
                     key={evento.id} 
                     to={`/evento/${evento.id}`} 
-                    className="group relative h-48 md:h-64 overflow-hidden rounded-xl bg-zinc-900 border border-zinc-800 flex items-end"
+                    className="group relative h-64 overflow-hidden rounded-xl bg-zinc-900 border border-zinc-800 flex items-end"
                   >
                     {/* Background Image */}
                     <div className="absolute inset-0">
