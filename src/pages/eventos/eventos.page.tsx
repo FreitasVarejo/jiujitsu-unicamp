@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, MapPin, ChevronRight, Medal, AlertCircle } from 'lucide-react';
-import { data, Evento } from '@/data';
+import { data } from '@/data';
 
 const EventosPage = () => {
-  const [eventos, setEventos] = useState<Evento[]>([]);
+  const [eventFolders, setEventFolders] = useState<{ id: string, date: string, year: string }[]>([]);
+  const [eventInfo, setEventInfo] = useState<Record<string, any>>({});
+  const [visibleCounts, setVisibleCounts] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const mediaBase = import.meta.env.VITE_MEDIA_BASE_URL || '/media';
@@ -18,56 +20,233 @@ const EventosPage = () => {
   }, { ouro: 0, prata: 0, bronze: 0 });
 
   useEffect(() => {
-    const fetchEventos = async () => {
+    const fetchEventIndex = async () => {
       try {
-        // Fetch index first to get list of folders dynamically
         const indexResponse = await fetch(`${mediaBase}/eventos/index.json`);
         if (!indexResponse.ok) throw new Error("Falha ao carregar o índice de eventos");
-        const eventFolders: string[] = await indexResponse.json();
+        const folders: string[] = await indexResponse.json();
 
-        if (!Array.isArray(eventFolders)) {
+        if (!Array.isArray(folders)) {
           throw new Error("Formato inválido do índice de eventos");
         }
 
-        const promises = eventFolders.map(async (folder) => {
-          const response = await fetch(`${mediaBase}/eventos/${folder}/info.json`);
-          if (!response.ok) throw new Error(`Failed to fetch info for ${folder}`);
-          const info = await response.json();
-          
-          return {
-            id: folder,
-            nome: info.NOME,
-            data: info.DATA,
-            local: info.LOCAL,
-            descricao: info.DESCRIÇÃO,
-            thumbnail: `${mediaBase}/eventos/${folder}/0000.jpg`
-          };
+        const folderData = folders.map(folder => {
+          // Format: YYYY-MM-DD-name
+          const match = folder.match(/^(\d{4})-(\d{2})-(\d{2})/);
+          const date = match ? `${match[1]}-${match[2]}-${match[3]}` : '2000-01-01';
+          const year = match ? match[1] : 'Antigo';
+          return { id: folder, date, year };
         });
 
-        const results = await Promise.all(promises);
-        // Sort by date descending
-        results.sort((a, b) => new Date(b.data).getTime() - new Date(a.data).getTime());
-        setEventos(results as Evento[]);
+        // Sort folders by date descending
+        folderData.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+        setEventFolders(folderData);
+        
+        // Initialize visible counts (4 per year)
+        const years = Array.from(new Set(folderData.map(f => f.year)));
+        const initialCounts: Record<string, number> = {};
+        years.forEach(year => initialCounts[year] = 4);
+        setVisibleCounts(initialCounts);
+
       } catch (error) {
-        console.error("Erro ao carregar eventos:", error);
-        setError("Não foi possível carregar os registros de eventos no momento. Por favor, tente novamente mais tarde.");
+        console.error("Erro ao carregar índice:", error);
+        setError("Não foi possível carregar os registros de eventos.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchEventos();
+    fetchEventIndex();
   }, [mediaBase]);
 
-  // Group by year
-  const groupedEventos = eventos.reduce((acc: { [key: string]: any[] }, evento) => {
-    const year = new Date(evento.data).getFullYear();
-    if (!acc[year]) acc[year] = [];
-    acc[year].push(evento);
+  // Fetch info.json only for visible events that aren't cached yet
+  useEffect(() => {
+    if (eventFolders.length === 0) return;
+
+    const fetchVisibleInfo = async () => {
+      const foldersToFetch: string[] = [];
+      
+      // Group folders by year to check visibility
+      const grouped = eventFolders.reduce((acc: Record<string, typeof eventFolders>, f) => {
+        if (!acc[f.year]) acc[f.year] = [];
+        acc[f.year].push(f);
+        return acc;
+      }, {});
+
+      Object.entries(grouped).forEach(([year, folders]) => {
+        const count = visibleCounts[year] || 4;
+        folders.slice(0, count).forEach(f => {
+          if (!eventInfo[f.id]) {
+            foldersToFetch.push(f.id);
+          }
+        });
+      });
+
+      if (foldersToFetch.length === 0) return;
+
+      // Fetch in batches to avoid overwhelming the network
+      const results = await Promise.all(
+        foldersToFetch.map(async (id) => {
+          try {
+            const response = await fetch(`${mediaBase}/eventos/${id}/info.json`);
+            if (!response.ok) return null;
+            const info = await response.json();
+            return { id, info };
+          } catch (e) {
+            return null;
+          }
+        })
+      );
+
+      const newInfo = { ...eventInfo };
+      results.forEach(res => {
+        if (res) newInfo[res.id] = res.info;
+      });
+      setEventInfo(newInfo);
+    };
+
+    fetchVisibleInfo();
+  }, [eventFolders, visibleCounts, mediaBase]);
+
+  // Speculative pre-fetching with prioritized phases and delay
+  useEffect(() => {
+    if (loading || eventFolders.length === 0) return;
+
+    let isMounted = true;
+    let imageWarmingIntervals: NodeJS.Timeout[] = [];
+    let nextPhaseTimeout: NodeJS.Timeout;
+
+    const prefetchLogic = async () => {
+      // PHASE 1: Fetch all remaining info.json in background (Low priority metadata)
+      const remainingFolders = eventFolders.filter(f => !eventInfo[f.id]);
+      
+      const scheduleFetch = (fn: () => void) => {
+        if ('requestIdleCallback' in window) {
+          (window as any).requestIdleCallback(fn);
+        } else {
+          setTimeout(fn, 1000);
+        }
+      };
+
+      scheduleFetch(async () => {
+        if (!isMounted) return;
+        
+        // --- Phase 1: Metadata ---
+        if (remainingFolders.length > 0) {
+          const batchSize = 8;
+          for (let i = 0; i < remainingFolders.length; i += batchSize) {
+            if (!isMounted) break;
+            const batch = remainingFolders.slice(i, i + batchSize);
+            const results = await Promise.all(
+              batch.map(async (f) => {
+                try {
+                  const response = await fetch(`${mediaBase}/eventos/${f.id}/info.json`);
+                  if (!response.ok) return null;
+                  const info = await response.json();
+                  return { id: f.id, info };
+                } catch (e) { return null; }
+              })
+            );
+            if (isMounted) {
+              setEventInfo(prev => {
+                const next = { ...prev };
+                results.forEach(res => { if (res) next[res.id] = res.info; });
+                return next;
+              });
+            }
+            await new Promise(resolve => setTimeout(resolve, 600));
+          }
+        }
+
+        // --- Phase 2: Hidden Thumbnails ---
+        // Pre-fetch 0000.jpg for events currently not visible
+        nextPhaseTimeout = setTimeout(async () => {
+          if (!isMounted) return;
+
+          const hiddenFolders: typeof eventFolders = [];
+          const grouped = eventFolders.reduce((acc: Record<string, typeof eventFolders>, f) => {
+            if (!acc[f.year]) acc[f.year] = [];
+            acc[f.year].push(f);
+            return acc;
+          }, {});
+
+          Object.entries(grouped).forEach(([year, folders]) => {
+            const count = visibleCounts[year] || 4;
+            if (folders.length > count) {
+              hiddenFolders.push(...folders.slice(count));
+            }
+          });
+
+          if (hiddenFolders.length > 0) {
+            const thumbBatchSize = 4;
+            for (let i = 0; i < hiddenFolders.length; i += thumbBatchSize) {
+              if (!isMounted) break;
+              const batch = hiddenFolders.slice(i, i + thumbBatchSize);
+              batch.forEach(f => {
+                // Pre-warm 0000.webp for hidden thumbnails
+                const img = new Image();
+                img.src = `${mediaBase}/eventos/${f.id}/0000.webp`;
+              });
+              await new Promise(resolve => setTimeout(resolve, 1000)); // Be gentle with network
+            }
+          }
+
+          // --- Phase 3: Top Event Internal Images ---
+          nextPhaseTimeout = setTimeout(() => {
+            if (!isMounted) return;
+            const topEvents = eventFolders.slice(0, 2);
+            topEvents.forEach(event => {
+              const checkAndWarm = setInterval(() => {
+                const info = eventInfo[event.id];
+                if (info && info.IMAGENS_COUNT) {
+                  clearInterval(checkAndWarm);
+                  const count = Math.min(info.IMAGENS_COUNT, 4);
+                  for (let i = 1; i <= count; i++) { // Start from 0001.webp/jpg
+                    const webp = new Image();
+                    webp.src = `${mediaBase}/eventos/${event.id}/${String(i).padStart(4, '0')}.webp`;
+                    const jpg = new Image();
+                    jpg.src = `${mediaBase}/eventos/${event.id}/${String(i).padStart(4, '0')}.jpg`;
+                  }
+                }
+              }, 3000);
+              imageWarmingIntervals.push(checkAndWarm);
+              setTimeout(() => clearInterval(checkAndWarm), 20000);
+            });
+          }, 4000);
+        }, 2000);
+      });
+    };
+
+    // Initial 4-second delay to give absolute priority to visible thumbnails
+    const mainTimeout = setTimeout(() => {
+      if (isMounted) prefetchLogic();
+    }, 4000);
+
+    return () => {
+      isMounted = false;
+      clearTimeout(mainTimeout);
+      clearTimeout(nextPhaseTimeout);
+      imageWarmingIntervals.forEach(clearInterval);
+    };
+  }, [loading, eventFolders, mediaBase]);
+
+  const handleSeeMore = (year: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setVisibleCounts(prev => ({
+      ...prev,
+      [year]: prev[year] + 6
+    }));
+  };
+
+  // Group by year for rendering
+  const years = Array.from(new Set(eventFolders.map(f => f.year))).sort((a, b) => Number(b) - Number(a));
+  const groupedEventFolders = eventFolders.reduce((acc: Record<string, typeof eventFolders>, f) => {
+    if (!acc[f.year]) acc[f.year] = [];
+    acc[f.year].push(f);
     return acc;
   }, {});
-
-  const years = Object.keys(groupedEventos).sort((a, b) => Number(b) - Number(a));
 
   if (loading) {
     return (
@@ -127,58 +306,112 @@ const EventosPage = () => {
         </div>
       ) : (
         <div className="space-y-12">
-          {years.map(year => (
-            <section key={year}>
-              <div className="flex items-center gap-4 mb-6">
-                <h2 className="text-2xl font-display text-primary">{year}</h2>
-                <div className="h-px bg-zinc-800 flex-grow"></div>
-              </div>
+          {years.map(year => {
+            const folders = groupedEventFolders[year] || [];
+            const visibleCount = visibleCounts[year] || 4;
+            const visibleFolders = folders.slice(0, visibleCount);
+            const hasMore = folders.length > visibleCount;
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {groupedEventos[year].map((evento: any) => (
-                  <Link 
-                    key={evento.id} 
-                    to={`/evento/${evento.id}`} 
-                    className="group relative h-64 overflow-hidden rounded-xl bg-zinc-900 border border-zinc-800 flex items-end"
-                  >
-                    {/* Background Image */}
-                    <div className="absolute inset-0">
-                      <img 
-                        src={evento.thumbnail} 
-                        alt={evento.nome}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-80"></div>
-                    </div>
+            return (
+              <section key={year}>
+                <div className="flex items-center gap-4 mb-6">
+                  <h2 className="text-2xl font-display text-primary">{year}</h2>
+                  <div className="h-px bg-zinc-800 flex-grow"></div>
+                </div>
 
-                    {/* Content */}
-                    <div className="relative z-10 p-6 md:p-8 w-full flex justify-between items-end">
-                      <div className="max-w-2xl">
-                        <div className="flex items-center gap-4 text-primary mb-2 text-sm font-medium">
-                          <span className="flex items-center gap-1">
-                            <Calendar size={14} />
-                            {new Date(evento.data).toLocaleDateString('pt-BR')}
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <MapPin size={14} />
-                            {evento.local}
-                          </span>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {visibleFolders.map((folder, index) => {
+                    const info = eventInfo[folder.id];
+                    const isLastVisible = index === visibleCount - 1 && hasMore;
+                    const remaining = folders.length - visibleCount;
+
+                    if (isLastVisible) {
+                      return (
+                        <button 
+                          key={folder.id} 
+                          onClick={(e) => handleSeeMore(year, e)}
+                          className="group relative h-64 overflow-hidden rounded-xl bg-zinc-900 border border-zinc-800 flex items-end text-left"
+                        >
+                          <div className="absolute inset-0">
+                            <picture>
+                              <source srcSet={`${mediaBase}/eventos/${folder.id}/0000.webp`} type="image/webp" />
+                              <img 
+                                src={`${mediaBase}/eventos/${folder.id}/0000.jpg`} 
+                                alt={info?.NOME || folder.id}
+                                loading="lazy"
+                                className="w-full h-full object-cover transition-transform duration-700 grayscale blur-[2px]"
+                              />
+                            </picture>
+                            <div className="absolute inset-0 bg-black/60 group-hover:bg-black/40 transition-colors"></div>
+                          </div>
+
+                          <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
+                            <div className="bg-primary/20 p-4 rounded-full mb-3 group-hover:scale-110 transition-transform">
+                              <ChevronRight size={32} className="text-primary rotate-90" />
+                            </div>
+                            <span className="text-white font-display text-xl uppercase tracking-widest">
+                              Ver mais {year}
+                            </span>
+                            <span className="text-primary/80 text-sm font-sans mt-1">
+                              +{remaining} eventos registrados
+                            </span>
+                          </div>
+                        </button>
+                      );
+                    }
+
+                    return (
+                      <Link 
+                        key={folder.id} 
+                        to={`/evento/${folder.id}`} 
+                        className="group relative h-64 overflow-hidden rounded-xl bg-zinc-900 border border-zinc-800 flex items-end"
+                      >
+                        {/* Background Image */}
+                        <div className="absolute inset-0">
+                          <picture>
+                            <source srcSet={`${mediaBase}/eventos/${folder.id}/0000.webp`} type="image/webp" />
+                            <img 
+                              src={`${mediaBase}/eventos/${folder.id}/0000.jpg`} 
+                              alt={info?.NOME || folder.id}
+                              loading="lazy"
+                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            />
+                          </picture>
+                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent opacity-90"></div>
                         </div>
-                        <h3 className="text-2xl md:text-3xl font-display text-white uppercase tracking-tight">
-                          {evento.nome}
-                        </h3>
-                      </div>
-                      
-                      <div className="hidden md:flex items-center gap-2 text-white/50 group-hover:text-primary transition-colors">
-                        <span className="text-sm font-display uppercase tracking-widest">Ver Fotos</span>
-                        <ChevronRight size={20} />
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </section>
-          ))}
+
+                        {/* Content */}
+                        <div className="relative z-10 p-6 md:p-8 w-full flex justify-between items-end">
+                          <div className="max-w-2xl">
+                            <div className="flex items-center gap-4 text-primary mb-2 text-sm font-semibold">
+                              <span className="flex items-center gap-1">
+                                <Calendar size={14} />
+                                {new Date(folder.date).toLocaleDateString('pt-BR')}
+                              </span>
+                              {info && (
+                                <span className="flex items-center gap-1">
+                                  <MapPin size={14} />
+                                  {info.LOCAL}
+                                </span>
+                              )}
+                            </div>
+                            <h3 className="text-2xl md:text-3xl font-display text-white uppercase tracking-tight drop-shadow-sm">
+                              {info?.NOME || 'Carregando...'}
+                            </h3>
+                          </div>
+                          
+                          <div className="hidden md:flex items-center gap-2 text-white/90 group-hover:text-primary transition-colors">
+                            <span className="text-sm font-display uppercase tracking-widest font-medium">Ver Fotos</span>
+                            <ChevronRight size={20} />
+                          </div>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </section>
+            );
+          })}
         </div>
       )}
     </div>
