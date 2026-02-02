@@ -1,7 +1,7 @@
 import { Medal } from 'lucide-react';
 import { Membro } from '@/data';
 
-const MEDIA_BASE_URL = 'https://jiujitsuunicamp.com.br/media';
+const MEDIA_BASE_URL = import.meta.env.VITE_MEDIA_BASE_URL || '/media';
 
 export const beltConfig: Record<Membro['faixa'], { weight: number, color: string }> = {
   'Preta': { weight: 5, color: 'border-zinc-500 shadow-[0_0_15px_rgba(255,255,255,0.1)]' },

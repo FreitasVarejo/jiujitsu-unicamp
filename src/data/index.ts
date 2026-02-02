@@ -31,6 +31,15 @@ export interface HorarioNoturno {
   tipo: string;
 }
 
+export interface Evento {
+  id: string;
+  nome: string;
+  data: string;
+  local: string;
+  descricao: string;
+  thumbnail: string;
+}
+
 export interface SiteData {
   equipe: Membro[];
   produtos: Produto[];

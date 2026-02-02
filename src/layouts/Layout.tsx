@@ -1,4 +1,4 @@
-import React, { useState, ReactNode } from 'react';
+import { useState, ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Instagram, MapPin } from 'lucide-react';
 
@@ -14,7 +14,7 @@ const Layout = ({ children }: LayoutProps) => {
     { path: '/', label: 'Home' },
     { path: '/membros', label: 'Equipe' },
     { path: '/guia', label: 'Guia' },
-    { path: '/galeria', label: 'Galeria' },
+    { path: '/eventos', label: 'Eventos' },
     { path: '/loja', label: 'Loja' },
   ];
 

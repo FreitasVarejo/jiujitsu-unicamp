@@ -11,4 +11,12 @@ export default defineConfig({
     svgr()
   ],
   base: '/',
+  server: {
+    proxy: {
+      '/media': {
+        target: 'https://jiujitsuunicamp.com.br',
+        changeOrigin: true,
+      }
+    }
+  }
 })

@@ -1,4 +1,4 @@
-export * from "./galeria";
+export * from "./eventos";
 export * from "./guia";
 export * from "./home";
 export * from "./membros";
