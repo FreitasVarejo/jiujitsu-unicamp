@@ -11,9 +11,8 @@ const Layout = ({ children }: LayoutProps) => {
   const location = useLocation();
 
   const navLinks = [
-    { path: '/', label: 'Home' },
-    { path: '/membros', label: 'Equipe' },
     { path: '/guia', label: 'Guia' },
+    { path: '/treinos', label: 'Treinos' },
     { path: '/eventos', label: 'Eventos' },
     { path: '/loja', label: 'Loja' },
   ];
