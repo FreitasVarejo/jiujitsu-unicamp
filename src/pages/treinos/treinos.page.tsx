@@ -7,42 +7,66 @@ const Treinos = () => {
   return (
     <div className="flex flex-col gap-16 py-12">
       {/* 1. Horários de Treinos */}
-      <section className="container mx-auto px-4">
-        <SectionHeader title="Horários de Treino" icon={Clock} />
+      <section className="w-full px-4">
+        <div className="container mx-auto">
+          <SectionHeader title="Horários de Treino" icon={Clock} />
+        </div>
 
-        <div className="grid md:grid-cols-2 gap-8">
-          {/* Diurnos */}
-          <div className="bg-zinc-900/50 p-6 rounded-lg border border-zinc-800">
-            <h3 className="text-2xl font-display text-primary mb-6 border-b border-zinc-800 pb-2">Treinos Diurnos</h3>
-            <div className="space-y-4">
-              {data.horarios.diurnos.map((item, index) => (
-                <div key={index} className="grid grid-cols-4 gap-2 text-sm border-b border-zinc-800 pb-3 last:border-0">
-                  <span className="font-bold text-white col-span-1">{item.dia}</span>
-                  <div className="col-span-3 space-y-1">
-                    {item.comp !== '-' && <div className="flex justify-between"><span className="text-gray-400">Competição:</span> <span className="text-white">{item.comp}</span></div>}
-                    {item.geral !== '-' && <div className="flex justify-between"><span className="text-gray-400">Geral:</span> <span className="text-white">{item.geral}</span></div>}
-                    {item.feminino !== '-' && <div className="flex justify-between"><span className="text-primary">Feminino:</span> <span className="text-white">{item.feminino}</span></div>}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Noturnos */}
-          <div className="bg-zinc-900/50 p-6 rounded-lg border border-zinc-800 h-fit">
-            <h3 className="text-2xl font-display text-primary mb-6 border-b border-zinc-800 pb-2">Treinos Noturnos</h3>
-            <div className="space-y-4">
-              {data.horarios.noturnos.map((item, index) => (
-                <div key={index} className="flex justify-between items-center border-b border-zinc-800 pb-3 last:border-0">
-                  <span className="font-bold text-white">{item.dia}</span>
-                  <div className="text-right">
-                    <div className="text-white">{item.hora}</div>
-                    <div className="text-xs text-primary uppercase tracking-wider">{item.tipo}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+        <div className="w-full overflow-x-auto">
+          <table className="w-full border-collapse border border-zinc-800 table-fixed">
+            <thead>
+              <tr>
+                <th className="border border-zinc-800 p-3 bg-zinc-900 text-white font-display text-lg"style={{width: '150px'}}>Horários / Dias</th>
+                {['SEG', 'TER', 'QUA', 'QUI', 'SEX'].map(dia => (
+                  <th key={dia} className="border border-zinc-800 p-3 bg-zinc-900 text-white font-display text-lg">{dia}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {(() => {
+                const horariosSet = new Set();
+                data.horarios.diurnos.forEach(item => {
+                  if (item.comp !== '-') horariosSet.add(item.comp);
+                  if (item.geral !== '-') horariosSet.add(item.geral);
+                  if (item.feminino !== '-') horariosSet.add(item.feminino);
+                });
+                const horarios = Array.from(horariosSet).sort() as string[];
+                
+                return horarios.map((horario: string) => (
+                  <tr key={horario}>
+                    <td className="border border-zinc-800 p-3 bg-zinc-900/50 text-white font-bold text-center">{horario}</td>
+                    {['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'].map(dia => {
+                      const diaTreino = data.horarios.diurnos.find(d => d.dia === dia);
+                      if (!diaTreino) return null;
+                      
+                      let tipo = null;
+                      if (diaTreino.comp === horario) tipo = 'Competição';
+                      else if (diaTreino.geral === horario) tipo = 'Geral';
+                      else if (diaTreino.feminino === horario) tipo = 'Feminino';
+                      
+                      return (
+                        <td 
+                          key={`${dia}-${horario}`}
+                          className="border border-zinc-800 p-3 text-center bg-zinc-900/30"
+                        >
+                          {tipo && (
+                            <span className={`text-base font-semibold ${
+                              tipo === 'Competição' ? 'text-yellow-300' :
+                              tipo === 'Geral' ? 'text-orange-300' :
+                              tipo === 'Feminino' ? 'text-red-400' : 
+                              'text-white'
+                            }`}>
+                              {tipo === 'Geral' ? 'GERAL' : tipo}
+                            </span>
+                          )}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ));
+              })()}
+            </tbody>
+          </table>
         </div>
       </section>
 

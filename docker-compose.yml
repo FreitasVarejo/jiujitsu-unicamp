@@ -1,6 +1,8 @@
 services:
   web:
-    build: .
+    build: 
+      context: .
+      target: prod
     container_name: jiujitsu-unicamp-web
     restart: unless-stopped
     networks:

@@ -25,12 +25,6 @@ export interface HorarioDiurno {
   feminino: string;
 }
 
-export interface HorarioNoturno {
-  dia: string;
-  hora: string;
-  tipo: string;
-}
-
 export interface Evento {
   id: string;
   nome: string;
@@ -45,7 +39,6 @@ export interface SiteData {
   produtos: Produto[];
   horarios: {
     diurnos: HorarioDiurno[];
-    noturnos: HorarioNoturno[];
   };
 }
 
@@ -70,9 +63,5 @@ export const data: SiteData = {
       { "dia": "Quinta", "comp": "-", "geral": "12:00-13:30", "feminino": "-" },
       { "dia": "Sexta", "comp": "12:00-13:30", "geral": "-", "feminino": "14:30-15:30" }
     ],
-    "noturnos": [
-      { "dia": "Quarta-feira", "hora": "21:00 às 22:30", "tipo": "Geral" },
-      { "dia": "Quinta-feira", "hora": "20:00 às 21:30", "tipo": "Geral" }
-    ]
   }
 };
