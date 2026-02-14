@@ -117,12 +117,34 @@ export const ProductModal = ({ product, onClose, categoryLabel }: ProductModalPr
             <h4 className="text-gray-400 uppercase text-xs font-bold tracking-widest mb-3">
               Informações
             </h4>
-            {product.obs ? (
-              <p className="text-gray-300 leading-relaxed">
+            {product.descricao ? (
+              <p className="text-gray-300 leading-relaxed mb-6">
+                {product.descricao}
+              </p>
+            ) : product.obs ? (
+              <p className="text-gray-300 leading-relaxed mb-6">
                 {product.obs}
               </p>
             ) : (
-              <p className="text-gray-500 italic">Nenhuma observação adicional.</p>
+              <p className="text-gray-500 italic mb-6">Nenhuma observação adicional.</p>
+            )}
+
+            {product.tamanhos && product.tamanhos.length > 0 && (
+              <div className="mb-6">
+                <h4 className="text-gray-400 uppercase text-xs font-bold tracking-widest mb-3">
+                  Tamanhos Disponíveis
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  {product.tamanhos.map((tamanho) => (
+                    <span 
+                      key={tamanho}
+                      className="px-3 py-1 bg-zinc-800 border border-zinc-700 text-white text-sm font-bold rounded-md"
+                    >
+                      {tamanho}
+                    </span>
+                  ))}
+                </div>
+              </div>
             )}
             
             <div className="mt-8 space-y-4">

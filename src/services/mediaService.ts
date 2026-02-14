@@ -25,6 +25,8 @@ export interface ProductInfo {
   preco: string;
   categoria: string;
   obs?: string;
+  descricao?: string;
+  tamanhos?: string[];
   imagensCount?: number;
 }
 
