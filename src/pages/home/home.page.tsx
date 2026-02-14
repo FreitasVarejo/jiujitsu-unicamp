@@ -1,8 +1,9 @@
-import { Link } from 'react-router-dom';
-import { Users } from 'lucide-react';
-import { data } from '@/data';
-import { SectionHeader } from './_components/SectionHeader';
-import { MemberCard, beltConfig } from './_components/MemberCard';
+import { Link } from "react-router-dom";
+import { Users } from "lucide-react";
+import { data } from "@/data";
+import { SectionHeader } from "./_components/SectionHeader";
+import { MemberCard, beltConfig } from "./_components/MemberCard";
+import { mediaService } from "@/services/mediaService";
 
 const Home = () => {
   const sortedMembers = [...data.equipe].sort((a, b) => {
@@ -18,15 +19,24 @@ const Home = () => {
         <div className="absolute inset-0 bg-black/60 z-10"></div>
         <div
           className="absolute inset-0 bg-cover bg-center z-0"
-          style={{ backgroundImage: "url('https://placehold.co/1920x1080/1a1a1a/d26030?text=Jiu-Jitsu+Unicamp')" }}
+          style={{
+            backgroundImage:
+              "url('https://placehold.co/1920x1080/1a1a1a/d26030?text=Jiu-Jitsu+Unicamp')",
+          }}
         ></div>
 
         <div className="relative z-20 text-center px-4 max-w-4xl mx-auto">
+          <img
+            src={mediaService.getMediaUrl("/drive/logo.webp")}
+            alt="Logo Jiu-Jitsu Unicamp"
+            className="w-32 h-32 md:w-48 md:h-48 mx-auto mb-8 drop-shadow-2xl"
+          />
           <h1 className="text-6xl md:text-8xl font-display font-bold text-white mb-6 tracking-tighter">
             Jiu-Jitsu <span className="text-primary">Unicamp</span>
           </h1>
           <p className="text-xl md:text-2xl text-gray-300 mb-10 max-w-2xl mx-auto font-light">
-            Defesa pessoal, competição e comunidade. Junte-se à equipe oficial da universidade.
+            Defesa pessoal, competição e comunidade. Junte-se à equipe oficial
+            da universidade.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
@@ -48,7 +58,7 @@ const Home = () => {
       {/* Equipe Section */}
       <section className="container mx-auto px-4">
         <SectionHeader title="Nossa Equipe" icon={Users} />
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {sortedMembers.map((member, index) => (
             <MemberCard key={index} member={member} />

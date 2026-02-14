@@ -1,7 +1,6 @@
 import { Medal } from 'lucide-react';
 import { Membro } from '@/data';
-
-const MEDIA_BASE_URL = import.meta.env.VITE_MEDIA_BASE_URL || '/media';
+import { mediaService } from '@/services/mediaService';
 
 export const beltConfig: Record<Membro['faixa'], { weight: number, color: string }> = {
   'Preta': { weight: 5, color: 'border-zinc-500 shadow-[0_0_15px_rgba(255,255,255,0.1)]' },
@@ -29,7 +28,7 @@ export const MemberCard = ({ member }: MemberCardProps) => {
         </div>
         <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-zinc-700 bg-zinc-800">
           <img
-            src={`${MEDIA_BASE_URL}/${member.foto}`}
+            src={mediaService.getMediaUrl(member.foto)}
             alt={member.nome}
             className="w-full h-full object-cover"
           />
