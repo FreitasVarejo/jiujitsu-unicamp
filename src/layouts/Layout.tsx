@@ -1,4 +1,4 @@
-import React, { useState, ReactNode } from 'react';
+import { useState, ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Instagram, MapPin } from 'lucide-react';
 
@@ -11,10 +11,9 @@ const Layout = ({ children }: LayoutProps) => {
   const location = useLocation();
 
   const navLinks = [
-    { path: '/', label: 'Home' },
-    { path: '/membros', label: 'Membros' },
     { path: '/guia', label: 'Guia' },
-    { path: '/galeria', label: 'Galeria' },
+    { path: '/treinos', label: 'Treinos' },
+    { path: '/eventos', label: 'Eventos' },
     { path: '/loja', label: 'Loja' },
   ];
 

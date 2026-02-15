@@ -1,21 +1,19 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './layouts/Layout';
-import Home from './pages/Home';
-import Membros from './pages/Membros';
-import Guia from './pages/Guia';
-import Galeria from './pages/Galeria';
-import Loja from './pages/Store';
+import ScrollToTop from './components/ScrollToTop';
+import { Home, Treinos, Guia, Eventos, Loja, EventoDetalhes } from './pages';
 
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <Layout>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/membros" element={<Membros />} />
+          <Route path="/treinos" element={<Treinos />} />
           <Route path="/guia" element={<Guia />} />
-          <Route path="/galeria" element={<Galeria />} />
+          <Route path="/eventos" element={<Eventos />} />
+          <Route path="/evento/:id" element={<EventoDetalhes />} />
           <Route path="/loja" element={<Loja />} />
         </Routes>
       </Layout>
