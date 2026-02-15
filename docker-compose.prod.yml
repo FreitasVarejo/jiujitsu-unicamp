@@ -16,17 +16,34 @@ services:
   files:
     image: filebrowser/filebrowser
     container_name: jiujitsu-files
+    user: "1000:1000"
     restart: unless-stopped
     networks:
       - proxy_net
     volumes:
       - ${DATA_PATH:-/home/saul/jiujitsu-data}/media:/srv
-      - ${DATA_PATH:-/home/saul/jiujitsu-data}/filebrowser/filebrowser.db:/database.db
+      - ${DATA_PATH:-/home/saul/jiujitsu-data}/filebrowser:/database
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.files.rule=Host(`files.jiujitsuunicamp.com.br`)"
       - "traefik.http.routers.files.entrypoints=web"
       - "traefik.http.services.files.loadbalancer.server.port=80"
+
+  permission-fixer:
+    image: alpine
+    container_name: jiujitsu-permission-fixer
+    user: "0:0"
+    restart: unless-stopped
+    volumes:
+      - ${DATA_PATH:-/home/saul/jiujitsu-data}/media:/media
+    command: sh -c "while true; do chmod -R 644 /media; find /media -type d -exec chmod 755 {} +; sleep 5; done"
+    labels:
+      - "autoheal=true"
+    healthcheck:
+      test: ["CMD-SHELL", "ps aux | grep '[c]hmod' || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 networks:
   proxy_net:
