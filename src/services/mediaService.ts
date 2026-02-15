@@ -76,10 +76,17 @@ export const mediaService = {
   },
 
   getAllMembers: async (): Promise<MemberInfo[]> => {
-    const index = await mediaService.getMemberIndex();
-    const members = await Promise.all(
-      index.map((id) => mediaService.getMemberInfo(id)),
-    );
-    return members;
+    try {
+      const response = await fetch(BaseMediaService.getUrl("/membros/info.json"));
+      if (!response.ok) throw new Error("Falha ao carregar lista de membros");
+      
+      const rawMembers = await response.json();
+      
+      // Mapear usando o adaptador, mas precisamos ajustar como o adaptador lida com imagens
+      return rawMembers.map((raw: any) => memberAdapter(raw, raw.id));
+    } catch (error) {
+      console.error("Erro ao buscar todos os membros:", error);
+      return [];
+    }
   },
 };
