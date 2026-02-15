@@ -4,7 +4,7 @@ export const resolveFullCoverUrl = (
   raw: any,
   id: string,
   rootPath: string,
-  galleryUrls: string[],
+  galleryUrls?: string[],
 ): string | undefined => {
   const coverFile = raw.cover || raw.coverImage;
   if (coverFile && typeof coverFile === "string") {
@@ -13,6 +13,5 @@ export const resolveFullCoverUrl = (
     }
     return BaseMediaService.getUrl(`${rootPath}/${id}/${coverFile}`);
   }
-
-  return galleryUrls[0];
+  return galleryUrls?.[0];
 };

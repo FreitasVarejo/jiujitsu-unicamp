@@ -1,11 +1,12 @@
-import { BaseMediaService } from './baseMediaService';
-import { eventAdapter, productAdapter } from '../adapters';
-import { MediaType } from '../constants/media';
-import { Event, Product } from '../types/media';
+import { BaseMediaService } from "./baseMediaService";
+import { eventAdapter, productAdapter, memberAdapter } from "../adapters";
+import { MediaType } from "../constants/media";
+import { Event, Product, Member } from "../types/media";
 
 // Maintain compatibility for names if needed, but using clean types
 export type EventInfo = Event;
 export type ProductInfo = Product;
+export type MemberInfo = Member;
 export type EventFolder = { id: string; date: string; year: string };
 export type ProductCategories = Record<string, string>;
 
@@ -13,8 +14,10 @@ export const mediaService = {
   getMediaUrl: (path: string) => BaseMediaService.getUrl(path),
 
   getEventIndex: async (): Promise<EventFolder[]> => {
-    const folders: string[] = await BaseMediaService.fetchIndex(MediaType.EVENTS);
-    
+    const folders: string[] = await BaseMediaService.fetchIndex(
+      MediaType.EVENTS,
+    );
+
     return folders
       .map((folder) => {
         const match = folder.match(/^(\d{4})-(\d{2})-(\d{2})/);
@@ -42,8 +45,11 @@ export const mediaService = {
   },
 
   getProductCategories: async (): Promise<ProductCategories> => {
-    const response = await fetch(BaseMediaService.getUrl('/produtos/categorias.json'));
-    if (!response.ok) throw new Error("Falha ao carregar categorias de produtos");
+    const response = await fetch(
+      BaseMediaService.getUrl("/produtos/categorias.json"),
+    );
+    if (!response.ok)
+      throw new Error("Falha ao carregar categorias de produtos");
     return await response.json();
   },
 
@@ -55,8 +61,25 @@ export const mediaService = {
   getAllProducts: async (): Promise<ProductInfo[]> => {
     const index = await mediaService.getProductIndex();
     const products = await Promise.all(
-      index.map(id => mediaService.getProductInfo(id))
+      index.map((id) => mediaService.getProductInfo(id)),
     );
     return products;
-  }
+  },
+
+  getMemberIndex: async (): Promise<string[]> => {
+    return BaseMediaService.fetchIndex(MediaType.MEMBERS);
+  },
+
+  getMemberInfo: async (id: string): Promise<MemberInfo> => {
+    const raw = await BaseMediaService.fetchItemInfo(MediaType.MEMBERS, id);
+    return memberAdapter(raw, id);
+  },
+
+  getAllMembers: async (): Promise<MemberInfo[]> => {
+    const index = await mediaService.getMemberIndex();
+    const members = await Promise.all(
+      index.map((id) => mediaService.getMemberInfo(id)),
+    );
+    return members;
+  },
 };

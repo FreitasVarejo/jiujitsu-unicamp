@@ -1,16 +1,3 @@
-export interface Membro {
-  nome: string;
-  faixa: "Preta" | "Marrom" | "Roxa" | "Azul" | "Branca";
-  foto: string;
-  ano: string;
-  curso: string;
-  medalhas: {
-    ouro: number;
-    prata: number;
-    bronze: number;
-  };
-}
-
 export interface Produto {
   nome: string;
   preco: string;
@@ -41,7 +28,6 @@ export interface Evento {
 }
 
 export interface SiteData {
-  equipe: Membro[];
   produtos: Produto[];
   horarios: {
     diurnos: HorarioDiurno[];
@@ -50,48 +36,6 @@ export interface SiteData {
 }
 
 export const data: SiteData = {
-  equipe: [
-    {
-      nome: "Pablo Viana",
-      faixa: "Preta",
-      foto: "professores-profile-pic/pablo-lr.png",
-      ano: "2022",
-      curso: "Educação Física",
-      medalhas: { ouro: 3, prata: 1, bronze: 0 },
-    },
-    {
-      nome: "Lucas Senno",
-      faixa: "Marrom",
-      foto: "professores-profile-pic/senno-lr.png",
-      ano: "2024",
-      curso: "Ciência da Computação",
-      medalhas: { ouro: 1, prata: 2, bronze: 1 },
-    },
-    {
-      nome: "Vitor Takahashi",
-      faixa: "Roxa",
-      foto: "professores-profile-pic/vitor-lr.png",
-      ano: "2022",
-      curso: "Ciência da Computação",
-      medalhas: { ouro: 0, prata: 1, bronze: 1 },
-    },
-    {
-      nome: "Kauã Nunes",
-      faixa: "Roxa",
-      foto: "professores-profile-pic/kaua-lr.png",
-      ano: "2025",
-      curso: "Economia",
-      medalhas: { ouro: 2, prata: 0, bronze: 0 },
-    },
-    {
-      nome: "Rayla",
-      faixa: "Azul",
-      foto: "professores-profile-pic/rayla-lr.png",
-      ano: "2022",
-      curso: "Educação Física",
-      medalhas: { ouro: 0, prata: 0, bronze: 1 },
-    },
-  ],
   produtos: [
     {
       nome: "Rashguard BJJ Unicamp",

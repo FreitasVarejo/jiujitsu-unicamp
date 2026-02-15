@@ -1,6 +1,5 @@
 import { AlertCircle } from "lucide-react";
 import { useEvents } from "./event.hook";
-import { EventStats } from "./components/EventStats";
 import { YearSection } from "./components/YearSection";
 
 export const Eventos = () => {
@@ -31,8 +30,6 @@ export const Eventos = () => {
           Confira os registros oficiais da nossa trajetória no Jiu-Jitsu.
         </p>
       </header>
-
-      <EventStats />
 
       {error ? (
         <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-8 text-center">
