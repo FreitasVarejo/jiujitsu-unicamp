@@ -1,16 +1,33 @@
 import { Link } from "react-router-dom";
-import { Users } from "lucide-react";
-import { data } from "@/data";
+import { Users, Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { SectionHeader } from "./_components/SectionHeader";
 import { MemberCard, beltConfig } from "./_components/MemberCard";
-import { mediaService } from "@/services/mediaService";
+import { mediaService, MemberInfo } from "@/services/mediaService";
 
 const Home = () => {
-  const sortedMembers = [...data.equipe].sort((a, b) => {
-    const weightA = beltConfig[a.faixa]?.weight || 0;
-    const weightB = beltConfig[b.faixa]?.weight || 0;
-    return weightB - weightA;
-  });
+  const [members, setMembers] = useState<MemberInfo[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchMembers = async () => {
+      try {
+        const data = await mediaService.getAllMembers();
+        const sorted = [...data].sort((a, b) => {
+          const weightA = beltConfig[a.belt]?.weight || 0;
+          const weightB = beltConfig[b.belt]?.weight || 0;
+          return weightB - weightA;
+        });
+        setMembers(sorted);
+      } catch (error) {
+        console.error("Erro ao carregar membros:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMembers();
+  }, []);
 
   return (
     <div className="flex flex-col gap-16 pb-16">
@@ -59,11 +76,17 @@ const Home = () => {
       <section className="container mx-auto px-4">
         <SectionHeader title="Nossa Equipe" icon={Users} />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {sortedMembers.map((member, index) => (
-            <MemberCard key={index} member={member} />
-          ))}
-        </div>
+        {loading ? (
+          <div className="flex justify-center py-12">
+            <Loader2 className="w-8 h-8 text-primary animate-spin" />
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {members.map((member) => (
+              <MemberCard key={member.id} member={member} />
+            ))}
+          </div>
+        )}
       </section>
     </div>
   );
