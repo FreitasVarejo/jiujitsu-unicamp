@@ -38,7 +38,7 @@ export const ProductCarousel = ({ products, categories, onProductClick }: Produc
             >
               <ProductCard 
                 product={product} 
-                categoryLabel={categories[product.categoria]}
+                categoryLabel={categories[product.category]}
                 onClick={onProductClick}
               />
             </div>

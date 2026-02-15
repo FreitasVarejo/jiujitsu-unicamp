@@ -1,5 +1,5 @@
 import { ShoppingCart } from 'lucide-react';
-import { ProductInfo, mediaService } from '@/services/mediaService';
+import { ProductInfo } from '@/services/mediaService';
 
 interface ProductCardProps {
   product: ProductInfo;
@@ -8,7 +8,7 @@ interface ProductCardProps {
 }
 
 export const ProductCard = ({ product, categoryLabel, onClick }: ProductCardProps) => {
-  const firstImage = mediaService.getMediaUrl(`/produtos/${product.id}/${product.id}-00.webp`);
+  const coverImage = product.coverImage || `https://placehold.co/500x500/18181b/d26030?text=${product.title.replace(/ /g, '+')}`;
 
   return (
     <div 
@@ -17,11 +17,11 @@ export const ProductCard = ({ product, categoryLabel, onClick }: ProductCardProp
     >
       <div className="aspect-square bg-zinc-800 relative overflow-hidden shrink-0">
         <img 
-          src={firstImage} 
-          alt={product.nome}
+          src={coverImage} 
+          alt={product.title}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
           onError={(e) => {
-            (e.target as HTMLImageElement).src = `https://placehold.co/500x500/18181b/d26030?text=${product.nome.replace(/ /g, '+')}`;
+            (e.target as HTMLImageElement).src = `https://placehold.co/500x500/18181b/d26030?text=${product.title.replace(/ /g, '+')}`;
           }}
         />
         
@@ -30,13 +30,13 @@ export const ProductCard = ({ product, categoryLabel, onClick }: ProductCardProp
 
         {/* Price Tag */}
         <div className="absolute top-4 right-4 bg-black text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg z-10 border-2 border-primary">
-          {product.preco}
+          {product.price}
         </div>
 
         {/* Badge for multiple photos */}
-        {(product.imagensCount || 1) > 1 && (
+        {product.gallery.length > 1 && (
           <div className="absolute bottom-4 right-4 bg-zinc-900/80 backdrop-blur text-white/70 text-[10px] px-2 py-0.5 rounded uppercase tracking-widest font-bold border border-white/5">
-            +{product.imagensCount! - 1} fotos
+            +{product.gallery.length - 1} fotos
           </div>
         )}
       </div>
@@ -47,7 +47,7 @@ export const ProductCard = ({ product, categoryLabel, onClick }: ProductCardProp
             {categoryLabel || 'Coleção Oficial'}
           </p>
           <h3 className="text-lg font-display text-white group-hover:text-primary transition-colors line-clamp-1">
-            {product.nome}
+            {product.title}
           </h3>
         </div>
         

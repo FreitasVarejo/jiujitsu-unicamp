@@ -24,10 +24,9 @@ export const useEventDetails = (id?: string) => {
     fetchDetails();
   }, [id]);
 
-  const images = details ? Array.from({ length: Math.max(0, details.imagensCount - 1) }).map((_, i) => ({
-    id: i + 1,
-    webp: mediaService.getMediaUrl(`/eventos/${id}/${String(i + 1).padStart(4, '0')}.webp`),
-    jpg: mediaService.getMediaUrl(`/eventos/${id}/${String(i + 1).padStart(4, '0')}.jpg`),
+  const images = details ? details.gallery.map((url, i) => ({
+    id: i,
+    url,
   })) : [];
 
   return { details, loading, error, images };

@@ -11,7 +11,7 @@ const Loja = () => {
 
   const productsByCategory = useMemo(() => {
     return products.reduce((acc, product) => {
-      const cat = product.categoria || 'outros';
+      const cat = product.category || 'outros';
       if (!acc[cat]) acc[cat] = [];
       acc[cat].push(product);
       return acc;
@@ -70,7 +70,7 @@ const Loja = () => {
       {selectedProduct && (
         <ProductModal 
           product={selectedProduct} 
-          categoryLabel={categories[selectedProduct.categoria]}
+          categoryLabel={categories[selectedProduct.category]}
           onClose={() => setSelectedProduct(null)}
         />
       )}

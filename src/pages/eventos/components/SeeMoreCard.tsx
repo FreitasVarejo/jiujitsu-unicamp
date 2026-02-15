@@ -10,8 +10,7 @@ interface SeeMoreCardProps {
 }
 
 export const SeeMoreCard = ({ folder, info, year, remaining, onClick }: SeeMoreCardProps) => {
-  const thumbWebp = mediaService.getMediaUrl(`/eventos/${folder.id}/0000.webp`);
-  const thumbJpg = mediaService.getMediaUrl(`/eventos/${folder.id}/0000.jpg`);
+  const thumb = info?.coverImage || mediaService.getMediaUrl(`/eventos/${folder.id}/0000.webp`);
 
   return (
     <button
@@ -19,15 +18,12 @@ export const SeeMoreCard = ({ folder, info, year, remaining, onClick }: SeeMoreC
       className="group relative h-64 overflow-hidden rounded-xl bg-zinc-900 border border-zinc-800 flex items-end text-left"
     >
       <div className="absolute inset-0">
-        <picture>
-          <source srcSet={thumbWebp} type="image/webp" />
-          <img
-            src={thumbJpg}
-            alt={info?.nome || folder.id}
-            loading="lazy"
-            className="w-full h-full object-cover transition-transform duration-700 grayscale blur-[2px]"
-          />
-        </picture>
+        <img
+          src={thumb}
+          alt={info?.title || folder.id}
+          loading="lazy"
+          className="w-full h-full object-cover transition-transform duration-700 grayscale blur-[2px]"
+        />
         <div className="absolute inset-0 bg-black/60 group-hover:bg-black/40 transition-colors"></div>
       </div>
 

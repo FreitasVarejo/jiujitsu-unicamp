@@ -3,7 +3,6 @@ import { useParams, Link } from 'react-router-dom';
 import { ChevronLeft, Calendar, MapPin, AlertCircle } from 'lucide-react';
 import { useEventDetails } from './event-details.hook';
 import { Lightbox } from '../components/Lightbox';
-import { mediaService } from '@/services/mediaService';
 
 export const EventoDetalhes = () => {
   const { id } = useParams<{ id: string }>();
@@ -29,9 +28,6 @@ export const EventoDetalhes = () => {
     );
   }
 
-  const mainThumbWebp = mediaService.getMediaUrl(`/eventos/${id}/0000.webp`);
-  const mainThumbJpg = mediaService.getMediaUrl(`/eventos/${id}/0000.jpg`);
-
   return (
     <div className="container mx-auto px-4 py-12">
       <Link 
@@ -52,14 +48,14 @@ export const EventoDetalhes = () => {
               </span>
               <span className="flex items-center gap-1">
                 <MapPin size={16} />
-                {details.local}
+                {details.location}
               </span>
             </div>
             <h1 className="text-4xl md:text-5xl font-display text-white mb-6 uppercase tracking-tight">
-              {details.nome}
+              {details.title}
             </h1>
             <p className="text-gray-400 text-lg leading-relaxed max-w-3xl">
-              {details.descricao}
+              {details.description}
             </p>
           </header>
         </div>
@@ -67,16 +63,19 @@ export const EventoDetalhes = () => {
         {/* Capa do Evento */}
         <div 
           className="lg:w-2/5 aspect-[16/10] rounded-2xl overflow-hidden border border-zinc-800 bg-zinc-900 group cursor-pointer relative"
-          onClick={() => setSelectedImage(mainThumbWebp)}
+          onClick={() => setSelectedImage(details.coverImage || null)}
         >
-          <picture>
-            <source srcSet={mainThumbWebp} type="image/webp" />
+          {details.coverImage ? (
             <img 
-              src={mainThumbJpg} 
-              alt={details.nome}
+              src={details.coverImage} 
+              alt={details.title}
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             />
-          </picture>
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-zinc-700">
+              Sem Imagem
+            </div>
+          )}
           <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-300"></div>
           <div className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-md text-white text-[10px] uppercase tracking-widest px-3 py-1.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
             Ver em destaque
@@ -89,24 +88,15 @@ export const EventoDetalhes = () => {
         {images.map((img) => (
           <div 
             key={img.id} 
-            onClick={() => setSelectedImage(img.webp)}
+            onClick={() => setSelectedImage(img.url)}
             className="aspect-[4/3] overflow-hidden rounded-lg bg-zinc-900 border border-zinc-800 group cursor-pointer"
           >
-            <picture>
-              <source srcSet={img.webp} type="image/webp" />
-              <img 
-                src={img.jpg} 
-                alt={`${details.nome} - Foto ${img.id + 1}`}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                loading="lazy"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  if (target.src !== img.jpg) {
-                    target.src = img.jpg;
-                  }
-                }}
-              />
-            </picture>
+            <img 
+              src={img.url} 
+              alt={`${details.title} - Foto ${img.id + 1}`}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              loading="lazy"
+            />
           </div>
         ))}
       </div>

@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { X, MessageCircle, ChevronLeft, ChevronRight } from 'lucide-react';
-import { ProductInfo, mediaService } from '@/services/mediaService';
+import { ProductInfo } from '@/services/mediaService';
 
 interface ProductModalProps {
   product: ProductInfo | null;
@@ -37,11 +37,8 @@ export const ProductModal = ({ product, onClose, categoryLabel }: ProductModalPr
 
   if (!product) return null;
 
-  const imagensCount = product.imagensCount || 1;
-  const images = Array.from({ length: imagensCount }, (_, i) => {
-    const fileName = `${product.id}-${String(i).padStart(2, '0')}.webp`;
-    return mediaService.getMediaUrl(`/produtos/${product.id}/${fileName}`);
-  });
+  const images = product.gallery;
+  const imagensCount = images.length;
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8">
@@ -69,10 +66,10 @@ export const ProductModal = ({ product, onClose, categoryLabel }: ProductModalPr
                 <div key={idx} className="flex-[0_0_100%] h-full flex items-center justify-center">
                   <img 
                     src={url} 
-                    alt={`${product.nome} - ${idx + 1}`}
+                    alt={`${product.title} - ${idx + 1}`}
                     className="w-full h-full object-contain"
                     onError={(e) => {
-                      (e.target as HTMLImageElement).src = `https://placehold.co/800x800/18181b/d26030?text=${product.nome.replace(/ /g, '+')}`;
+                      (e.target as HTMLImageElement).src = `https://placehold.co/800x800/18181b/d26030?text=${product.title.replace(/ /g, '+')}`;
                     }}
                   />
                 </div>
@@ -106,10 +103,10 @@ export const ProductModal = ({ product, onClose, categoryLabel }: ProductModalPr
               {categoryLabel || 'Coleção Oficial'}
             </span>
             <h2 className="text-3xl md:text-4xl font-display text-white mt-1 mb-2">
-              {product.nome}
+              {product.title}
             </h2>
             <div className="inline-block bg-black text-white px-4 py-1.5 rounded-full text-xl font-bold mb-6 shadow-lg border-2 border-primary">
-              {product.preco}
+              {product.price}
             </div>
           </div>
 
@@ -117,25 +114,21 @@ export const ProductModal = ({ product, onClose, categoryLabel }: ProductModalPr
             <h4 className="text-gray-400 uppercase text-xs font-bold tracking-widest mb-3">
               Informações
             </h4>
-            {product.descricao ? (
+            {product.description ? (
               <p className="text-gray-300 leading-relaxed mb-6">
-                {product.descricao}
-              </p>
-            ) : product.obs ? (
-              <p className="text-gray-300 leading-relaxed mb-6">
-                {product.obs}
+                {product.description}
               </p>
             ) : (
               <p className="text-gray-500 italic mb-6">Nenhuma observação adicional.</p>
             )}
 
-            {product.tamanhos && product.tamanhos.length > 0 && (
+            {product.sizes && product.sizes.length > 0 && (
               <div className="mb-6">
                 <h4 className="text-gray-400 uppercase text-xs font-bold tracking-widest mb-3">
                   Tamanhos Disponíveis
                 </h4>
                 <div className="flex flex-wrap gap-2">
-                  {product.tamanhos.map((tamanho) => (
+                  {product.sizes.map((tamanho) => (
                     <span 
                       key={tamanho}
                       className="px-3 py-1 bg-zinc-800 border border-zinc-700 text-white text-sm font-bold rounded-md"
@@ -161,7 +154,7 @@ export const ProductModal = ({ product, onClose, categoryLabel }: ProductModalPr
 
           <div className="mt-8">
             <a 
-              href={`https://wa.me/?text=Olá, gostaria de encomendar o produto: ${product.nome}`}
+              href={`https://wa.me/?text=Olá, gostaria de encomendar o produto: ${product.title}`}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full flex items-center justify-center gap-3 bg-green-600 hover:bg-green-700 text-white py-4 rounded-xl transition-all font-display uppercase tracking-wider transform hover:scale-[1.02] active:scale-[0.98]"

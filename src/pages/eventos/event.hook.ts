@@ -136,8 +136,10 @@ export const useEvents = () => {
           for (let i = 0; i < hiddenFolders.length; i += 4) {
             if (!isMounted) break;
             hiddenFolders.slice(i, i + 4).forEach(f => {
+              const info = eventInfo[f.id];
+              const thumbUrl = info?.coverImage || mediaService.getMediaUrl(`/eventos/${f.id}/0000.webp`);
               const img = new Image();
-              img.src = mediaService.getMediaUrl(`/eventos/${f.id}/0000.webp`);
+              img.src = thumbUrl;
             });
             await new Promise(r => setTimeout(r, 1000));
           }
@@ -149,15 +151,13 @@ export const useEvents = () => {
             topEvents.forEach((event) => {
               const checkAndWarm = setInterval(() => {
                 const info = eventInfo[event.id];
-                if (info && info.imagensCount) {
+                if (info && info.gallery.length > 0) {
                   clearInterval(checkAndWarm);
-                  const count = Math.min(info.imagensCount, 4);
-                  for (let i = 1; i <= count; i++) {
-                    const webp = new Image();
-                    webp.src = mediaService.getMediaUrl(`/eventos/${event.id}/${String(i).padStart(4, "0")}.webp`);
-                    const jpg = new Image();
-                    jpg.src = mediaService.getMediaUrl(`/eventos/${event.id}/${String(i).padStart(4, "0")}.jpg`);
-                  }
+                  const imagesToPrefetch = info.gallery.slice(1, 5); // Skip cover, take next 4
+                  imagesToPrefetch.forEach(url => {
+                    const img = new Image();
+                    img.src = url;
+                  });
                 }
               }, 3000);
               intervals.push(checkAndWarm);

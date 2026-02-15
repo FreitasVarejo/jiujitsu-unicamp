@@ -8,8 +8,7 @@ interface EventCardProps {
 }
 
 export const EventCard = ({ folder, info }: EventCardProps) => {
-  const thumbWebp = mediaService.getMediaUrl(`/eventos/${folder.id}/0000.webp`);
-  const thumbJpg = mediaService.getMediaUrl(`/eventos/${folder.id}/0000.jpg`);
+  const thumb = info?.coverImage || mediaService.getMediaUrl(`/eventos/${folder.id}/0000.webp`);
 
   return (
     <Link
@@ -17,15 +16,12 @@ export const EventCard = ({ folder, info }: EventCardProps) => {
       className="group relative h-64 overflow-hidden rounded-xl bg-zinc-900 border border-zinc-800 flex items-end"
     >
       <div className="absolute inset-0">
-        <picture>
-          <source srcSet={thumbWebp} type="image/webp" />
-          <img
-            src={thumbJpg}
-            alt={info?.nome || folder.id}
-            loading="lazy"
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-          />
-        </picture>
+        <img
+          src={thumb}
+          alt={info?.title || folder.id}
+          loading="lazy"
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+        />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent opacity-90"></div>
       </div>
 
@@ -39,12 +35,12 @@ export const EventCard = ({ folder, info }: EventCardProps) => {
             {info && (
               <span className="flex items-center gap-1">
                 <MapPin size={14} />
-                {info.local}
+                {info.location}
               </span>
             )}
           </div>
           <h3 className="text-2xl md:text-3xl font-display text-white uppercase tracking-tight drop-shadow-sm">
-            {info?.nome || "Carregando..."}
+            {info?.title || "Carregando..."}
           </h3>
         </div>
 
