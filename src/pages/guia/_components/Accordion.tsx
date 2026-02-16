@@ -10,7 +10,7 @@ export const AccordionItem = ({ title, children }: AccordionItemProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="border border-zinc-800 rounded-lg bg-zinc-900 overflow-hidden mb-4">
+    <div className="border border-zinc-800 rounded-lg bg-zinc-900 overflow-hidden">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="w-full px-6 py-4 flex items-center justify-between bg-zinc-900 hover:bg-zinc-800 transition-colors"

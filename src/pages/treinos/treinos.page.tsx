@@ -4,18 +4,103 @@ import { SectionHeader } from '../home/_components/SectionHeader';
 import { Link } from 'react-router-dom';
 
 const Treinos = () => {
+  const diasSemana = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'];
+  const diasAbreviados = ['SEG', 'TER', 'QUA', 'QUI', 'SEX'];
+
+  const getCorTipo = (tipo: string) => {
+    if (tipo === 'Competição') return 'text-yellow-300';
+    if (tipo === 'Geral') return 'text-orange-300';
+    if (tipo === 'Feminino') return 'text-red-400';
+    if (tipo === 'Noturno') return 'text-blue-400';
+    return 'text-white';
+  };
+
+  const getTreinosPorDia = (dia: (typeof diasSemana)[number]) => {
+    const diaTreino = data.horarios.find((horarioDia) => horarioDia.dia === dia);
+    if (!diaTreino) return [];
+
+    const treinosDia = [] as { tipo: string; horario: string; professor: string }[];
+
+    if (diaTreino.comp !== '-') {
+      treinosDia.push({
+        tipo: 'Competição',
+        horario: diaTreino.comp,
+        professor: diaTreino.professorComp,
+      });
+    }
+
+    if (diaTreino.geral !== '-') {
+      treinosDia.push({
+        tipo: 'Geral',
+        horario: diaTreino.geral,
+        professor: diaTreino.professorGeral,
+      });
+    }
+
+    if (diaTreino.feminino !== '-') {
+      treinosDia.push({
+        tipo: 'Feminino',
+        horario: diaTreino.feminino,
+        professor: diaTreino.professorFeminino,
+      });
+    }
+
+    if (diaTreino.noturno !== '-') {
+      treinosDia.push({
+        tipo: 'Noturno',
+        horario: diaTreino.noturno,
+        professor: diaTreino.professorNoturno,
+      });
+    }
+
+    return treinosDia;
+  };
+
   return (
     <div className="flex flex-col gap-16 py-12">
       {/* 1. Horários de Treinos */}
       <section className="container mx-auto px-4">
         <SectionHeader title="Horários de Treino" icon={Clock} />
 
-        <div className="w-full overflow-x-auto">
+        <div className="md:hidden space-y-4">
+          {diasSemana.map((dia) => {
+            const treinosDia = getTreinosPorDia(dia);
+
+            return (
+              <div key={dia} className="rounded-lg border border-zinc-800 bg-zinc-900 p-4">
+                <h3 className="font-display text-lg text-white mb-3">{dia}</h3>
+
+                {treinosDia.length > 0 ? (
+                  <div className="space-y-2">
+                    {treinosDia.map((treino) => (
+                      <div
+                        key={`${dia}-${treino.tipo}-${treino.horario}`}
+                        className="flex items-start justify-between gap-3 rounded-md bg-zinc-800/40 p-3"
+                      >
+                        <div className="flex flex-col">
+                          <span className={`text-sm font-semibold ${getCorTipo(treino.tipo)}`}>
+                            {treino.tipo === 'Geral' ? 'GERAL' : treino.tipo}
+                          </span>
+                          <span className="text-xs text-gray-400">({treino.professor})</span>
+                        </div>
+                        <span className="text-sm text-white font-medium">{treino.horario}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-gray-500">Sem treino neste dia.</p>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="hidden md:block w-full overflow-x-auto">
           <table className="w-full border-collapse border border-zinc-800 table-fixed">
             <thead>
               <tr>
                 <th className="border border-zinc-800 p-3 bg-zinc-900 text-white font-display text-lg"style={{width: '150px'}}>Horários / Dias</th>
-                {['SEG', 'TER', 'QUA', 'QUI', 'SEX'].map(dia => (
+                {diasAbreviados.map(dia => (
                   <th key={dia} className="border border-zinc-800 p-3 bg-zinc-900 text-white font-display text-lg">{dia}</th>
                 ))}
               </tr>
@@ -34,7 +119,7 @@ const Treinos = () => {
                 return horarios.map((horario: string) => (
                   <tr key={horario}>
                     <td className="border border-zinc-800 p-3 bg-zinc-900/50 text-white font-bold text-center">{horario}</td>
-                    {['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'].map(dia => {
+                    {diasSemana.map(dia => {
                       const diaTreino = data.horarios.find(d => d.dia === dia);
                       if (!diaTreino) return null;
                       
@@ -57,13 +142,7 @@ const Treinos = () => {
                         >
                           {tipo && (
                             <div className="flex flex-col items-center justify-center gap-1">
-                              <span className={`text-base font-semibold ${
-                                tipo === 'Competição' ? 'text-yellow-300' :
-                                tipo === 'Geral' ? 'text-orange-300' :
-                                tipo === 'Feminino' ? 'text-red-400' : 
-                                tipo === 'Noturno' ? 'text-blue-400' :
-                                'text-white'
-                              }`}>
+                              <span className={`text-base font-semibold ${getCorTipo(tipo)}`}>
                                 {tipo === 'Geral' ? 'GERAL' : tipo}
                               </span>
                               <span className="text-xs text-gray-400 leading-none">
