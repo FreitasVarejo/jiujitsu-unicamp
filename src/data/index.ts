@@ -18,17 +18,16 @@ export interface Produto {
   obs?: string;
 }
 
-export interface HorarioDiurno {
+export interface Horario {
   dia: string;
   comp: string;
   geral: string;
   feminino: string;
-}
-
-export interface HorarioNoturno {
-  dia: string;
-  hora: string;
-  tipo: string;
+  noturno: string;
+  professorComp: string;
+  professorGeral: string;
+  professorFeminino: string;
+  professorNoturno: string;
 }
 
 export interface Evento {
@@ -43,10 +42,7 @@ export interface Evento {
 export interface SiteData {
   equipe: Membro[];
   produtos: Produto[];
-  horarios: {
-    diurnos: HorarioDiurno[];
-    noturnos: HorarioNoturno[];
-  };
+  horarios: Horario[];
 }
 
 export const data: SiteData = {
@@ -97,17 +93,61 @@ export const data: SiteData = {
     { nome: "Camiseta BJJ Unicamp", preco: "R$ 80,00", categoria: "Vestuário" },
     { nome: "Rashguard Instinto", preco: "R$ 160,00", obs: "Design por João Gondim" },
   ],
-  horarios: {
-    diurnos: [
-      { dia: "Segunda", comp: "10:30-11:30", geral: "12:00-13:30", feminino: "-" },
-      { dia: "Terça", comp: "-", geral: "12:00-13:30", feminino: "10:30-11:30" },
-      { dia: "Quarta", comp: "10:30-11:30", geral: "12:00-13:30", feminino: "-" },
-      { dia: "Quinta", comp: "-", geral: "12:00-13:30", feminino: "-" },
-      { dia: "Sexta", comp: "12:00-13:30", geral: "-", feminino: "14:30-15:30" },
-    ],
-    noturnos: [
-      { dia: "Quarta-feira", hora: "21:00 às 22:30", tipo: "Geral" },
-      { dia: "Quinta-feira", hora: "20:00 às 21:30", tipo: "Geral" },
-    ],
-  },
+  horarios: [
+      {
+        dia: "Segunda",
+        comp: "10:30-11:30",
+        geral: "12:00-13:30",
+        feminino: "-",
+        noturno: "-",
+        professorComp: "Kauã Nunes",
+        professorGeral: "Pablo Viana",
+        professorFeminino: "-",
+        professorNoturno: "-",
+      },
+      {
+        dia: "Terça",
+        comp: "-",
+        geral: "12:00-13:30",
+        feminino: "10:30-11:30",
+        noturno: "-",
+        professorComp: "-",
+        professorGeral: "Lucas Senno",
+        professorFeminino: "Rayla",
+        professorNoturno: "-",
+      },
+      {
+        dia: "Quarta",
+        comp: "10:30-11:30",
+        geral: "12:00-13:30",
+        feminino: "-",
+        noturno: "21:00-22:30",
+        professorComp: "Kauã Nunes",
+        professorGeral: "Pablo Viana",
+        professorFeminino: "-",
+        professorNoturno: "Vitor Takahashi",
+      },
+      {
+        dia: "Quinta",
+        comp: "-",
+        geral: "12:00-13:30",
+        feminino: "-",
+        noturno: "20:00-21:30",
+        professorComp: "-",
+        professorGeral: "Lucas Senno",
+        professorFeminino: "-",
+        professorNoturno: "Vitor Takahashi",
+      },
+      {
+        dia: "Sexta",
+        comp: "-",
+        geral: "12:00-13:30",
+        feminino: "14:30-15:30",
+        noturno: "-",
+        professorComp: "-",
+        professorGeral: "Pablo Viana",
+        professorFeminino: "Rayla",
+        professorNoturno: "-",
+      },
+  ],
 };

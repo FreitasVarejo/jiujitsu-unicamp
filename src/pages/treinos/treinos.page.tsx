@@ -7,10 +7,8 @@ const Treinos = () => {
   return (
     <div className="flex flex-col gap-16 py-12">
       {/* 1. Horários de Treinos */}
-      <section className="w-full px-4">
-        <div className="container mx-auto">
-          <SectionHeader title="Horários de Treino" icon={Clock} />
-        </div>
+      <section className="container mx-auto px-4">
+        <SectionHeader title="Horários de Treino" icon={Clock} />
 
         <div className="w-full overflow-x-auto">
           <table className="w-full border-collapse border border-zinc-800 table-fixed">
@@ -25,10 +23,11 @@ const Treinos = () => {
             <tbody>
               {(() => {
                 const horariosSet = new Set();
-                data.horarios.diurnos.forEach(item => {
+                data.horarios.forEach(item => {
                   if (item.comp !== '-') horariosSet.add(item.comp);
                   if (item.geral !== '-') horariosSet.add(item.geral);
                   if (item.feminino !== '-') horariosSet.add(item.feminino);
+                  if (item.noturno !== '-') horariosSet.add(item.noturno);
                 });
                 const horarios = Array.from(horariosSet).sort() as string[];
                 
@@ -36,13 +35,20 @@ const Treinos = () => {
                   <tr key={horario}>
                     <td className="border border-zinc-800 p-3 bg-zinc-900/50 text-white font-bold text-center">{horario}</td>
                     {['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'].map(dia => {
-                      const diaTreino = data.horarios.diurnos.find(d => d.dia === dia);
+                      const diaTreino = data.horarios.find(d => d.dia === dia);
                       if (!diaTreino) return null;
                       
                       let tipo = null;
+                      let professor = '';
                       if (diaTreino.comp === horario) tipo = 'Competição';
                       else if (diaTreino.geral === horario) tipo = 'Geral';
                       else if (diaTreino.feminino === horario) tipo = 'Feminino';
+                      else if (diaTreino.noturno === horario) tipo = 'Noturno';
+
+                      if (diaTreino.comp === horario) professor = diaTreino.professorComp;
+                      else if (diaTreino.geral === horario) professor = diaTreino.professorGeral;
+                      else if (diaTreino.feminino === horario) professor = diaTreino.professorFeminino;
+                      else if (diaTreino.noturno === horario) professor = diaTreino.professorNoturno;
                       
                       return (
                         <td 
@@ -50,14 +56,20 @@ const Treinos = () => {
                           className="border border-zinc-800 p-3 text-center bg-zinc-900/30"
                         >
                           {tipo && (
-                            <span className={`text-base font-semibold ${
-                              tipo === 'Competição' ? 'text-yellow-300' :
-                              tipo === 'Geral' ? 'text-orange-300' :
-                              tipo === 'Feminino' ? 'text-red-400' : 
-                              'text-white'
-                            }`}>
-                              {tipo === 'Geral' ? 'GERAL' : tipo}
-                            </span>
+                            <div className="flex flex-col items-center justify-center gap-1">
+                              <span className={`text-base font-semibold ${
+                                tipo === 'Competição' ? 'text-yellow-300' :
+                                tipo === 'Geral' ? 'text-orange-300' :
+                                tipo === 'Feminino' ? 'text-red-400' : 
+                                tipo === 'Noturno' ? 'text-blue-400' :
+                                'text-white'
+                              }`}>
+                                {tipo === 'Geral' ? 'GERAL' : tipo}
+                              </span>
+                              <span className="text-xs text-gray-400 leading-none">
+                                ({professor})
+                              </span>
+                            </div>
                           )}
                         </td>
                       );
