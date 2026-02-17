@@ -15,6 +15,15 @@ const Treinos = () => {
     return 'text-white';
   };
 
+  const getHorarioInicioEmMinutos = (horario: string) => {
+    const match = horario.match(/(\d{1,2}):(\d{2})/);
+    if (!match) return Number.MAX_SAFE_INTEGER;
+
+    const horas = Number(match[1]);
+    const minutos = Number(match[2]);
+    return horas * 60 + minutos;
+  };
+
   const getTreinosPorDia = (dia: (typeof diasSemana)[number]) => {
     const diaTreino = data.horarios.find((horarioDia) => horarioDia.dia === dia);
     if (!diaTreino) return [];
@@ -53,7 +62,9 @@ const Treinos = () => {
       });
     }
 
-    return treinosDia;
+    return treinosDia.sort(
+      (a, b) => getHorarioInicioEmMinutos(a.horario) - getHorarioInicioEmMinutos(b.horario),
+    );
   };
 
   return (
