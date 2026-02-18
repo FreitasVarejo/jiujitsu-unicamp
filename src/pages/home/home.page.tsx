@@ -16,11 +16,19 @@ import {
 } from "./_components";
 import { mediaService, MemberInfo } from "@/services/mediaService";
 import { data } from "@/data";
+import { Weekday, WEEKDAY_LABELS } from "@/constants/date";
+import { TRAINING_CATEGORY_LABELS } from "@/constants/treinos";
 
 export const Home = () => {
   const [members, setMembers] = useState<MemberInfo[]>([]);
   const [loading, setLoading] = useState(true);
-  const diasSemana = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta"];
+  const diasSemana = [
+    Weekday.Segunda,
+    Weekday.Terca,
+    Weekday.Quarta,
+    Weekday.Quinta,
+    Weekday.Sexta,
+  ];
   const diasAbreviados = ["SEG", "TER", "QUA", "QUI", "SEX"];
 
   const getCorTipo = (tipo: string) => {
@@ -40,55 +48,19 @@ export const Home = () => {
     return horas * 60 + minutos;
   };
 
-  const getTreinosPorDia = (dia: (typeof diasSemana)[number]) => {
-    const diaTreino = data.horarios.find(
-      (horarioDia) => horarioDia.dia === dia,
-    );
-    if (!diaTreino) return [];
-
-    const treinosDia = [] as {
-      tipo: string;
-      horario: string;
-      professor: string;
-    }[];
-
-    if (diaTreino.comp !== "-") {
-      treinosDia.push({
-        tipo: "Competição",
-        horario: diaTreino.comp,
-        professor: diaTreino.professorComp,
-      });
-    }
-
-    if (diaTreino.geral !== "-") {
-      treinosDia.push({
-        tipo: "Geral",
-        horario: diaTreino.geral,
-        professor: diaTreino.professorGeral,
-      });
-    }
-
-    if (diaTreino.feminino !== "-") {
-      treinosDia.push({
-        tipo: "Feminino",
-        horario: diaTreino.feminino,
-        professor: diaTreino.professorFeminino,
-      });
-    }
-
-    if (diaTreino.noturno !== "-") {
-      treinosDia.push({
-        tipo: "Noturno",
-        horario: diaTreino.noturno,
-        professor: diaTreino.professorNoturno,
-      });
-    }
-
-    return treinosDia.sort(
-      (a, b) =>
-        getHorarioInicioEmMinutos(a.horario) -
-        getHorarioInicioEmMinutos(b.horario),
-    );
+  const getTreinosPorDia = (dia: Weekday) => {
+    return data.horarios
+      .filter((h) => h.weekday === dia)
+      .map((h) => ({
+        tipo: TRAINING_CATEGORY_LABELS[h.category],
+        horario: h.startTime,
+        professor: h.member,
+      }))
+      .sort(
+        (a, b) =>
+          getHorarioInicioEmMinutos(a.horario) -
+          getHorarioInicioEmMinutos(b.horario),
+      );
   };
 
   useEffect(() => {
@@ -282,7 +254,7 @@ export const Home = () => {
                 key={dia}
                 className="rounded-lg border border-zinc-800 bg-zinc-900 p-4"
               >
-                <h3 className="font-display text-lg text-white mb-3">{dia}</h3>
+                <h3 className="font-display text-lg text-white mb-3">{WEEKDAY_LABELS[dia]}</h3>
 
                 {treinosDia.length > 0 ? (
                   <div className="space-y-2">
@@ -337,18 +309,15 @@ export const Home = () => {
             </thead>
             <tbody>
               {(() => {
-                const horariosSet = new Set();
+                const horariosSet = new Set<string>();
                 data.horarios.forEach((item) => {
-                  if (item.comp !== "-") horariosSet.add(item.comp);
-                  if (item.geral !== "-") horariosSet.add(item.geral);
-                  if (item.feminino !== "-") horariosSet.add(item.feminino);
-                  if (item.noturno !== "-") horariosSet.add(item.noturno);
+                  horariosSet.add(item.startTime);
                 });
                 const horarios = Array.from(horariosSet).sort(
                   (a, b) =>
-                    getHorarioInicioEmMinutos(a as string) -
-                    getHorarioInicioEmMinutos(b as string),
-                ) as string[];
+                    getHorarioInicioEmMinutos(a) -
+                    getHorarioInicioEmMinutos(b),
+                );
 
                 return horarios.map((horario: string) => (
                   <tr key={horario}>
@@ -356,45 +325,35 @@ export const Home = () => {
                       {horario}
                     </td>
                     {diasSemana.map((dia) => {
-                      const diaTreino = data.horarios.find(
-                        (d) => d.dia === dia,
+                      const treino = data.horarios.find(
+                        (h) => h.weekday === dia && h.startTime === horario,
                       );
-                      if (!diaTreino) return null;
 
-                      let tipo = null;
-                      let professor = "";
-                      if (diaTreino.comp === horario) tipo = "Competição";
-                      else if (diaTreino.geral === horario) tipo = "Geral";
-                      else if (diaTreino.feminino === horario)
-                        tipo = "Feminino";
-                      else if (diaTreino.noturno === horario) tipo = "Noturno";
+                      if (!treino) return (
+                        <td
+                          key={`${dia}-${horario}`}
+                          className="border border-zinc-800 p-3 text-center bg-zinc-900/30"
+                        />
+                      );
 
-                      if (diaTreino.comp === horario)
-                        professor = diaTreino.professorComp;
-                      else if (diaTreino.geral === horario)
-                        professor = diaTreino.professorGeral;
-                      else if (diaTreino.feminino === horario)
-                        professor = diaTreino.professorFeminino;
-                      else if (diaTreino.noturno === horario)
-                        professor = diaTreino.professorNoturno;
+                      const tipo = TRAINING_CATEGORY_LABELS[treino.category];
+                      const professor = treino.member;
 
                       return (
                         <td
                           key={`${dia}-${horario}`}
                           className="border border-zinc-800 p-3 text-center bg-zinc-900/30"
                         >
-                          {tipo && (
-                            <div className="flex flex-col items-center justify-center gap-1">
-                              <span
-                                className={`text-base font-semibold ${getCorTipo(tipo)}`}
-                              >
-                                {tipo === "Geral" ? "GERAL" : tipo}
-                              </span>
-                              <span className="text-xs text-gray-400 leading-none">
-                                ({professor})
-                              </span>
-                            </div>
-                          )}
+                          <div className="flex flex-col items-center justify-center gap-1">
+                            <span
+                              className={`text-base font-semibold ${getCorTipo(tipo)}`}
+                            >
+                              {tipo === "Geral" ? "GERAL" : tipo}
+                            </span>
+                            <span className="text-xs text-gray-400 leading-none">
+                              ({professor})
+                            </span>
+                          </div>
                         </td>
                       );
                     })}
