@@ -94,10 +94,10 @@ const Layout = ({ children }: LayoutProps) => {
             </div>
             
             <div className="flex items-center gap-6">
-              <a href="#" className="text-gray-400 hover:text-primary transition-colors">
+              <a href="https://www.instagram.com/jiujitsu.unicamp/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-primary transition-colors">
                 <Instagram size={24} />
               </a>
-              <a href="#" className="text-gray-400 hover:text-primary transition-colors">
+              <a href="https://maps.app.goo.gl/r88brrFBeAUawRVN8" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-primary transition-colors">
                 <MapPin size={24} />
               </a>
             </div>
