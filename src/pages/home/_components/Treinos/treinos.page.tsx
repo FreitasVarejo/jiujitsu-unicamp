@@ -1,10 +1,14 @@
-import { MapPin, Clock, ArrowRight } from "lucide-react";
-import { data } from "@/data";
+import { MapPin, Clock, ArrowRight, Loader2 } from "lucide-react";
 import { SectionHeader } from "../SectionHeader";
 import { Link } from "react-router-dom";
 import { Weekday, WEEKDAY_INFO, WEEKDAYS, TRAINING_TYPE_INFO } from "@/constants";
+import { useEffect, useState } from "react";
+import { TrainingSchedule } from "@/types/media";
+import { mediaService } from "@/services/mediaService";
 
 const Treinos = () => {
+  const [trainings, setTrainings] = useState<TrainingSchedule[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const getHorarioInicioEmMinutos = (horario: string) => {
     const match = horario.match(/(\d{1,2}):(\d{2})/);
@@ -16,7 +20,7 @@ const Treinos = () => {
   };
 
   const getTreinosPorDia = (dia: Weekday) => {
-    return data.horarios
+    return trainings
       .filter((h) => h.weekday === dia)
       .map((h) => ({
         tipo: TRAINING_TYPE_INFO[h.category].label,
@@ -31,6 +35,21 @@ const Treinos = () => {
       );
   };
 
+  useEffect(() => {
+    const fetchTrainings = async () => {
+      try {
+        const trainingsData = await mediaService.getAllTrainings();
+        setTrainings(trainingsData);
+      } catch (error) {
+        console.error("Erro ao carregar horários de treinos:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTrainings();
+  }, []);
+
 
   return (
     <div className="flex flex-col gap-16 py-12">
@@ -38,6 +57,12 @@ const Treinos = () => {
       <section className="container mx-auto px-4">
         <SectionHeader title="Horários de Treino" icon={Clock} />
 
+        {loading ? (
+          <div className="flex justify-center py-12">
+            <Loader2 className="w-8 h-8 text-primary animate-spin" />
+          </div>
+        ) : (
+          <>
         <div className="md:hidden space-y-4">
           {WEEKDAYS.map((dia) => {
             const treinosDia = getTreinosPorDia(dia);
@@ -104,7 +129,7 @@ const Treinos = () => {
             <tbody>
               {(() => {
                 const horariosSet = new Set<string>();
-                data.horarios.forEach((item) => {
+                trainings.forEach((item) => {
                   horariosSet.add(item.startTime);
                 });
                 const horarios = Array.from(horariosSet).sort(
@@ -119,7 +144,7 @@ const Treinos = () => {
                       {horario}
                     </td>
                     {WEEKDAYS.map((dia) => {
-                      const treino = data.horarios.find(
+                      const treino = trainings.find(
                         (h) => h.weekday === dia && h.startTime === horario,
                       );
 
@@ -158,6 +183,8 @@ const Treinos = () => {
             </tbody>
           </table>
         </div>
+        </>
+        )}
       </section>
 
       {/* 2. Localização */}

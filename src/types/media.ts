@@ -29,3 +29,14 @@ export interface Product extends BaseGaleryEntity {
   price: string;
   sizes: string[];
 }
+
+import { Weekday, TrainingType } from "../constants";
+
+export interface TrainingSchedule {
+  id: string;
+  weekday: Weekday;
+  category: TrainingType;
+  startTime: string;
+  endTime: string;
+  member: string;
+}

@@ -2,6 +2,7 @@ export enum MediaType {
   EVENTS = "events",
   PRODUCTS = "products",
   MEMBERS = "members",
+  TRAININGS = "trainings",
 }
 
 export const MEDIA_INFO = {
@@ -16,5 +17,9 @@ export const MEDIA_INFO = {
   [MediaType.MEMBERS]: {
     root: "/membros",
     index: "/membros/index.json",
+  },
+  [MediaType.TRAININGS]: {
+    root: "/treinos",
+    index: "/treinos/info.json",
   },
 } as const;

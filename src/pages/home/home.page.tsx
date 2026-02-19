@@ -15,12 +15,14 @@ import {
   beltConfig,
 } from "./_components";
 import { mediaService, MemberInfo } from "@/services/mediaService";
-import { data } from "@/data";
+import { TrainingSchedule } from "@/types/media";
 import { Weekday, WEEKDAY_INFO, WEEKDAYS, TRAINING_TYPE_INFO } from "@/constants";
 
 export const Home = () => {
   const [members, setMembers] = useState<MemberInfo[]>([]);
+  const [trainings, setTrainings] = useState<TrainingSchedule[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingTrainings, setLoadingTrainings] = useState(true);
 
   const getHorarioInicioEmMinutos = (horario: string) => {
     const match = horario.match(/(\d{1,2}):(\d{2})/);
@@ -32,7 +34,7 @@ export const Home = () => {
   };
 
   const getTreinosPorDia = (dia: Weekday) => {
-    return data.horarios
+    return trainings
       .filter((h) => h.weekday === dia)
       .map((h) => ({
         tipo: TRAINING_TYPE_INFO[h.category].label,
@@ -64,7 +66,19 @@ export const Home = () => {
       }
     };
 
+    const fetchTrainings = async () => {
+      try {
+        const trainingsData = await mediaService.getAllTrainings();
+        setTrainings(trainingsData);
+      } catch (error) {
+        console.error("Erro ao carregar horários de treinos:", error);
+      } finally {
+        setLoadingTrainings(false);
+      }
+    };
+
     fetchMembers();
+    fetchTrainings();
   }, []);
 
   return (
@@ -294,7 +308,7 @@ export const Home = () => {
             <tbody>
               {(() => {
                 const horariosSet = new Set<string>();
-                data.horarios.forEach((item) => {
+                trainings.forEach((item) => {
                   horariosSet.add(item.startTime);
                 });
                 const horarios = Array.from(horariosSet).sort(
@@ -309,7 +323,7 @@ export const Home = () => {
                       {horario}
                     </td>
                     {WEEKDAYS.map((dia) => {
-                      const treino = data.horarios.find(
+                      const treino = trainings.find(
                         (h) => h.weekday === dia && h.startTime === horario,
                       );
 

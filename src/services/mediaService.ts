@@ -1,7 +1,7 @@
 import { BaseMediaService } from "./baseMediaService";
-import { eventAdapter, productAdapter, memberAdapter } from "../adapters";
+import { eventAdapter, productAdapter, memberAdapter, trainingAdapter } from "../adapters";
 import { MediaType } from "../constants";
-import { Event, Product, Member } from "../types/media";
+import { Event, Product, Member, TrainingSchedule } from "../types/media";
 
 // Maintain compatibility for names if needed, but using clean types
 export type EventInfo = Event;
@@ -86,6 +86,20 @@ export const mediaService = {
       return rawMembers.map((raw: any) => memberAdapter(raw, raw.id));
     } catch (error) {
       console.error("Erro ao buscar todos os membros:", error);
+      return [];
+    }
+  },
+
+  getAllTrainings: async (): Promise<TrainingSchedule[]> => {
+    try {
+      const response = await fetch(BaseMediaService.getUrl("/treinos/info.json"));
+      if (!response.ok) throw new Error("Falha ao carregar horários de treinos");
+      
+      const rawTrainings = await response.json();
+      
+      return rawTrainings.map((raw: any) => trainingAdapter(raw));
+    } catch (error) {
+      console.error("Erro ao buscar horários de treinos:", error);
       return [];
     }
   },
