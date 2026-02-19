@@ -1,9 +1,9 @@
 import { Member } from "../types/media";
-import { MEDIA_PATHS, MediaType } from "../constants/media";
+import { MEDIA_INFO, MediaType } from "../constants";
 import { BaseMediaService } from "../services/baseMediaService";
 
 export const memberAdapter = (raw: any, id: string): Member => {
-  const rootPath = MEDIA_PATHS[MediaType.MEMBERS].root;
+  const rootPath = MEDIA_INFO[MediaType.MEMBERS].root;
   const coverFile = raw.cover || raw.coverImage;
   
   let finalCoverImage = undefined;

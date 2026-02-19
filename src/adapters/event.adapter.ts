@@ -1,10 +1,10 @@
 import { Event } from "../types/media";
 import { BaseMediaService } from "../services/baseMediaService";
-import { MEDIA_PATHS, MediaType } from "../constants/media";
+import { MEDIA_INFO, MediaType } from "../constants";
 import { resolveFullCoverUrl } from "./adapters.handlers";
 
 export const eventAdapter = (raw: any, id: string): Event => {
-  const rootPath = MEDIA_PATHS[MediaType.EVENTS].root;
+  const rootPath = MEDIA_INFO[MediaType.EVENTS].root;
   const gallery = BaseMediaService.processGallery(
     rootPath,
     id,

@@ -1,6 +1,6 @@
 import { BaseMediaService } from "./baseMediaService";
 import { eventAdapter, productAdapter, memberAdapter } from "../adapters";
-import { MediaType } from "../constants/media";
+import { MediaType } from "../constants";
 import { Event, Product, Member } from "../types/media";
 
 // Maintain compatibility for names if needed, but using clean types

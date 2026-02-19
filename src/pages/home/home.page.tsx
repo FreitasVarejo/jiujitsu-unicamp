@@ -16,28 +16,11 @@ import {
 } from "./_components";
 import { mediaService, MemberInfo } from "@/services/mediaService";
 import { data } from "@/data";
-import { Weekday, WEEKDAY_LABELS } from "@/constants/date";
-import { TRAINING_CATEGORY_LABELS } from "@/constants/treinos";
+import { Weekday, WEEKDAY_INFO, WEEKDAYS, TRAINING_TYPE_INFO } from "@/constants";
 
 export const Home = () => {
   const [members, setMembers] = useState<MemberInfo[]>([]);
   const [loading, setLoading] = useState(true);
-  const diasSemana = [
-    Weekday.Segunda,
-    Weekday.Terca,
-    Weekday.Quarta,
-    Weekday.Quinta,
-    Weekday.Sexta,
-  ];
-  const diasAbreviados = ["SEG", "TER", "QUA", "QUI", "SEX"];
-
-  const getCorTipo = (tipo: string) => {
-    if (tipo === "Competição") return "text-yellow-300";
-    if (tipo === "Geral") return "text-orange-300";
-    if (tipo === "Feminino") return "text-red-400";
-    if (tipo === "Noturno") return "text-blue-400";
-    return "text-white";
-  };
 
   const getHorarioInicioEmMinutos = (horario: string) => {
     const match = horario.match(/(\d{1,2}):(\d{2})/);
@@ -52,7 +35,8 @@ export const Home = () => {
     return data.horarios
       .filter((h) => h.weekday === dia)
       .map((h) => ({
-        tipo: TRAINING_CATEGORY_LABELS[h.category],
+        tipo: TRAINING_TYPE_INFO[h.category].label,
+        cor: TRAINING_TYPE_INFO[h.category].color,
         horario: h.startTime,
         professor: h.member,
       }))
@@ -246,7 +230,7 @@ export const Home = () => {
         <SectionHeader title="Horários de Treino" icon={Clock} />
 
         <div className="md:hidden space-y-4">
-          {diasSemana.map((dia) => {
+          {WEEKDAYS.map((dia) => {
             const treinosDia = getTreinosPorDia(dia);
 
             return (
@@ -254,7 +238,7 @@ export const Home = () => {
                 key={dia}
                 className="rounded-lg border border-zinc-800 bg-zinc-900 p-4"
               >
-                <h3 className="font-display text-lg text-white mb-3">{WEEKDAY_LABELS[dia]}</h3>
+                <h3 className="font-display text-lg text-white mb-3">{WEEKDAY_INFO[dia].label}</h3>
 
                 {treinosDia.length > 0 ? (
                   <div className="space-y-2">
@@ -265,7 +249,7 @@ export const Home = () => {
                       >
                         <div className="flex flex-col">
                           <span
-                            className={`text-sm font-semibold ${getCorTipo(treino.tipo)}`}
+                            className={`text-sm font-semibold ${treino.cor}`}
                           >
                             {treino.tipo === "Geral" ? "GERAL" : treino.tipo}
                           </span>
@@ -297,12 +281,12 @@ export const Home = () => {
                 >
                   Horários / Dias
                 </th>
-                {diasAbreviados.map((dia) => (
+                {WEEKDAYS.map((dia) => (
                   <th
                     key={dia}
                     className="border border-zinc-800 p-3 bg-zinc-900 text-white font-display text-lg"
                   >
-                    {dia}
+                    {WEEKDAY_INFO[dia].short}
                   </th>
                 ))}
               </tr>
@@ -324,7 +308,7 @@ export const Home = () => {
                     <td className="border border-zinc-800 p-3 bg-zinc-900/50 text-white font-bold text-center">
                       {horario}
                     </td>
-                    {diasSemana.map((dia) => {
+                    {WEEKDAYS.map((dia) => {
                       const treino = data.horarios.find(
                         (h) => h.weekday === dia && h.startTime === horario,
                       );
@@ -336,7 +320,7 @@ export const Home = () => {
                         />
                       );
 
-                      const tipo = TRAINING_CATEGORY_LABELS[treino.category];
+                      const info = TRAINING_TYPE_INFO[treino.category];
                       const professor = treino.member;
 
                       return (
@@ -346,9 +330,9 @@ export const Home = () => {
                         >
                           <div className="flex flex-col items-center justify-center gap-1">
                             <span
-                              className={`text-base font-semibold ${getCorTipo(tipo)}`}
+                              className={`text-base font-semibold ${info.color}`}
                             >
-                              {tipo === "Geral" ? "GERAL" : tipo}
+                              {info.label === "Geral" ? "GERAL" : info.label}
                             </span>
                             <span className="text-xs text-gray-400 leading-none">
                               ({professor})

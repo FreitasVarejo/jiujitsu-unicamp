@@ -1,10 +1,10 @@
 import { Product } from "../types/media";
 import { BaseMediaService } from "../services/baseMediaService";
-import { MEDIA_PATHS, MediaType } from "../constants/media";
+import { MEDIA_INFO, MediaType } from "../constants";
 import { resolveFullCoverUrl } from "./adapters.handlers";
 
 export const productAdapter = (raw: any, id: string): Product => {
-  const rootPath = MEDIA_PATHS[MediaType.PRODUCTS].root;
+  const rootPath = MEDIA_INFO[MediaType.PRODUCTS].root;
   const gallery = BaseMediaService.processGallery(
     rootPath,
     id,

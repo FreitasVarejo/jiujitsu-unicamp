@@ -4,7 +4,7 @@ export enum MediaType {
   MEMBERS = "members",
 }
 
-export const MEDIA_PATHS = {
+export const MEDIA_INFO = {
   [MediaType.EVENTS]: {
     root: "/eventos",
     index: "/eventos/index.json",

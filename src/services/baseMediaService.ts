@@ -1,4 +1,4 @@
-import { MediaType, MEDIA_PATHS } from '../constants/media';
+import { MediaType, MEDIA_INFO } from '../constants';
 
 const VITE_MEDIA_BASE_URL = import.meta.env.VITE_MEDIA_BASE_URL || '/media';
 
@@ -11,7 +11,7 @@ export class BaseMediaService {
   }
 
   static async fetchIndex(type: MediaType): Promise<any> {
-    const path = MEDIA_PATHS[type].index;
+    const path = MEDIA_INFO[type].index;
     const url = this.getUrl(path);
     const response = await fetch(url, {
       headers: {
@@ -29,7 +29,7 @@ export class BaseMediaService {
   }
 
   static async fetchItemInfo<T>(type: MediaType, id: string): Promise<T> {
-    const rootPath = MEDIA_PATHS[type].root;
+    const rootPath = MEDIA_INFO[type].root;
     const url = this.getUrl(`${rootPath}/${id}/info.json`);
     const response = await fetch(url, {
       headers: {
