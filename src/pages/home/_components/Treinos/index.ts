@@ -1,1 +1,3 @@
-export * from "./treinos.page";
+export * from "./Treinos.component";
+export * from "./useTrainings.hook";
+export * from "./trainings.utils";

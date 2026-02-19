@@ -1,3 +1,5 @@
+import { Belt } from "@/constants";
+
 export interface BaseEntity {
   id: string;
   slug: string;
@@ -7,7 +9,7 @@ export interface BaseEntity {
 export interface Member extends BaseEntity {
   year: string;
   course: string;
-  belt: string;
+  belt: Belt;
   coverImage?: string;
 }
 

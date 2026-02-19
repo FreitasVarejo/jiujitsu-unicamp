@@ -1,2 +1,3 @@
-export * from "./guia.page";
-export * from "./Accordion";
+export * from "./Guia.component";
+export * from "./InfoCard.component";
+export * from "./FAQ.component";
