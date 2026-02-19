@@ -31,10 +31,14 @@ export const TrainingScheduleDesktop = ({ trainings }: TrainingScheduleDesktopPr
           </tr>
         </thead>
         <tbody>
-          {horarios.map((horario: string) => (
+          {horarios.map((horario: string) => {
+            const treinoComHorario = trainings.find((t) => t.startTime === horario);
+            const endTime = treinoComHorario?.endTime;
+
+            return (
             <tr key={horario}>
               <td className="border border-zinc-800 p-3 bg-zinc-900/50 text-white font-bold text-center">
-                {horario}
+                {endTime ? `${horario} – ${endTime}` : horario}
               </td>
               {WEEKDAYS.map((dia: Weekday) => {
                 const treino = trainings.find(
@@ -72,7 +76,8 @@ export const TrainingScheduleDesktop = ({ trainings }: TrainingScheduleDesktopPr
                 );
               })}
             </tr>
-          ))}
+          );
+          })}
         </tbody>
       </table>
     </div>

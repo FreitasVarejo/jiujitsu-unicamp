@@ -39,7 +39,7 @@ export const TrainingScheduleMobile = ({ trainings }: TrainingScheduleMobileProp
                       </span>
                     </div>
                     <span className="text-sm text-white font-medium">
-                      {treino.horario}
+                      {treino.horarioFim ? `${treino.horario} – ${treino.horarioFim}` : treino.horario}
                     </span>
                   </div>
                 ))}
