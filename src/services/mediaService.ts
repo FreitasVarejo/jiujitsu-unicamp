@@ -103,4 +103,16 @@ export const mediaService = {
       return [];
     }
   },
+
+  getHeroImages: async (): Promise<string[]> => {
+    try {
+      const response = await fetch(BaseMediaService.getUrl("/hero/index.json"));
+      if (!response.ok) throw new Error("Falha ao carregar imagens do hero");
+      const files: string[] = await response.json();
+      return files.map((file) => BaseMediaService.getUrl(`/hero/${file}`));
+    } catch (error) {
+      console.error("Erro ao buscar imagens do hero:", error);
+      return [];
+    }
+  },
 };

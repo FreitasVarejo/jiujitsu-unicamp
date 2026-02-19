@@ -22,9 +22,9 @@ const Layout = ({ children }: LayoutProps) => {
       {/* Navbar */}
       <nav className="border-b border-white/10 sticky top-0 bg-black/95 backdrop-blur-sm z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex items-center justify-between h-20">
             <div className="flex-shrink-0">
-              <Link to="/" className="font-display text-2xl font-bold tracking-wider text-primary">
+              <Link to="/" className="font-display text-3xl font-bold tracking-wider text-primary">
                 BJJ <span className="text-white">UNICAMP</span>
               </Link>
             </div>
