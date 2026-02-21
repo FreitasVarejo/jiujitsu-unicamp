@@ -6,7 +6,6 @@ export class BaseMediaService {
   static getUrl(path: string): string {
     const cleanPath = path.startsWith('/') ? path : `/${path}`;
     const url = `${VITE_MEDIA_BASE_URL}${cleanPath}`;
-    console.log(`[BaseMediaService] Generated URL: ${url}`);
     return url;
   }
 

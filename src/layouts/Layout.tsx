@@ -90,7 +90,7 @@ const Layout = ({ children }: LayoutProps) => {
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="text-center md:text-left">
               <h3 className="text-xl font-display text-white">Jiu-Jitsu Unicamp</h3>
-              <p className="text-gray-500 text-sm mt-1">Desde 20xx - Campinas, SP</p>
+              <p className="text-gray-500 text-sm mt-1">Desde 2018 - Campinas, SP</p>
             </div>
             
             <div className="flex items-center gap-6">

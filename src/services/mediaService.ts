@@ -76,32 +76,17 @@ export const mediaService = {
   },
 
   getAllMembers: async (): Promise<MemberInfo[]> => {
-    try {
-      const response = await fetch(BaseMediaService.getUrl("/membros/info.json"));
-      if (!response.ok) throw new Error("Falha ao carregar lista de membros");
-      
-      const rawMembers = await response.json();
-      
-      // Mapear usando o adaptador, mas precisamos ajustar como o adaptador lida com imagens
-      return rawMembers.map((raw: any) => memberAdapter(raw, raw.id));
-    } catch (error) {
-      console.error("Erro ao buscar todos os membros:", error);
-      return [];
-    }
+    const response = await fetch(BaseMediaService.getUrl("/membros/info.json"));
+    if (!response.ok) throw new Error("Falha ao carregar lista de membros");
+    const rawMembers = await response.json();
+    return rawMembers.map((raw: any) => memberAdapter(raw, raw.id));
   },
 
   getAllTrainings: async (): Promise<TrainingSchedule[]> => {
-    try {
-      const response = await fetch(BaseMediaService.getUrl("/treinos/info.json"));
-      if (!response.ok) throw new Error("Falha ao carregar horários de treinos");
-      
-      const rawTrainings = await response.json();
-      
-      return rawTrainings.map((raw: any) => trainingAdapter(raw));
-    } catch (error) {
-      console.error("Erro ao buscar horários de treinos:", error);
-      return [];
-    }
+    const response = await fetch(BaseMediaService.getUrl("/treinos/info.json"));
+    if (!response.ok) throw new Error("Falha ao carregar horários de treinos");
+    const rawTrainings = await response.json();
+    return rawTrainings.map((raw: any) => trainingAdapter(raw));
   },
 
   getHeroImages: async (): Promise<string[]> => {

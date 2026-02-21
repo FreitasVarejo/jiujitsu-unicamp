@@ -13,7 +13,6 @@ export const eventAdapter = (raw: any, id: string): Event => {
 
   return {
     id,
-    slug: id,
     title: raw.title,
     date: raw.date,
     location: raw.location,

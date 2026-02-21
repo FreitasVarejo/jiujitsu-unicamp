@@ -2,7 +2,6 @@ import { Belt } from "@/constants";
 
 export interface BaseEntity {
   id: string;
-  slug: string;
   title: string;
 }
 
@@ -13,19 +12,19 @@ export interface Member extends BaseEntity {
   coverImage?: string;
 }
 
-export interface BaseGaleryEntity extends BaseEntity {
+export interface BaseGalleryEntity extends BaseEntity {
   coverImage?: string;
   gallery: string[];
 }
 
-export interface Event extends BaseGaleryEntity {
+export interface Event extends BaseGalleryEntity {
   description: string;
   category: string;
   date: string;
   location: string;
 }
 
-export interface Product extends BaseGaleryEntity {
+export interface Product extends BaseGalleryEntity {
   description: string;
   category: string;
   price: string;

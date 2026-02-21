@@ -8,7 +8,7 @@ services:
     networks:
       - proxy_net
     volumes:
-      - ${DATA_PATH:-/home/saul/jiujitsu-data}/media:/usr/share/nginx/html/media
+      - ${DATA_PATH:-/data/jiujitsu}/media:/usr/share/nginx/html/media
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.jiujitsu.rule=Host(`jiujitsuunicamp.com.br`)"
@@ -23,8 +23,8 @@ services:
     networks:
       - proxy_net
     volumes:
-      - ${DATA_PATH:-/home/saul/jiujitsu-data}/media:/srv
-      - ${DATA_PATH:-/home/saul/jiujitsu-data}/filebrowser:/database
+      - ${DATA_PATH:-/data/jiujitsu}/media:/srv
+      - ${DATA_PATH:-/data/jiujitsu}/filebrowser:/database
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.files.rule=Host(`files.jiujitsuunicamp.com.br`)"
@@ -37,7 +37,7 @@ services:
     user: "0:0"
     restart: unless-stopped
     volumes:
-      - ${DATA_PATH:-/home/saul/jiujitsu-data}/media:/media
+      - ${DATA_PATH:-/data/jiujitsu}/media:/media
     command: sh -c "while true; do chmod -R 644 /media; find /media -type d -exec chmod 755 {} +; sleep 5; done"
     labels:
       - "autoheal=true"

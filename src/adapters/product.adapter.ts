@@ -13,7 +13,6 @@ export const productAdapter = (raw: any, id: string): Product => {
 
   return {
     id,
-    slug: id,
     title: raw.title,
     description: raw.description,
     price: raw.price,

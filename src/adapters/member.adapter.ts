@@ -23,7 +23,6 @@ export const memberAdapter = (raw: any, id: string): Member => {
 
   return {
     id,
-    slug: id,
     title: raw.title,
     year: raw.year,
     course: raw.course,

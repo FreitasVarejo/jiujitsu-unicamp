@@ -58,7 +58,7 @@ export const useEvents = () => {
         foldersToFetch.map(async (id) => {
           try {
             return await mediaService.getEventInfo(id);
-          } catch (e) {
+          } catch {
             return null;
           }
         })
@@ -107,7 +107,7 @@ export const useEvents = () => {
             const results = await Promise.all(
               batch.map(async (f) => {
                 try { return await mediaService.getEventInfo(f.id); } 
-                catch (e) { return null; }
+                catch { return null; }
               })
             );
             
