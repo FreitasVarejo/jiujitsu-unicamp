@@ -1,17 +1,13 @@
-import { BaseMediaService } from "../services/baseMediaService";
+import { BaseMediaService, StrapiMediaFile } from '../services/baseMediaService';
 
-export const resolveFullCoverUrl = (
-  raw: any,
-  id: string,
-  rootPath: string,
-  galleryUrls?: string[],
-): string | undefined => {
-  const coverFile = raw.cover || raw.coverImage;
-  if (coverFile && typeof coverFile === "string") {
-    if (coverFile.startsWith("http") || coverFile.startsWith("/")) {
-      return coverFile;
-    }
-    return BaseMediaService.getUrl(`${rootPath}/${id}/${coverFile}`);
-  }
-  return galleryUrls?.[0];
+export const resolveMediaUrl = (file: StrapiMediaFile | null | undefined): string | undefined => {
+  if (!file?.url) return undefined;
+  return BaseMediaService.resolveMediaUrl(file.url);
+};
+
+export const resolveGalleryUrls = (files: StrapiMediaFile[] | null | undefined): string[] => {
+  if (!files || !Array.isArray(files)) return [];
+  return files
+    .map((f) => BaseMediaService.resolveMediaUrl(f.url))
+    .filter(Boolean) as string[];
 };

@@ -29,7 +29,7 @@ export const getTreinosPorDia = (trainings: TrainingSchedule[], dia: Weekday) =>
       cor: TRAINING_TYPE_INFO[h.category].color,
       horario: h.startTime,
       horarioFim: h.endTime,
-      professor: h.member,
+      professor: h.instructor,
     }))
     .sort(
       (a, b) =>

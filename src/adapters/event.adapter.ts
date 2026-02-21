@@ -1,24 +1,17 @@
-import { Event } from "../types/media";
-import { BaseMediaService } from "../services/baseMediaService";
-import { MEDIA_INFO, MediaType } from "../constants";
-import { resolveFullCoverUrl } from "./adapters.handlers";
+import { Event } from '../types/media';
+import { resolveMediaUrl, resolveGalleryUrls } from './adapters.handlers';
 
-export const eventAdapter = (raw: any, id: string): Event => {
-  const rootPath = MEDIA_INFO[MediaType.EVENTS].root;
-  const gallery = BaseMediaService.processGallery(
-    rootPath,
-    id,
-    raw.gallery || [],
-  );
+export const eventAdapter = (raw: any): Event => {
+  const gallery = resolveGalleryUrls(raw.gallery);
 
   return {
-    id,
+    id: raw.slug,
     title: raw.title,
     date: raw.date,
-    location: raw.location,
-    description: raw.description,
-    category: raw.category,
+    location: raw.location || '',
+    description: raw.description || '',
+    category: raw.category || '',
     gallery,
-    coverImage: resolveFullCoverUrl(raw, id, rootPath, gallery),
+    coverImage: resolveMediaUrl(raw.cover) ?? gallery[0],
   };
 };

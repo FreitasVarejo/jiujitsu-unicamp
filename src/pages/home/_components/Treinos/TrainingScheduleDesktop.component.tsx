@@ -55,7 +55,7 @@ export const TrainingScheduleDesktop = ({ trainings }: TrainingScheduleDesktopPr
                 }
 
                 const info = TRAINING_TYPE_INFO[treino.category];
-                const professor = treino.member;
+                const professor = treino.instructor;
 
                 return (
                   <td

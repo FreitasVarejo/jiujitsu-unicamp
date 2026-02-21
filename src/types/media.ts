@@ -39,5 +39,5 @@ export interface TrainingSchedule {
   category: TrainingType;
   startTime: string;
   endTime: string;
-  member: string;
+  instructor: string;
 }

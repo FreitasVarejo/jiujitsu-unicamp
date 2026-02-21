@@ -1,24 +1,17 @@
-import { Product } from "../types/media";
-import { BaseMediaService } from "../services/baseMediaService";
-import { MEDIA_INFO, MediaType } from "../constants";
-import { resolveFullCoverUrl } from "./adapters.handlers";
+import { Product } from '../types/media';
+import { resolveMediaUrl, resolveGalleryUrls } from './adapters.handlers';
 
-export const productAdapter = (raw: any, id: string): Product => {
-  const rootPath = MEDIA_INFO[MediaType.PRODUCTS].root;
-  const gallery = BaseMediaService.processGallery(
-    rootPath,
-    id,
-    raw.gallery || [],
-  );
+export const productAdapter = (raw: any): Product => {
+  const gallery = resolveGalleryUrls(raw.gallery);
 
   return {
-    id,
+    id: raw.slug,
     title: raw.title,
-    description: raw.description,
+    description: raw.description || '',
     price: raw.price,
-    category: raw.category,
-    sizes: raw.sizes || [],
+    category: raw.categoria?.name || raw.categoria?.slug || '',
+    sizes: Array.isArray(raw.sizes) ? raw.sizes : [],
     gallery,
-    coverImage: resolveFullCoverUrl(raw, id, rootPath, gallery),
+    coverImage: resolveMediaUrl(raw.cover) ?? gallery[0],
   };
 };

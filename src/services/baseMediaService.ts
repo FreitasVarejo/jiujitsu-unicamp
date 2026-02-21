@@ -1,51 +1,40 @@
-import { MediaType, MEDIA_INFO } from '../constants';
+const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:1337';
+const VITE_API_TOKEN = import.meta.env.VITE_API_TOKEN as string | undefined;
 
-const VITE_MEDIA_BASE_URL = import.meta.env.VITE_MEDIA_BASE_URL || '/media';
+export interface StrapiMediaFile {
+  url: string;
+  formats?: {
+    thumbnail?: { url: string };
+    small?: { url: string };
+    medium?: { url: string };
+    large?: { url: string };
+  };
+}
 
 export class BaseMediaService {
-  static getUrl(path: string): string {
-    const cleanPath = path.startsWith('/') ? path : `/${path}`;
-    const url = `${VITE_MEDIA_BASE_URL}${cleanPath}`;
-    return url;
+  static resolveMediaUrl(relativeUrl: string): string {
+    if (!relativeUrl) return '';
+    if (relativeUrl.startsWith('http')) return relativeUrl;
+    return `${VITE_API_BASE_URL}${relativeUrl}`;
   }
 
-  static async fetchIndex(type: MediaType): Promise<any> {
-    const path = MEDIA_INFO[type].index;
-    const url = this.getUrl(path);
-    const response = await fetch(url, {
-      headers: {
-        'Accept': 'application/json'
-      }
-    });
-    if (!response.ok) {
-      throw new Error(`Falha ao carregar o índice de ${type} em ${url}`);
+  static async get<T>(endpoint: string, params?: Record<string, string>): Promise<T> {
+    const url = new URL(`${VITE_API_BASE_URL}${endpoint}`);
+    if (params) {
+      Object.entries(params).forEach(([key, value]) => url.searchParams.set(key, value));
     }
-    const contentType = response.headers.get("content-type");
-    if (contentType && !contentType.includes("application/json")) {
-      console.error(`[BaseMediaService] Expected JSON but got ${contentType} for ${url}`);
+
+    const headers: Record<string, string> = {
+      'Accept': 'application/json',
+    };
+    if (VITE_API_TOKEN) {
+      headers['Authorization'] = `Bearer ${VITE_API_TOKEN}`;
+    }
+
+    const response = await fetch(url.toString(), { headers });
+    if (!response.ok) {
+      throw new Error(`Falha na requisição ${endpoint}: ${response.status}`);
     }
     return response.json();
-  }
-
-  static async fetchItemInfo<T>(type: MediaType, id: string): Promise<T> {
-    const rootPath = MEDIA_INFO[type].root;
-    const url = this.getUrl(`${rootPath}/${id}/info.json`);
-    const response = await fetch(url, {
-      headers: {
-        'Accept': 'application/json'
-      }
-    });
-    if (!response.ok) {
-      throw new Error(`Falha ao carregar info de ${type}: ${id} em ${url}`);
-    }
-    const contentType = response.headers.get("content-type");
-    if (contentType && !contentType.includes("application/json")) {
-      console.error(`[BaseMediaService] Expected JSON but got ${contentType} for ${url}`);
-    }
-    return response.json();
-  }
-
-  static processGallery(rootPath: string, id: string, files: string[]): string[] {
-    return (files || []).map(file => this.getUrl(`${rootPath}/${id}/${file}`));
   }
 }

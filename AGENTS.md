@@ -6,7 +6,7 @@ Coding agent reference for the `jiujitsu-unicamp` repository. Read this before m
 
 ## Project Overview
 
-Frontend SPA for the Jiu-Jitsu Unicamp team website. Built with React 19 + Vite 7 + Tailwind CSS v3. Data is fetched from a remote static JSON/media server (`jiujitsuunicamp.com.br`). No backend code lives in this repo. Deployed via Docker + Nginx through a GitHub Actions self-hosted runner on every push to `main`.
+Frontend SPA for the Jiu-Jitsu Unicamp team website. Built with React 19 + Vite 7 + Tailwind CSS v3. Data is fetched from the `jiujitsu-backend` Strapi v5 CMS via REST API. No backend code lives in this repo. Deployed via Docker + Nginx through a GitHub Actions self-hosted runner on every push to `main`.
 
 ---
 
@@ -38,11 +38,39 @@ docker compose up -d --build   # Build and run the production image (Nginx)
 
 ---
 
+## Local Development Setup
+
+The frontend fetches all data from the `jiujitsu-backend` Strapi instance. To run locally:
+
+1. **Start the backend** — clone `jiujitsu-backend`, copy `.env.example` to `.env`, fill in secrets, then run `npm run dev` (or `docker compose up -d`). Strapi will be available at `http://localhost:1337`.
+
+2. **Configure the frontend env** — copy `.env.example` to `.env.local` and fill in:
+
+   ```
+   VITE_API_BASE_URL=http://localhost:1337
+   VITE_API_TOKEN=<read-only API token generated in the Strapi admin panel>
+   ```
+
+   To generate a token: open `http://localhost:1337/admin` → Settings → API Tokens → Create new token (type: Read-only).
+
+3. **Run the frontend** — `npm run dev`. No proxy is needed; Strapi's CORS already allows `localhost:5173`.
+
+### Environment variables
+
+| Variable | Purpose | Example |
+|---|---|---|
+| `VITE_API_BASE_URL` | Base URL of the Strapi backend | `http://localhost:1337` (dev) / `https://files.jiujitsuunicamp.com.br` (prod) |
+| `VITE_API_TOKEN` | Read-only Strapi API token — sent as `Authorization: Bearer` on every request | *(generate in Strapi admin)* |
+
+Both variables are consumed by `BaseMediaService` in `src/services/baseMediaService.ts`. `VITE_API_TOKEN` is optional: if absent, requests are sent without an `Authorization` header (useful when Strapi endpoints are configured as public).
+
+---
+
 ## Repository Structure
 
 ```
 src/
-├── adapters/        # Raw API JSON → typed domain model (one file per entity)
+├── adapters/        # Strapi REST response → typed domain model (one file per entity)
 ├── components/      # Globally shared components (e.g. ScrollToTop)
 ├── constants/       # Enums + companion lookup maps (Belt, Weekday, TrainingType, MediaType)
 ├── layouts/         # App shell: Layout.tsx wraps every page with navbar + footer
@@ -58,6 +86,50 @@ src/
 ```
 
 Every folder exposes a barrel `index.ts` that re-exports its public surface. Always update or create the `index.ts` when adding new exports to a folder.
+
+---
+
+## Data Layer Architecture
+
+### `BaseMediaService` (`src/services/baseMediaService.ts`)
+
+Low-level HTTP client for the Strapi API. Key members:
+
+- `get<T>(endpoint, params?)` — performs an authenticated `fetch` to `{VITE_API_BASE_URL}{endpoint}` with optional query string params. Throws on non-OK responses.
+- `resolveMediaUrl(relativeUrl)` — converts a Strapi-relative media URL (e.g. `/uploads/foto.jpg`) to an absolute URL by prepending `VITE_API_BASE_URL`. Pass-through for URLs that are already absolute.
+- `StrapiMediaFile` — exported interface `{ url: string; formats?: { thumbnail?, small?, medium?, large? } }` representing a Strapi upload object.
+
+### `mediaService` (`src/services/mediaService.ts`)
+
+Public singleton that exposes typed, domain-level data methods. All methods call `BaseMediaService.get()` with the appropriate Strapi endpoint and `populate`/`pagination` params, then pass the raw response through the relevant adapter.
+
+| Method | Strapi endpoint |
+|---|---|
+| `getHeroImages()` | `GET /api/hero-carousel?populate=images` |
+| `getAllMembers()` | `GET /api/membros?populate=photo&pagination[limit]=250` |
+| `getAllTrainings()` | `GET /api/treinos?sort[0]=weekday&sort[1]=startTime&pagination[limit]=250` |
+| `getEventIndex()` | `GET /api/eventos?fields[0]=slug&fields[1]=date&sort[0]=date:desc&pagination[limit]=250` |
+| `getEventInfo(slug)` | `GET /api/eventos?filters[slug][$eq]={slug}&populate[0]=cover&populate[1]=gallery` |
+| `getAllProducts()` | `GET /api/produtos?populate[0]=cover&populate[1]=gallery&populate[2]=categoria&pagination[limit]=250` |
+| `getProductCategories()` | `GET /api/categoria-produtos?pagination[limit]=250` |
+
+### Adapters (`src/adapters/`)
+
+Each adapter maps a raw Strapi response item to a typed domain object. Helper functions in `adapters.handlers.ts`:
+
+- `resolveMediaUrl(file)` — takes a `StrapiMediaFile | null | undefined`, returns the resolved absolute URL string or `undefined`.
+- `resolveGalleryUrls(files)` — maps an array of `StrapiMediaFile` to resolved URL strings, filtering out any empty values.
+
+Adapters receive the raw `data[]` item directly (not the full response envelope). The `id` field in domain objects is always the Strapi `slug`.
+
+### Strapi response envelope
+
+All Strapi collection endpoints return:
+```json
+{ "data": [ { "id": 1, "documentId": "...", "slug": "...", ...fields, "cover": { "url": "/uploads/..." } } ],
+  "meta": { "pagination": { ... } } }
+```
+Single-type endpoints return `{ "data": { ...fields } }`. Adapters receive the unwrapped item from `data[]` / `data`.
 
 ---
 
