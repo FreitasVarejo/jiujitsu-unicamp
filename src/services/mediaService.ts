@@ -35,7 +35,7 @@ export const mediaService = {
   getAllMembers: async (): Promise<MemberInfo[]> => {
     const response = await BaseMediaService.get<StrapiListResponse<any>>(
       '/api/membros',
-      { 'populate': 'profilePicture', 'pagination[limit]': '250' },
+      { 'pagination[limit]': '250' },
     );
     return response.data.map((raw) => memberAdapter(raw));
   },
@@ -68,11 +68,7 @@ export const mediaService = {
   getEventInfo: async (slug: string): Promise<EventInfo> => {
     const response = await BaseMediaService.get<StrapiListResponse<any>>(
       '/api/eventos',
-      {
-        'filters[slug][$eq]': slug,
-        'populate[0]': 'gallery.coverImage',
-        'populate[1]': 'gallery.images',
-      },
+      { 'filters[slug][$eq]': slug },
     );
     const item = response.data[0];
     if (!item) throw new Error(`Evento não encontrado: ${slug}`);
@@ -86,12 +82,7 @@ export const mediaService = {
   getAllProducts: async (): Promise<ProductInfo[]> => {
     const response = await BaseMediaService.get<StrapiListResponse<any>>(
       '/api/produtos',
-      {
-        'populate[0]': 'gallery.coverImage',
-        'populate[1]': 'gallery.images',
-        'populate[2]': 'categoria',
-        'pagination[limit]': '250',
-      },
+      { 'pagination[limit]': '250' },
     );
     return response.data.map((raw) => productAdapter(raw));
   },
