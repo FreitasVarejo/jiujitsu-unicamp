@@ -1,13 +1,17 @@
 import { BaseMediaService, StrapiMediaFile } from '../services/baseMediaService';
+import { Image } from '../types/media';
 
-export const resolveMediaUrl = (file: StrapiMediaFile | null | undefined): string | undefined => {
+export const resolveImage = (file: StrapiMediaFile | null | undefined): Image | undefined => {
   if (!file?.url) return undefined;
-  return BaseMediaService.resolveMediaUrl(file.url);
+  return {
+    url: BaseMediaService.resolveMediaUrl(file.url),
+    alternativeText: file.alternativeText || '',
+  };
 };
 
-export const resolveGalleryUrls = (files: StrapiMediaFile[] | null | undefined): string[] => {
+export const resolveGallery = (files: StrapiMediaFile[] | null | undefined): Image[] => {
   if (!files || !Array.isArray(files)) return [];
   return files
-    .map((f) => BaseMediaService.resolveMediaUrl(f.url))
-    .filter(Boolean) as string[];
+    .map((f) => resolveImage(f))
+    .filter((img): img is Image => img !== undefined);
 };

@@ -63,12 +63,12 @@ export const EventoDetalhes = () => {
         {/* Capa do Evento */}
         <div 
           className="lg:w-2/5 aspect-[16/10] rounded-2xl overflow-hidden border border-zinc-800 bg-zinc-900 group cursor-pointer relative"
-          onClick={() => setSelectedImage(details.coverImage || null)}
+          onClick={() => setSelectedImage(details.coverImage?.url || null)}
         >
           {details.coverImage ? (
             <img 
-              src={details.coverImage} 
-              alt={details.title}
+              src={details.coverImage.url} 
+              alt={details.coverImage.alternativeText || details.title}
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             />
           ) : (
@@ -85,15 +85,15 @@ export const EventoDetalhes = () => {
 
       {/* Grid de Fotos */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {images.map((img) => (
+        {images.map((img, index) => (
           <div 
-            key={img.id} 
+            key={index} 
             onClick={() => setSelectedImage(img.url)}
             className="aspect-[4/3] overflow-hidden rounded-lg bg-zinc-900 border border-zinc-800 group cursor-pointer"
           >
             <img 
               src={img.url} 
-              alt={`${details.title} - Foto ${img.id + 1}`}
+              alt={img.alternativeText || `${details.title} - Foto ${index + 1}`}
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               loading="lazy"
             />

@@ -8,7 +8,7 @@ interface ProductCardProps {
 }
 
 export const ProductCard = ({ product, categoryLabel, onClick }: ProductCardProps) => {
-  const coverImage = product.coverImage || `https://placehold.co/500x500/18181b/d26030?text=${product.title.replace(/ /g, '+')}`;
+  const coverImage = product.coverImage?.url || `https://placehold.co/500x500/18181b/d26030?text=${product.title.replace(/ /g, '+')}`;
 
   return (
     <div 

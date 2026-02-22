@@ -6,7 +6,6 @@ export const Eventos = () => {
   const {
     years,
     groupedEvents,
-    eventInfo,
     visibleCounts,
     loading,
     error,
@@ -51,8 +50,7 @@ export const Eventos = () => {
             <YearSection
               key={year}
               year={year}
-              folders={groupedEvents[year] || []}
-              eventInfo={eventInfo}
+              events={groupedEvents[year] || []}
               visibleCount={visibleCounts[year] || 4}
               onSeeMore={handleSeeMore}
             />

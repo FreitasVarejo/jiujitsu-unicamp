@@ -1,19 +1,24 @@
-import { useEffect, useRef, useState } from "react";
-import { mediaService } from "@/services/mediaService";
+import { useEffect, useRef, useState } from 'react';
+import { mediaService } from '@/services/mediaService';
+import { Image } from '@/types/media';
 
 const INTERVAL_MS = 5000;
 const FADE_MS = 1500;
 
 export const Hero = () => {
-  const [images, setImages] = useState<string[]>([]);
+  const [images, setImages] = useState<Image[]>([]);
+  const [logo, setLogo] = useState<Image | null>(null);
   const [current, setCurrent] = useState(0);
   const [next, setNext] = useState<number | null>(null);
   const [nextVisible, setNextVisible] = useState(false);
   const lockRef = useRef(false);
 
   useEffect(() => {
-    mediaService.getHeroImages().then((urls) => {
-      if (urls.length > 0) setImages(urls);
+    mediaService.getHeroImages().then((imgs) => {
+      if (imgs.length > 0) setImages(imgs);
+    });
+    mediaService.getLogo().then((img) => {
+      if (img) setLogo(img);
     });
   }, []);
 
@@ -51,7 +56,7 @@ export const Hero = () => {
 
   const bgStyle = (url: string) => ({
     backgroundImage: `url('${url}')`,
-    filter: "grayscale(100%)",
+    filter: 'grayscale(100%)',
   });
 
   return (
@@ -60,7 +65,7 @@ export const Hero = () => {
       {images.length > 0 && (
         <div
           className="absolute inset-0 bg-cover bg-center z-[1]"
-          style={bgStyle(images[current])}
+          style={bgStyle(images[current].url)}
         />
       )}
 
@@ -69,7 +74,7 @@ export const Hero = () => {
         <div
           className="absolute inset-0 bg-cover bg-center z-[2]"
           style={{
-            ...bgStyle(images[next]),
+            ...bgStyle(images[next].url),
             opacity: nextVisible ? 1 : 0,
             transition: `opacity ${FADE_MS}ms ease-in-out`,
           }}
@@ -86,11 +91,13 @@ export const Hero = () => {
 
       {/* Conteúdo */}
       <div className="relative z-[4] text-center px-4 max-w-4xl mx-auto">
-        <img
-          src={mediaService.getMediaUrl("/uploads/logo-sem-titulo.webp")}
-          alt="Logo Jiu-Jitsu Unicamp"
-          className="w-32 h-32 md:w-48 md:h-48 mx-auto mb-8 drop-shadow-2xl"
-        />
+        {logo && (
+          <img
+            src={logo.url}
+            alt={logo.alternativeText || 'Logo Jiu-Jitsu Unicamp'}
+            className="w-32 h-32 md:w-48 md:h-48 mx-auto mb-8 drop-shadow-2xl"
+          />
+        )}
         <h1 className="text-6xl md:text-8xl font-display font-bold text-white mb-6 tracking-tighter">
           Jiu-Jitsu <span className="text-primary">Unicamp</span>
         </h1>

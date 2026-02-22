@@ -1,9 +1,9 @@
-import { Users, Loader2, AlertCircle } from "lucide-react";
-import { SectionHeader, MemberCard } from "../shared";
-import { useTeam } from "./useTeam.hook";
+import { Users, Loader2, AlertCircle } from 'lucide-react';
+import { SectionHeader, InstructorCard } from '../shared';
+import { useTeam } from './useTeam.hook';
 
 export const Team = () => {
-  const { members, loading, error } = useTeam();
+  const { instructors, loading, error } = useTeam();
 
   return (
     <section className="container mx-auto px-4">
@@ -21,8 +21,8 @@ export const Team = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {members.map((member) => (
-            <MemberCard key={member.id} member={member} />
+          {instructors.map((instructor) => (
+            <InstructorCard key={instructor.id} instructor={instructor} />
           ))}
         </div>
       )}

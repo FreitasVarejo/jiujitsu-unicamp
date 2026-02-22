@@ -3,6 +3,7 @@ const VITE_API_TOKEN = import.meta.env.VITE_API_TOKEN as string | undefined;
 
 export interface StrapiMediaFile {
   url: string;
+  alternativeText?: string;
   formats?: {
     thumbnail?: { url: string };
     small?: { url: string };

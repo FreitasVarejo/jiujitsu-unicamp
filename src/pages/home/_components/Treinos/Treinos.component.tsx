@@ -1,5 +1,4 @@
-import { Clock, MapPin, ArrowRight, Loader2, AlertCircle } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Clock, Loader2, AlertCircle } from "lucide-react";
 import { SectionHeader } from "../shared";
 import { useTrainings } from "./useTrainings.hook";
 import { TrainingScheduleMobile } from "./TrainingScheduleMobile.component";

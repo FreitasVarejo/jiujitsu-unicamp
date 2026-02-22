@@ -1,18 +1,17 @@
-import { EventFolder, EventInfo } from "@/services/mediaService";
-import { EventCard } from "./EventCard";
-import { SeeMoreCard } from "./SeeMoreCard";
+import { EventSummaryInfo } from '@/services/mediaService';
+import { EventCard } from './EventCard';
+import { SeeMoreCard } from './SeeMoreCard';
 
 interface YearSectionProps {
   year: string;
-  folders: EventFolder[];
-  eventInfo: Record<string, EventInfo>;
+  events: EventSummaryInfo[];
   visibleCount: number;
   onSeeMore: (year: string) => void;
 }
 
-export const YearSection = ({ year, folders, eventInfo, visibleCount, onSeeMore }: YearSectionProps) => {
-  const visibleFolders = folders.slice(0, visibleCount);
-  const hasMore = folders.length > visibleCount;
+export const YearSection = ({ year, events, visibleCount, onSeeMore }: YearSectionProps) => {
+  const visibleEvents = events.slice(0, visibleCount);
+  const hasMore = events.length > visibleCount;
 
   return (
     <section key={year}>
@@ -22,16 +21,15 @@ export const YearSection = ({ year, folders, eventInfo, visibleCount, onSeeMore 
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {visibleFolders.map((folder, index) => {
+        {visibleEvents.map((event, index) => {
           const isLastVisible = index === visibleCount - 1 && hasMore;
-          const remaining = folders.length - visibleCount;
+          const remaining = events.length - visibleCount;
 
           if (isLastVisible) {
             return (
               <SeeMoreCard
-                key={folder.id}
-                folder={folder}
-                info={eventInfo[folder.id]}
+                key={event.id}
+                event={event}
                 year={year}
                 remaining={remaining}
                 onClick={onSeeMore}
@@ -39,7 +37,7 @@ export const YearSection = ({ year, folders, eventInfo, visibleCount, onSeeMore 
             );
           }
 
-          return <EventCard key={folder.id} folder={folder} info={eventInfo[folder.id]} />;
+          return <EventCard key={event.id} event={event} />;
         })}
       </div>
     </section>

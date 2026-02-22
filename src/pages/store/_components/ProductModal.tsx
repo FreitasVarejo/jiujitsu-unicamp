@@ -62,11 +62,11 @@ export const ProductModal = ({ product, onClose, categoryLabel }: ProductModalPr
         <div className="w-full md:w-3/5 bg-zinc-800 relative">
           <div className="h-[40vh] md:h-full overflow-hidden" ref={emblaRef}>
             <div className="flex h-full">
-              {images.map((url, idx) => (
+              {images.map((img, idx) => (
                 <div key={idx} className="flex-[0_0_100%] h-full flex items-center justify-center">
                   <img 
-                    src={url} 
-                    alt={`${product.title} - ${idx + 1}`}
+                    src={img.url} 
+                    alt={img.alternativeText || `${product.title} - ${idx + 1}`}
                     className="w-full h-full object-contain"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = `https://placehold.co/800x800/18181b/d26030?text=${product.title.replace(/ /g, '+')}`;

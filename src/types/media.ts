@@ -1,43 +1,47 @@
-import { Belt } from "@/constants";
+import { Belt, Weekday, TrainingType } from '@/constants';
+
+export interface Image {
+  url: string;
+  alternativeText: string;
+}
 
 export interface BaseEntity {
   id: string;
   title: string;
 }
 
-export interface Member extends BaseEntity {
+export interface Instructor extends BaseEntity {
   year: string;
   course: string;
   belt: Belt;
-  coverImage?: string;
+  photo: Image;
 }
 
-export interface BaseGalleryEntity extends BaseEntity {
-  coverImage?: string;
-  gallery: string[];
-}
-
-export interface Event extends BaseGalleryEntity {
-  description: string;
-  category: string;
+export interface EventSummary extends BaseEntity {
   date: string;
   location: string;
+  coverImage: Image;
 }
 
-export interface Product extends BaseGalleryEntity {
+export interface Event extends EventSummary {
+  description: string;
+  category: string;
+  gallery: Image[];
+}
+
+export interface Product extends BaseEntity {
   description: string;
   category: string;
   price: string;
   sizes: string[];
+  coverImage: Image;
+  gallery: Image[];
 }
 
-import { Weekday, TrainingType } from "../constants";
-
-export interface TrainingSchedule {
-  id: string;
-  weekday: Weekday;
-  category: TrainingType;
+export interface TrainingSchedule extends BaseEntity {
   startTime: string;
   endTime: string;
   instructor: string;
+  weekday: Weekday;
+  category: TrainingType;
 }

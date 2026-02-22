@@ -1,29 +1,28 @@
-import { ChevronRight } from "lucide-react";
-import { EventFolder, EventInfo, mediaService } from "@/services/mediaService";
+import { ChevronRight } from 'lucide-react';
+import { EventSummaryInfo } from '@/services/mediaService';
 
 interface SeeMoreCardProps {
-  folder: EventFolder;
-  info?: EventInfo;
+  event: EventSummaryInfo;
   year: string;
   remaining: number;
   onClick: (year: string) => void;
 }
 
-export const SeeMoreCard = ({ folder, info, year, remaining, onClick }: SeeMoreCardProps) => {
-  const thumb = info?.coverImage || mediaService.getMediaUrl(`/eventos/${folder.id}/0000.webp`);
-
+export const SeeMoreCard = ({ event, year, remaining, onClick }: SeeMoreCardProps) => {
   return (
     <button
       onClick={() => onClick(year)}
       className="group relative h-64 overflow-hidden rounded-xl bg-zinc-900 border border-zinc-800 flex items-end text-left"
     >
       <div className="absolute inset-0">
-        <img
-          src={thumb}
-          alt={info?.title || folder.id}
-          loading="lazy"
-          className="w-full h-full object-cover transition-transform duration-700 grayscale blur-[2px]"
-        />
+        {event.coverImage.url && (
+          <img
+            src={event.coverImage.url}
+            alt={event.coverImage.alternativeText || event.title}
+            loading="lazy"
+            className="w-full h-full object-cover transition-transform duration-700 grayscale blur-[2px]"
+          />
+        )}
         <div className="absolute inset-0 bg-black/60 group-hover:bg-black/40 transition-colors"></div>
       </div>
 
