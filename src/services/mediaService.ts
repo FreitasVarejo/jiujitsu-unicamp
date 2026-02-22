@@ -35,7 +35,7 @@ export const mediaService = {
   getAllMembers: async (): Promise<MemberInfo[]> => {
     const response = await BaseMediaService.get<StrapiListResponse<any>>(
       '/api/membros',
-      { 'populate': 'photo', 'pagination[limit]': '250' },
+      { 'populate': 'profilePicture', 'pagination[limit]': '250' },
     );
     return response.data.map((raw) => memberAdapter(raw));
   },
@@ -70,8 +70,8 @@ export const mediaService = {
       '/api/eventos',
       {
         'filters[slug][$eq]': slug,
-        'populate[0]': 'cover',
-        'populate[1]': 'gallery',
+        'populate[0]': 'gallery.coverImage',
+        'populate[1]': 'gallery.images',
       },
     );
     const item = response.data[0];
@@ -87,8 +87,8 @@ export const mediaService = {
     const response = await BaseMediaService.get<StrapiListResponse<any>>(
       '/api/produtos',
       {
-        'populate[0]': 'cover',
-        'populate[1]': 'gallery',
+        'populate[0]': 'gallery.coverImage',
+        'populate[1]': 'gallery.images',
         'populate[2]': 'categoria',
         'pagination[limit]': '250',
       },
@@ -104,5 +104,9 @@ export const mediaService = {
     return Object.fromEntries(
       response.data.map((raw) => [raw.slug, raw.name]),
     );
+  },
+
+  getMediaUrl: (relativeUrl: string): string => {
+    return BaseMediaService.resolveMediaUrl(relativeUrl);
   },
 };

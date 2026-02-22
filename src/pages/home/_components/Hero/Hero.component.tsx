@@ -87,7 +87,7 @@ export const Hero = () => {
       {/* Conteúdo */}
       <div className="relative z-[4] text-center px-4 max-w-4xl mx-auto">
         <img
-          src={mediaService.getMediaUrl("/drive/logo.webp")}
+          src={mediaService.getMediaUrl("/uploads/logo-sem-titulo.webp")}
           alt="Logo Jiu-Jitsu Unicamp"
           className="w-32 h-32 md:w-48 md:h-48 mx-auto mb-8 drop-shadow-2xl"
         />

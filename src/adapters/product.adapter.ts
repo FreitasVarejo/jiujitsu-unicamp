@@ -2,7 +2,7 @@ import { Product } from '../types/media';
 import { resolveMediaUrl, resolveGalleryUrls } from './adapters.handlers';
 
 export const productAdapter = (raw: any): Product => {
-  const gallery = resolveGalleryUrls(raw.gallery);
+  const gallery = resolveGalleryUrls(raw.gallery?.images);
 
   return {
     id: raw.slug,
@@ -12,6 +12,6 @@ export const productAdapter = (raw: any): Product => {
     category: raw.categoria?.name || raw.categoria?.slug || '',
     sizes: Array.isArray(raw.sizes) ? raw.sizes : [],
     gallery,
-    coverImage: resolveMediaUrl(raw.cover) ?? gallery[0],
+    coverImage: resolveMediaUrl(raw.gallery?.coverImage) ?? gallery[0],
   };
 };

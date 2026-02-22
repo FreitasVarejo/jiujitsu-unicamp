@@ -2,7 +2,7 @@ import { Event } from '../types/media';
 import { resolveMediaUrl, resolveGalleryUrls } from './adapters.handlers';
 
 export const eventAdapter = (raw: any): Event => {
-  const gallery = resolveGalleryUrls(raw.gallery);
+  const gallery = resolveGalleryUrls(raw.gallery?.images);
 
   return {
     id: raw.slug,
@@ -12,6 +12,6 @@ export const eventAdapter = (raw: any): Event => {
     description: raw.description || '',
     category: raw.category || '',
     gallery,
-    coverImage: resolveMediaUrl(raw.cover) ?? gallery[0],
+    coverImage: resolveMediaUrl(raw.gallery?.coverImage) ?? gallery[0],
   };
 };

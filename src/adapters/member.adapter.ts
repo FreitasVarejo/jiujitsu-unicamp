@@ -14,6 +14,6 @@ export const memberAdapter = (raw: any): Member => {
     year: raw.year || '',
     course: raw.course || '',
     belt,
-    coverImage: resolveMediaUrl(raw.photo),
+    coverImage: resolveMediaUrl(raw.profilePicture),
   };
 };
