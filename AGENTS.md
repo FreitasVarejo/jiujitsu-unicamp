@@ -35,8 +35,6 @@ docker compose up -d --build   # Build and run the production Nginx image
 
 Copy `.env.example` to `.env.local` and fill in both values. `VITE_API_TOKEN` is optional: if absent, requests are sent without an `Authorization` header (works when Strapi endpoints are configured as public). Both are consumed exclusively by `src/services/baseMediaService.ts`.
 
-> **Known stale file:** `src/vite-env.d.ts` declares `VITE_MEDIA_BASE_URL` — this is incorrect and unused. The real variable is `VITE_API_BASE_URL`.
-
 ---
 
 ## Repository Structure
