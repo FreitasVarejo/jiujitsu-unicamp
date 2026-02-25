@@ -12,5 +12,6 @@ jobs:
       
       - name: Build and Deploy
         run: |
+          cp /home/saul/envs/jiujitsu-unicamp.env .env.local
           docker compose -f docker-compose.yml up -d --build --remove-orphans
           docker image prune -f

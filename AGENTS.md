@@ -33,7 +33,11 @@ docker compose up -d --build   # Build and run the production Nginx image
 | `VITE_API_BASE_URL` | Base URL of the Strapi backend | `http://localhost:1337` (dev) / `https://files.jiujitsuunicamp.com.br` (prod) |
 | `VITE_API_TOKEN` | Read-only Strapi API token — sent as `Authorization: Bearer` | *(generate in Strapi admin → API Tokens)* |
 
-Copy `.env.example` to `.env.local` and fill in both values. `VITE_API_TOKEN` is optional: if absent, requests are sent without an `Authorization` header (works when Strapi endpoints are configured as public). Both are consumed exclusively by `src/services/baseMediaService.ts`.
+Copy `.env.example` to `.env.local` and fill in both values. Both are consumed exclusively by `src/services/baseMediaService.ts`.
+
+**Endpoints são privados** — `VITE_API_TOKEN` é obrigatório. Sem ele, todas as chamadas à API retornam 401/403 e o site não carrega nenhum dado.
+
+Em produção, o `.env.local` é armazenado em `/home/saul/envs/jiujitsu-unicamp.env` no servidor e copiado pelo workflow de CI durante o deploy. Variáveis `VITE_*` são embutidas no bundle JS em tempo de build (não em runtime).
 
 ---
 
@@ -225,6 +229,13 @@ useEffect(() => {
 
 ## CI/CD
 
-The GitHub Actions workflow at `.github/workflows/deploy.yml` triggers on every push to `main`. It runs `docker compose up -d --build` on the self-hosted runner, which rebuilds the Nginx production image and restarts the container.
+The GitHub Actions workflow at `.github/workflows/deploy.yml` triggers on every push to `main`. It runs on a **self-hosted runner** on the production server. The runner:
+
+1. Checks out the code
+2. Copies `/home/saul/envs/jiujitsu-unicamp.env` to `.env.local` in the checkout directory
+3. Runs `docker compose -f docker-compose.yml up -d --build --remove-orphans`
+4. Runs `docker image prune -f`
+
+The `.env.local` copy step is critical: without it, `VITE_API_BASE_URL` and `VITE_API_TOKEN` are missing from the Vite build and the production bundle cannot reach the backend. No GitHub Secrets are needed -- the runner has local access to the env file.
 
 **There are no lint or type-check gates in CI.** Run `npm run lint` and `npm run build` locally and confirm both pass before pushing to `main`.
