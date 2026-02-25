@@ -6,6 +6,7 @@ export const resolveImage = (file: StrapiMediaFile | null | undefined): Image | 
   return {
     url: BaseMediaService.resolveMediaUrl(file.url),
     alternativeText: file.alternativeText || '',
+    focalPoint: file.focalPoint ?? null,
   };
 };
 

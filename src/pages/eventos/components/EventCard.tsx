@@ -19,6 +19,9 @@ export const EventCard = ({ event }: EventCardProps) => {
             alt={event.coverImage.alternativeText || event.title}
             loading="lazy"
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            style={event.coverImage.focalPoint
+              ? { objectPosition: `${event.coverImage.focalPoint.x}% ${event.coverImage.focalPoint.y}%` }
+              : undefined}
           />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent opacity-90"></div>

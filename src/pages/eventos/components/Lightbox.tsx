@@ -43,7 +43,7 @@ export const Lightbox = ({ selectedImage, onClose }: LightboxProps) => {
       </button>
       
       <div 
-        className="relative max-w-5xl w-full h-full flex items-center justify-center p-4"
+        className="relative max-w-5xl w-full flex items-center justify-center p-4"
         onClick={(e) => e.stopPropagation()}
       >
         <picture>
@@ -51,7 +51,7 @@ export const Lightbox = ({ selectedImage, onClose }: LightboxProps) => {
           <img 
             src={selectedImage.replace('.webp', '.jpg')} 
             alt="Visualização ampliada"
-            className="max-w-full max-h-full object-contain rounded-lg shadow-2xl transition-transform duration-300 scale-100"
+            className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl transition-transform duration-300 scale-100"
             onError={(e) => {
               const target = e.target as HTMLImageElement;
               const fallback = selectedImage.replace('.webp', '.jpg');
