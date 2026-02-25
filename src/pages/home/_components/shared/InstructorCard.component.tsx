@@ -16,7 +16,7 @@ export const InstructorCard = ({ instructor }: InstructorCardProps) => {
           <span
             className="inline-block px-2 py-1 rounded text-xs font-bold uppercase tracking-wider mt-1 bg-zinc-800 text-gray-300"
           >
-            Faixa {instructor.belt}
+            Faixa {BELT_INFO[instructor.belt].label}
           </span>
         </div>
         <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-zinc-700 bg-zinc-800">

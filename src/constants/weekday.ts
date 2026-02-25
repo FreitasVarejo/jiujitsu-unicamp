@@ -1,48 +1,65 @@
 export enum Weekday {
-  Domingo = 0,
-  Segunda = 1,
-  Terca = 2,
-  Quarta = 3,
-  Quinta = 4,
-  Sexta = 5,
-  Sabado = 6,
+  DOMINGO = 0,
+  SEGUNDA = 1,
+  TERCA = 2,
+  QUARTA = 3,
+  QUINTA = 4,
+  SEXTA = 5,
+  SABADO = 6,
 }
 
 export const WEEKDAYS = [
-  Weekday.Segunda,
-  Weekday.Terca,
-  Weekday.Quarta,
-  Weekday.Quinta,
-  Weekday.Sexta,
+  Weekday.SEGUNDA,
+  Weekday.TERCA,
+  Weekday.QUARTA,
+  Weekday.QUINTA,
+  Weekday.SEXTA,
 ];
 
-export const WEEKDAY_INFO: Record<Weekday, { label: string; short: string }> = {
-  [Weekday.Domingo]: {
+export const WEEKDAY_INFO: Record<
+  Weekday,
+  { id: string; label: string; weight: number; short: string }
+> = {
+  [Weekday.DOMINGO]: {
+    id: "DOMINGO",
     label: "Domingo",
+    weight: 0,
     short: "DOM",
   },
-  [Weekday.Segunda]: {
+  [Weekday.SEGUNDA]: {
+    id: "SEGUNDA",
     label: "Segunda",
+    weight: 1,
     short: "SEG",
   },
-  [Weekday.Terca]: {
+  [Weekday.TERCA]: {
+    id: "TERCA",
     label: "Terça",
+    weight: 2,
     short: "TER",
   },
-  [Weekday.Quarta]: {
+  [Weekday.QUARTA]: {
+    id: "QUARTA",
     label: "Quarta",
+    weight: 3,
     short: "QUA",
   },
-  [Weekday.Quinta]: {
+  [Weekday.QUINTA]: {
+    id: "QUINTA",
     label: "Quinta",
+    weight: 4,
     short: "QUI",
   },
-  [Weekday.Sexta]: {
+  [Weekday.SEXTA]: {
+    id: "SEXTA",
     label: "Sexta",
+    weight: 5,
     short: "SEX",
   },
-  [Weekday.Sabado]: {
+  [Weekday.SABADO]: {
+    id: "SABADO",
     label: "Sábado",
+    weight: 6,
     short: "SAB",
   },
 };

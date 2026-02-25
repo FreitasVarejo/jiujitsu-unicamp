@@ -1,13 +1,19 @@
 import { Instructor } from '../types/media';
-import { Belt } from '@/constants';
+import { Belt, BELT_INFO } from '@/constants';
 import { resolveImage } from './adapters.handlers';
+
+const parseBelt = (value: unknown): Belt => {
+  if (value == null) return Belt.BRANCA;
+  const normalized = String(value).toUpperCase();
+  const entry = (Object.entries(BELT_INFO) as [string, { id: string }][]).find(
+    ([, info]) => info.id === normalized,
+  );
+  return entry ? (Number(entry[0]) as Belt) : Belt.BRANCA;
+};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const instructorAdapter = (raw: any): Instructor => {
-  const belt =
-    raw.belt && Object.values(Belt).includes(raw.belt as Belt)
-      ? (raw.belt as Belt)
-      : Belt.Branca;
+  const belt = parseBelt(raw.belt);
 
   const photo = resolveImage(raw.photo) ?? {
     url: '',
