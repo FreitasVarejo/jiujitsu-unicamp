@@ -13,7 +13,9 @@ export const productAdapter = (raw: any): Product => {
     id: raw.slug,
     title: raw.title || '',
     description: raw.description || '',
-    price: raw.price || '',
+    price: raw.price != null
+      ? `R$ ${Number(raw.price).toFixed(2).replace('.', ',')}`
+      : '',
     category: raw.categoria?.name || raw.categoria?.slug || '',
     sizes: Array.isArray(raw.sizes) ? raw.sizes : [],
     coverImage,
