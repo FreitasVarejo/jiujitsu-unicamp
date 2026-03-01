@@ -6,7 +6,7 @@ export const Team = () => {
   const { instructors, loading, error } = useTeam();
 
   return (
-    <section className="container mx-auto px-4">
+    <section className="container">
       <SectionHeader title="Nossa Equipe" icon={Users} />
 
       {loading ? (

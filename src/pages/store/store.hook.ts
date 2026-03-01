@@ -3,7 +3,7 @@ import { mediaService, ProductInfo, ProductCategories } from "@/services/mediaSe
 
 export const useProducts = () => {
   const [products, setProducts] = useState<ProductInfo[]>([]);
-  const [categories, setCategories] = useState<ProductCategories>({});
+  const [categories, setCategories] = useState<ProductCategories>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

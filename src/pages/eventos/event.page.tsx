@@ -14,7 +14,7 @@ export const Eventos = () => {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-24 text-center">
+      <div className="container py-24 text-center">
         <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
         <p className="text-gray-400">Carregando eventos...</p>
       </div>
@@ -22,7 +22,7 @@ export const Eventos = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-12">
+    <div className="container py-12">
       <header className="mb-12">
         <h1 className="text-4xl font-display text-white mb-2">Eventos</h1>
         <p className="text-gray-400 font-sans">

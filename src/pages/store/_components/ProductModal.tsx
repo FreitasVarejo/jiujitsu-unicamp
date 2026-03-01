@@ -1,7 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
-import { X, MessageCircle, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X, MessageCircle, ClipboardList, ChevronLeft, ChevronRight } from 'lucide-react';
 import { ProductInfo } from '@/services/mediaService';
+
+// Link de convite do grupo de avisos da loja no WhatsApp
+// Atualize este valor quando o link de convite for gerado/renovado
+const WHATSAPP_GROUP_URL = 'https://chat.whatsapp.com/SUBSTITUA_PELO_LINK_DO_GRUPO';
 
 interface ProductModalProps {
   product: ProductInfo | null;
@@ -37,7 +41,7 @@ export const ProductModal = ({ product, onClose, categoryLabel }: ProductModalPr
     };
     window.addEventListener('keydown', handleEsc);
     document.body.style.overflow = 'hidden';
-    
+
     return () => {
       window.removeEventListener('keydown', handleEsc);
       document.body.style.overflow = 'unset';
@@ -48,19 +52,20 @@ export const ProductModal = ({ product, onClose, categoryLabel }: ProductModalPr
 
   const images = product.gallery;
   const imagensCount = images.length;
+  const formsOpen = Boolean(product.formsLink);
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-2 sm:p-4 md:p-8">
       {/* Backdrop */}
-      <div 
-        className="absolute inset-0 bg-black/90 backdrop-blur-sm" 
+      <div
+        className="absolute inset-0 bg-black/90 backdrop-blur-sm"
         onClick={onClose}
       />
-      
+
       {/* Modal Content */}
       <div className="relative w-full max-w-5xl bg-zinc-900 rounded-2xl overflow-hidden shadow-2xl flex flex-col md:flex-row max-h-[95vh] md:max-h-[90vh]">
         {/* Close Button */}
-        <button 
+        <button
           onClick={onClose}
           className="absolute top-3 right-3 z-[110] p-2 bg-black/50 text-white rounded-full hover:bg-black/80 transition-colors"
         >
@@ -73,8 +78,8 @@ export const ProductModal = ({ product, onClose, categoryLabel }: ProductModalPr
             <div className="flex h-full">
               {images.map((img, idx) => (
                 <div key={idx} className="flex-[0_0_100%] h-full flex items-center justify-center">
-                  <img 
-                    src={img.url} 
+                  <img
+                    src={img.url}
                     alt={img.alternativeText || `${product.title} - ${idx + 1}`}
                     className="w-full h-full object-contain"
                     onError={(e) => {
@@ -86,16 +91,16 @@ export const ProductModal = ({ product, onClose, categoryLabel }: ProductModalPr
             </div>
           </div>
 
-          {/* Nav Buttons (desktop) */}
+          {/* Nav Buttons */}
           {imagensCount > 1 && (
             <>
-              <button 
+              <button
                 onClick={scrollPrev}
                 className="absolute left-3 top-1/2 -translate-y-1/2 p-2 md:p-3 bg-black/40 text-white rounded-full backdrop-blur-sm hover:bg-black/60 transition-colors"
               >
                 <ChevronLeft size={20} />
               </button>
-              <button 
+              <button
                 onClick={scrollNext}
                 className="absolute right-3 top-1/2 -translate-y-1/2 p-2 md:p-3 bg-black/40 text-white rounded-full backdrop-blur-sm hover:bg-black/60 transition-colors"
               >
@@ -112,8 +117,8 @@ export const ProductModal = ({ product, onClose, categoryLabel }: ProductModalPr
                   key={idx}
                   onClick={() => emblaApi?.scrollTo(idx)}
                   className={`rounded-full transition-all ${
-                    idx === currentSlide 
-                      ? 'w-2.5 h-2.5 bg-primary' 
+                    idx === currentSlide
+                      ? 'w-2.5 h-2.5 bg-primary'
                       : 'w-2 h-2 bg-white/40 hover:bg-white/60'
                   }`}
                   aria-label={`Ir para foto ${idx + 1}`}
@@ -156,7 +161,7 @@ export const ProductModal = ({ product, onClose, categoryLabel }: ProductModalPr
                 </h4>
                 <div className="flex flex-wrap gap-2">
                   {product.sizes.map((tamanho) => (
-                    <span 
+                    <span
                       key={tamanho}
                       className="px-3 py-1 bg-zinc-800 border border-zinc-700 text-white text-sm font-bold rounded-md"
                     >
@@ -166,31 +171,41 @@ export const ProductModal = ({ product, onClose, categoryLabel }: ProductModalPr
                 </div>
               </div>
             )}
-            
+
             <div className="mt-4 md:mt-6 space-y-3">
               <div className="flex items-center gap-3 text-xs md:text-sm text-gray-400">
-                <div className="w-2 h-2 rounded-full bg-green-500 shrink-0" />
-                Disponibilidade sob consulta
-              </div>
-              <div className="flex items-center gap-3 text-xs md:text-sm text-gray-400">
-                <div className="w-2 h-2 rounded-full bg-primary shrink-0" />
-                Produto exclusivo Unicamp Jiu-Jitsu
+                <div className={`w-2 h-2 rounded-full shrink-0 ${formsOpen ? 'bg-green-500' : 'bg-zinc-500'}`} />
+                {formsOpen ? 'Encomendas abertas' : 'Encomendas encerradas no momento'}
               </div>
             </div>
           </div>
 
           <div className="mt-6 md:mt-8">
-            <a 
-              href={`https://wa.me/?text=Olá, gostaria de encomendar o produto: ${product.title}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full flex items-center justify-center gap-3 bg-green-600 hover:bg-green-700 text-white py-3 md:py-4 rounded-xl transition-all font-display uppercase tracking-wider text-sm md:text-base transform hover:scale-[1.02] active:scale-[0.98]"
-            >
-              <MessageCircle size={20} />
-              Encomendar pelo WhatsApp
-            </a>
+            {formsOpen ? (
+              <a
+                href={product.formsLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full flex items-center justify-center gap-3 bg-primary hover:bg-primary/90 text-white py-3 md:py-4 rounded-xl transition-all font-display uppercase tracking-wider text-sm md:text-base transform hover:scale-[1.02] active:scale-[0.98]"
+              >
+                <ClipboardList size={20} />
+                Fazer encomenda
+              </a>
+            ) : (
+              <a
+                href={WHATSAPP_GROUP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full flex items-center justify-center gap-3 bg-green-600 hover:bg-green-700 text-white py-3 md:py-4 rounded-xl transition-all font-display uppercase tracking-wider text-sm md:text-base transform hover:scale-[1.02] active:scale-[0.98]"
+              >
+                <MessageCircle size={20} />
+                Acompanhar disponibilidade
+              </a>
+            )}
             <p className="text-center text-[10px] md:text-xs text-gray-500 mt-3 px-4">
-              O pagamento e a entrega são combinados diretamente com o responsável pela loja.
+              {formsOpen
+                ? 'Formulário com instruções de pagamento incluso.'
+                : 'Avisamos no grupo quando novas encomendas abrirem.'}
             </p>
           </div>
         </div>

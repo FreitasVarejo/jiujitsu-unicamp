@@ -11,7 +11,7 @@ export const EventoDetalhes = () => {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-24 text-center">
+      <div className="container py-24 text-center">
         <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
         <p className="text-gray-400">Carregando galeria...</p>
       </div>
@@ -20,7 +20,7 @@ export const EventoDetalhes = () => {
 
   if (error || !details) {
     return (
-      <div className="container mx-auto px-4 py-24 text-center">
+      <div className="container py-24 text-center">
         <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
         <p className="text-white text-xl">{error || "Evento não encontrado."}</p>
         <Link to="/eventos" className="text-primary hover:underline mt-4 inline-block">Voltar para Eventos</Link>
@@ -29,7 +29,7 @@ export const EventoDetalhes = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-12">
+    <div className="container py-12">
       <Link 
         to="/eventos" 
         className="inline-flex items-center gap-2 text-zinc-500 hover:text-primary transition-colors mb-8 group"

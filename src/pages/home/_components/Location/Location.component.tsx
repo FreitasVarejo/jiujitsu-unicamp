@@ -3,7 +3,7 @@ import { SectionHeader } from "../shared";
 
 export const Location = () => {
   return (
-    <section className="container mx-auto px-4">
+    <section className="container">
       <SectionHeader title="Localização" icon={MapPin} />
 
       <div className="grid md:grid-cols-3 gap-8 bg-zinc-900 rounded-lg overflow-hidden border border-zinc-800">

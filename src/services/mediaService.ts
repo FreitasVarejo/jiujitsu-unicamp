@@ -12,7 +12,7 @@ export type EventInfo = Event;
 export type EventSummaryInfo = EventSummary;
 export type ProductInfo = Product;
 export type InstructorInfo = Instructor;
-export type ProductCategories = Record<string, string>;
+export type ProductCategories = { slug: string; name: string }[];
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 interface StrapiListResponse<T = any> {
@@ -149,6 +149,8 @@ export const mediaService = {
         'populate[cover]': 'true',
         'populate[gallery]': 'true',
         'populate[categoria]': 'true',
+        'sort[0]': 'order:asc',
+        'sort[1]': 'createdAt:asc',
         'pagination[limit]': '250',
       },
     );
@@ -162,11 +164,13 @@ export const mediaService = {
   getProductCategories: async (): Promise<ProductCategories> => {
     const response = await BaseMediaService.get<StrapiListResponse>(
       '/api/categoria-produtos',
-      { 'pagination[limit]': '250' },
+      {
+        'sort[0]': 'order:asc',
+        'sort[1]': 'createdAt:asc',
+        'pagination[limit]': '250',
+      },
     );
-    return Object.fromEntries(
-      response.data.map((raw) => [raw.slug, raw.name]),
-    );
+    return response.data.map((raw) => ({ slug: raw.slug as string, name: raw.name as string }));
   },
 
   /**

@@ -59,7 +59,7 @@ const faqItems = [
 
 export const Guia = () => {
   return (
-    <section id="guia" className="container mx-auto px-4 py-12">
+    <section id="guia" className="container py-12">
       <div className="text-center mb-16">
         <h1 className="text-5xl font-display text-white mb-6">
           Guia do Iniciante

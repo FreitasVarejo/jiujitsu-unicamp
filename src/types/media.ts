@@ -37,6 +37,7 @@ export interface Product extends BaseEntity {
   sizes: string[];
   coverImage: Image;
   gallery: Image[];
+  formsLink?: string;
 }
 
 export interface TrainingSchedule {

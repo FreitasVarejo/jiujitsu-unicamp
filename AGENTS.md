@@ -68,7 +68,7 @@ interface BaseEntity     { id: string; title: string; }          // id is always
 interface Instructor     extends BaseEntity { year: string; course: string; belt: Belt; photo: Image; }
 interface EventSummary   extends BaseEntity { date: string; location: string; coverImage: Image; }
 interface Event          extends EventSummary { description: string; category: string; gallery: Image[]; }
-interface Product        extends BaseEntity { description: string; category: string; price: string; sizes: string[]; coverImage: Image; gallery: Image[]; }
+interface Product        extends BaseEntity { description: string; category: string; price: string; sizes: string[]; coverImage: Image; gallery: Image[]; formsLink?: string; }
 interface TrainingSchedule extends BaseEntity { startTime: string; endTime: string; instructor: string; weekday: Weekday; category: TrainingType; }
 ```
 
@@ -131,7 +131,7 @@ Single-type endpoints return `{ "data": { ...fields } }`. Media fields are objec
 | `instrutores` | `/api/instrutores` | `slug`, `title`, `year` *(string)*, `course` *(string)*, `belt` *(enum — see below)*, `photo` *(media)* |
 | `treinos` | `/api/treinos` | `slug`, `title`, `weekday` *(int)*, `category` *(int)*, `startTime` *(time HH:MM:SS)*, `endTime` *(time HH:MM:SS)*, `instructor` *(string)* |
 | `eventos` | `/api/eventos` | `slug`, `title`, `date` *(date YYYY-MM-DD)*, `location`, `description`, `category`, `cover` *(media)*, `gallery` *(media array)* |
-| `produtos` | `/api/produtos` | `slug`, `title`, `description`, `price` *(string)*, `sizes` *(JSON string array)*, `cover` *(media)*, `gallery` *(media array)*, `categoria` *(relation → `categoria-produtos`)* |
+| `produtos` | `/api/produtos` | `slug`, `title`, `description`, `price` *(string)*, `sizes` *(JSON string array)*, `cover` *(media)*, `gallery` *(media array)*, `categoria` *(relation → `categoria-produtos`)*, `formsLink` *(string, opcional)* |
 | `categoria-produtos` | `/api/categoria-produtos` | `slug`, `name` |
 
 ### Enum / Integer Constraints
@@ -220,6 +220,7 @@ useEffect(() => {
 - Custom fonts: `font-sans` → Inter, `font-display` → Oswald.
 - Responsive: use Tailwind breakpoint prefixes (`sm:`, `md:`, `lg:`, `xl:`).
 - SVG assets: import as React components via `vite-plugin-svgr` (`import Logo from "@/assets/logo.svg?react"`).
+- The `container` class is configured with `max-width: 1280px` starting at the `xl` breakpoint (≥1280px), aligning with the `max-w-7xl` constraint used in the navbar/footer. Always use `container` for page-level wrappers — never use `max-w-7xl mx-auto px-...` directly in page components.
 
 ---
 
@@ -228,3 +229,14 @@ useEffect(() => {
 The GitHub Actions workflow at `.github/workflows/deploy.yml` triggers on every push to `main`. It runs `docker compose up -d --build` on the self-hosted runner, which rebuilds the Nginx production image and restarts the container.
 
 **There are no lint or type-check gates in CI.** Run `npm run lint` and `npm run build` locally and confirm both pass before pushing to `main`.
+
+---
+
+## Store Ordering Flow
+
+The `ProductModal` component has two states driven by `product.formsLink`:
+
+- **`formsLink` present** (orders open): primary orange button (`bg-primary`) labeled "Fazer encomenda" opens the Google Forms link in a new tab. Status bullet shows green + "Encomendas abertas". Helper text: "Formulário com instruções de pagamento incluso."
+- **`formsLink` absent** (orders closed): green button (`bg-green-600`) labeled "Acompanhar disponibilidade" opens the WhatsApp group link. Status bullet shows gray + "Encomendas encerradas no momento". Helper text: "Avisamos no grupo quando novas encomendas abrirem."
+
+The WhatsApp group invite link is hardcoded in the constant `WHATSAPP_GROUP_URL` at the top of `src/pages/store/_components/ProductModal.tsx`. Update it directly when the invite link changes — no backend change needed.
