@@ -220,7 +220,7 @@ useEffect(() => {
 - Custom fonts: `font-sans` → Inter, `font-display` → Oswald.
 - Responsive: use Tailwind breakpoint prefixes (`sm:`, `md:`, `lg:`, `xl:`).
 - SVG assets: import as React components via `vite-plugin-svgr` (`import Logo from "@/assets/logo.svg?react"`).
-- The `container` class is configured with `max-width: 1280px` starting at the `xl` breakpoint (≥1280px), aligning with the `max-w-7xl` constraint used in the navbar/footer. Always use `container` for page-level wrappers — never use `max-w-7xl mx-auto px-...` directly in page components.
+- The `container` class is configured with `max-width: 1440px` starting at the `xl` breakpoint (≥1440px), with `2rem` padding at `lg` and `xl`. Always use `container` for page-level wrappers — never use `max-w-7xl mx-auto px-...` directly in page components.
 
 ---
 
@@ -237,6 +237,6 @@ The GitHub Actions workflow at `.github/workflows/deploy.yml` triggers on every 
 The `ProductModal` component has two states driven by `product.formsLink`:
 
 - **`formsLink` present** (orders open): primary orange button (`bg-primary`) labeled "Fazer encomenda" opens the Google Forms link in a new tab. Status bullet shows green + "Encomendas abertas". Helper text: "Formulário com instruções de pagamento incluso."
-- **`formsLink` absent** (orders closed): green button (`bg-green-600`) labeled "Acompanhar disponibilidade" opens the WhatsApp group link. Status bullet shows gray + "Encomendas encerradas no momento". Helper text: "Avisamos no grupo quando novas encomendas abrirem."
+- **`formsLink` absent** (orders closed): zinc button (`bg-zinc-700`) labeled "Acompanhar disponibilidade" opens the WhatsApp group link. Status bullet shows gray + "Encomendas encerradas no momento". Helper text: "Avisamos no grupo quando novas encomendas abrirem."
 
 The WhatsApp group invite link is hardcoded in the constant `WHATSAPP_GROUP_URL` at the top of `src/pages/store/_components/ProductModal.tsx`. Update it directly when the invite link changes — no backend change needed.
