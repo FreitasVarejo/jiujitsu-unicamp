@@ -1,4 +1,5 @@
 import { Hero } from "./_components/Hero";
+import { Agenda } from "./_components/Agenda";
 import { Guia } from "./_components/Guia";
 import { Treinos } from "./_components/Treinos";
 import { Location } from "./_components/Location";
@@ -8,6 +9,7 @@ export const Home = () => {
   return (
     <div className="flex flex-col gap-16 pb-16">
       <Hero />
+      <Agenda />
       <Guia />
 
       <div id="treinos">

@@ -32,8 +32,9 @@ docker compose up -d --build   # Build and run the production Nginx image
 |---|---|---|
 | `VITE_API_BASE_URL` | Base URL of the Strapi backend | `http://localhost:1337` (dev) / `https://files.jiujitsuunicamp.com.br` (prod) |
 | `VITE_API_TOKEN` | Read-only Strapi API token — sent as `Authorization: Bearer` | *(generate in Strapi admin → API Tokens)* |
+| `VITE_GOOGLE_API_KEY` | Google API key for Calendar API v3 (HTTP referer restricted) | *(generate in Google Cloud Console → Credentials)* |
 
-Copy `.env.example` to `.env.local` and fill in both values. `VITE_API_TOKEN` is optional: if absent, requests are sent without an `Authorization` header (works when Strapi endpoints are configured as public). Both are consumed exclusively by `src/services/baseMediaService.ts`.
+Copy `.env.example` to `.env.local` and fill in the values. `VITE_API_TOKEN` is optional: if absent, requests are sent without an `Authorization` header (works when Strapi endpoints are configured as public). `VITE_API_BASE_URL` and `VITE_API_TOKEN` are consumed by `src/services/baseMediaService.ts`; `VITE_GOOGLE_API_KEY` is consumed by `src/services/calendarService.ts`.
 
 ---
 
@@ -46,11 +47,11 @@ src/
 ├── constants/       # Enums + lookup maps: Belt, Weekday, TrainingType
 ├── layouts/         # App shell: Layout.tsx wraps every page with navbar + footer
 ├── pages/           # Route-level pages; each feature is self-contained:
-│   ├── home/        #   _components/ → local sub-components, *.hook.ts → data
+│   ├── home/        #   _components/ → local sub-components (incl. Agenda/), *.hook.ts → data
 │   ├── eventos/     #   event.hook.ts + event.page.tsx + detalhes/ sub-route
 │   ├── store/
 │   └── not-found/
-├── services/        # HTTP layer: BaseMediaService (low-level) + mediaService (public API)
+├── services/        # HTTP layer: BaseMediaService (low-level) + mediaService (Strapi) + calendarService (Google Calendar)
 ├── types/           # Shared TypeScript interfaces (media.ts)
 ├── App.tsx          # React Router <Routes> definition
 └── main.tsx         # ReactDOM.createRoot entry point
@@ -98,6 +99,16 @@ Public singleton. All methods call `BaseMediaService.get()`, then run the result
 | `getEventDetails(slug)` | `GET /api/eventos?filters[slug][$eq]={slug}&populate[cover]=true&populate[gallery]=true` |
 | `getAllProducts()` | `GET /api/produtos?populate[cover]=true&populate[gallery]=true&populate[categoria]=true&pagination[limit]=250` |
 | `getProductCategories()` | `GET /api/categoria-produtos?pagination[limit]=250` → `Record<slug, name>` |
+
+### `calendarService` (`src/services/calendarService.ts`)
+
+Fetches events from the **Google Calendar API v3** (public calendar, API key auth). Completely independent from Strapi — no adapters needed.
+
+| Method | API call |
+|---|---|
+| `getEventsByRange(start, end)` | `GET https://www.googleapis.com/calendar/v3/calendars/{calendarId}/events?timeMin=...&timeMax=...` → `GoogleCalendarEvent[]` |
+
+`GoogleCalendarEvent` interface: `{ id, summary, start: { dateTime?, date? }, end: { dateTime?, date? }, location?, description? }`.
 
 ### Adapters (`src/adapters/`)
 
@@ -215,12 +226,66 @@ useEffect(() => {
 
 ## Styling (Tailwind CSS)
 
-- Utility classes only — no CSS modules, no inline `style` props, no plain CSS (except global resets in `index.css`).
+- Utility classes only — no CSS modules, no inline `style` props, no plain CSS (except global resets in `index.css`). **Exception:** Schedule-X custom components (e.g. `TimeGridEvent`) require inline `style` for dynamic calendar colors — the library strips wrapper styles when a custom component is provided.
 - Custom theme tokens: `primary` (#d26030 orange), `background` (black), `surface` (light grey).
 - Custom fonts: `font-sans` → Inter, `font-display` → Oswald.
 - Responsive: use Tailwind breakpoint prefixes (`sm:`, `md:`, `lg:`, `xl:`).
 - SVG assets: import as React components via `vite-plugin-svgr` (`import Logo from "@/assets/logo.svg?react"`).
 - The `container` class is configured with `max-width: 1440px` starting at the `xl` breakpoint (≥1440px), with `2rem` padding at `lg` and `xl`. Always use `container` for page-level wrappers — never use `max-w-7xl mx-auto px-...` directly in page components.
+
+---
+
+## Agenda / Google Calendar
+
+The **Agenda** section on the home page displays the weekly training schedule using the **Schedule-X v4** library, consuming the **Google Calendar API v3** directly (without Strapi).
+
+### Dependencies
+
+- `@schedule-x/react`, `@schedule-x/calendar`, `@schedule-x/theme-default`, `@schedule-x/events-service`, `@schedule-x/calendar-controls`, `@schedule-x/current-time`
+- `temporal-polyfill` — Schedule-X v4 uses the Temporal API internally
+
+### Files
+
+| File | Responsibility |
+|---|---|
+| `src/services/calendarService.ts` | Fetches events from Google Calendar API v3 by date range |
+| `src/pages/home/_components/Agenda/Agenda.component.tsx` | Main component: Schedule-X week view, color legend, link to full calendar |
+| `src/pages/home/_components/Agenda/TimeGridEvent.component.tsx` | Custom event component: colors by training type, instructor, location with Maps link |
+| `src/pages/home/_components/Agenda/index.ts` | Barrel export |
+
+### Schedule-X Configuration
+
+- `isDark: true`, locale `pt-BR`, timezone `America/Fortaleza`
+- `firstDayOfWeek: 7` (Sunday; Schedule-X uses 1-7, **not** 0-6)
+- `dayBoundaries: { start: '10:00', end: '23:00' }`, `gridHeight: 600`
+- CSS variables for dark/orange theme in `src/index.css` (selector `.sx-react-calendar-wrapper`)
+- Override of `h1-h6` in `index.css` to neutralize global styles that bleed into Schedule-X headers
+- Wrapper with `height: 750px; max-height: 80vh` for internal scrolling
+- Code splitting: all `@schedule-x/*` packages + `temporal-polyfill` in a separate chunk via `manualChunks` in `vite.config.ts`
+
+### Training Types (colors derived from Google Calendar summary)
+
+The event `summary` follows the format `"Treino <Type> - Instructor"`. The type is inferred by `inferCalendarId()` with case-insensitive, accent-insensitive matching:
+
+| Type | Color | calendarId |
+|---|---|---|
+| Geral | `#d26030` (orange, primary) | `geral` |
+| Competição | `#dc2626` (red) | `competicao` |
+| Noturno | `#6366f1` (indigo) | `noturno` |
+| Feminino | `#d97706` (amber) | `feminino` |
+| Fallback | `#71717a` (grey) | `fallback` |
+
+### Locations
+
+Full Google Calendar addresses are mapped to friendly names (`LOCATION_DISPLAY_MAP` in `TimeGridEvent`):
+- "Faculdade de Educação Física..." → **LABFEF**
+- "GMU - Ginásio Multidisciplinar..." → **GMU**
+
+### Important Notes
+
+- The Schedule-X `fetchEvents` callback receives `range.start`/`range.end` as `Temporal.PlainDate` or `Temporal.ZonedDateTime` objects — use `String(range.start).slice(0, 10)` to extract `YYYY-MM-DD`.
+- Custom Schedule-X components (`timeGridEvent`) **must** be defined at module scope (outside React components) to avoid re-creation on every render.
+- `TimeGridEvent` applies colors via inline `style` (documented exception to the Tailwind rule) because Schedule-X strips wrapper styles when a custom component is provided.
 
 ---
 

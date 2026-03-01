@@ -11,4 +11,21 @@ export default defineConfig({
     svgr()
   ],
   base: '/',
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'schedule-x': [
+            '@schedule-x/react',
+            '@schedule-x/calendar',
+            '@schedule-x/theme-default',
+            '@schedule-x/events-service',
+            '@schedule-x/calendar-controls',
+            '@schedule-x/current-time',
+            'temporal-polyfill',
+          ],
+        },
+      },
+    },
+  },
 })
