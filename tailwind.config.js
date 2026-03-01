@@ -8,10 +8,11 @@ export default {
         DEFAULT: '1rem',
         sm: '1.5rem',
         lg: '2rem',
+        xl: '2rem',
       },
       screens: {
-        xl: '1280px',
-        '2xl': '1280px',
+        xl: '1440px',
+        '2xl': '1440px',
       },
     },
     extend: {

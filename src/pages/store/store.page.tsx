@@ -1,4 +1,4 @@
-import { MessageCircle, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { ProductCarousel } from './_components/ProductCarousel';
 import { ProductModal } from './_components/ProductModal';
@@ -46,16 +46,7 @@ export const Loja = () => {
       <div className="text-center mb-8">
         <h1 className="text-5xl font-display text-white mb-4">Loja Oficial</h1>
         <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-          Equipamentos e vestuário com a identidade da nossa equipe.
-        </p>
-      </div>
-
-      {/* Como comprar — banner informativo no topo */}
-      <div className="mb-12 p-5 bg-zinc-900/60 rounded-lg border border-zinc-800 flex items-center gap-4 max-w-2xl mx-auto">
-        <MessageCircle className="text-green-500 shrink-0" size={28} />
-        <p className="text-gray-400 text-sm leading-relaxed">
-          <span className="text-white font-bold">Loja sob demanda.</span>{' '}
-          Clique em um produto para ver os detalhes e encomendar diretamente pelo WhatsApp.
+          Peças sob demanda com a identidade da nossa equipe. Clique em um produto para ver detalhes e encomendar.
         </p>
       </div>
 

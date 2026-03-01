@@ -196,7 +196,7 @@ export const ProductModal = ({ product, onClose, categoryLabel }: ProductModalPr
                 href={WHATSAPP_GROUP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full flex items-center justify-center gap-3 bg-green-600 hover:bg-green-700 text-white py-3 md:py-4 rounded-xl transition-all font-display uppercase tracking-wider text-sm md:text-base transform hover:scale-[1.02] active:scale-[0.98]"
+                className="w-full flex items-center justify-center gap-3 bg-zinc-700 hover:bg-zinc-600 text-white py-3 md:py-4 rounded-xl transition-all font-display uppercase tracking-wider text-sm md:text-base transform hover:scale-[1.02] active:scale-[0.98]"
               >
                 <MessageCircle size={20} />
                 Acompanhar disponibilidade

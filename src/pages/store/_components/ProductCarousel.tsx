@@ -12,7 +12,7 @@ interface ProductCarouselProps {
 export const ProductCarousel = ({ products, onProductClick }: ProductCarouselProps) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: 'start',
-    containScroll: 'trimSnaps',
+    containScroll: 'keepSnaps',
     dragFree: false,
   });
 
@@ -56,7 +56,7 @@ export const ProductCarousel = ({ products, onProductClick }: ProductCarouselPro
           {products.map((product) => (
             <div 
               key={product.id} 
-              className="flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.333%] xl:flex-[0_0_25%] pl-4 py-2"
+              className="flex-[0_0_85%] sm:flex-[0_0_46%] lg:flex-[0_0_31%] xl:flex-[0_0_23%] pl-4 py-2"
             >
               <ProductCard 
                 product={product} 
@@ -87,10 +87,6 @@ export const ProductCarousel = ({ products, onProductClick }: ProductCarouselPro
         </button>
       )}
 
-      {/* Gradient mask for mobile — only when there's more content to scroll */}
-      {canScrollNext && (
-        <div className="absolute top-0 right-0 bottom-0 w-8 bg-gradient-to-l from-black/20 to-transparent pointer-events-none md:hidden" />
-      )}
     </div>
   );
 };
