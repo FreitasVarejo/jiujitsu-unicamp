@@ -51,7 +51,11 @@ The GitHub Actions workflow (`.github/workflows/deploy.yml`) creates `.env.local
 | `VITE_API_TOKEN` | Strapi API token from production |
 | `VITE_GOOGLE_API_KEY` | Google Calendar API key |
 
-These secrets are **never committed** to the repository and are only accessible to the workflow during deployment.
+Copy `.env.example` to `.env.local` and fill in both values. Both are consumed exclusively by `src/services/baseMediaService.ts`.
+
+**Endpoints são privados** — `VITE_API_TOKEN` é obrigatório. Sem ele, todas as chamadas à API retornam 401/403 e o site não carrega nenhum dado.
+
+Em produção, o `.env.local` é armazenado em `/home/saul/envs/jiujitsu-unicamp.env` no servidor e copiado pelo workflow de CI durante o deploy. Variáveis `VITE_*` são embutidas no bundle JS em tempo de build (não em runtime).
 
 ---
 
@@ -352,7 +356,14 @@ The map exists in two places: `agenda.hook.ts` (for mobile cards) and `TimeGridE
 
 ## CI/CD
 
-The GitHub Actions workflow at `.github/workflows/deploy.yml` triggers on every push to `main`. It runs `docker compose up -d --build` on the self-hosted runner, which rebuilds the Nginx production image and restarts the container.
+The GitHub Actions workflow at `.github/workflows/deploy.yml` triggers on every push to `main`. It runs on a **self-hosted runner** on the production server. The runner:
+
+1. Checks out the code
+2. Copies `/home/saul/envs/jiujitsu-unicamp.env` to `.env.local` in the checkout directory
+3. Runs `docker compose -f docker-compose.yml up -d --build --remove-orphans`
+4. Runs `docker image prune -f`
+
+The `.env.local` copy step is critical: without it, `VITE_API_BASE_URL` and `VITE_API_TOKEN` are missing from the Vite build and the production bundle cannot reach the backend. No GitHub Secrets are needed -- the runner has local access to the env file.
 
 **There are no lint or type-check gates in CI.** Run `npm run lint` and `npm run build` locally and confirm both pass before pushing to `main`.
 
