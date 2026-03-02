@@ -10,19 +10,22 @@ Frontend SPA for the Jiu-Jitsu Unicamp team website. Built with React 19 + Vite 
 
 ---
 
-## Commands
+## Commands & Development
 
 **Package manager: `npm`** (never `yarn`/`pnpm`/`bun`).
 
-```bash
-npm run dev          # Vite dev server (http://localhost:5173)
-npm run build        # Type-check + bundle to dist/
-npm run preview      # Serve the production build locally
-npm run lint         # ESLint across the entire project
-docker compose up -d --build   # Build and run the production Nginx image
-```
+| Command | Purpose |
+|---------|---------|
+| `npm run dev` | Start Vite dev server at `http://localhost:5173` |
+| `npm run build` | Type-check + bundle to `dist/` (fails on TS/lint errors) |
+| `npm run preview` | Serve the production build locally for testing |
+| `npm run lint` | Run ESLint across the entire project |
+| `docker compose up -d --build` | Build and run production Nginx image |
 
-**There are no tests.** No test runner (Jest, Vitest, etc.) is installed. Do not add one unless explicitly instructed.
+**Important:** 
+- **There are no tests.** No test runner is installed. Do not add one unless explicitly instructed.
+- The build **fails on TypeScript errors or ESLint violations**. Always run `npm run lint` and `npm run build` locally before pushing to `main`.
+- ESLint config enforces: strict TS mode, no unused variables/parameters, no `any` type (use `unknown` instead), single quotes, 2-space indentation.
 
 ---
 
@@ -178,12 +181,34 @@ Single-type endpoints return `{ "data": { ...fields } }`. Media fields are objec
 
 ---
 
-## Code Style
+## Code Style & Formatting
 
-No Prettier. Match surrounding code manually:
-- 2-space indentation, single quotes, trailing commas in multi-line structures.
-- Import order: **external libraries → `@/` absolute → relative**. Do not mix.
-- **Named exports only** for components, hooks, and utilities. Default exports exist only in `App.tsx`, `Layout.tsx`, and `ScrollToTop.tsx` for legacy reasons — do not add new ones.
+**No Prettier.** Match surrounding code manually:
+
+### Indentation & Spacing
+- **2-space indentation** (not 4, not tabs).
+- **Single quotes** for strings (not double quotes).
+- **Trailing commas** in multi-line arrays, objects, function parameters.
+- No semicolons (let ESLint enforce this).
+
+### Imports
+Order imports as: **external libraries → `@/` absolute → relative**. Do not mix.
+```ts
+import React from 'react'  // External
+import { useService } from '@/services'  // Absolute
+import { LocalComponent } from './local'  // Relative
+```
+
+### Exports
+- **Named exports only** for components, hooks, and utilities.
+- Default exports exist only in `App.tsx`, `Layout.tsx`, and `ScrollToTop.tsx` for legacy reasons — do not add new ones.
+- Always export in barrel `index.ts` files.
+
+### Type Safety
+- **Strict TypeScript mode** is enforced (`strict: true`). The build fails on violations.
+- Avoid `any` type — use `unknown` and narrow it. Reserve `any` only at adapter/service boundaries with `// eslint-disable-next-line @typescript-eslint/no-explicit-any`.
+- Prefix intentionally unused parameters with `_` (e.g., `_event`, `_error`).
+- Never use `Function` type; use proper signatures like `() => void` or `(x: T) => U`.
 
 ---
 
