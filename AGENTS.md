@@ -34,7 +34,21 @@ docker compose up -d --build   # Build and run the production Nginx image
 | `VITE_API_TOKEN` | Read-only Strapi API token — sent as `Authorization: Bearer` | *(generate in Strapi admin → API Tokens)* |
 | `VITE_GOOGLE_API_KEY` | Google API key for Calendar API v3 (HTTP referer restricted) | *(generate in Google Cloud Console → Credentials)* |
 
+### Local Development
+
 Copy `.env.example` to `.env.local` and fill in the values. `VITE_API_TOKEN` is optional: if absent, requests are sent without an `Authorization` header (works when Strapi endpoints are configured as public). `VITE_API_BASE_URL` and `VITE_API_TOKEN` are consumed by `src/services/baseMediaService.ts`; `VITE_GOOGLE_API_KEY` is consumed by `src/services/calendarService.ts`.
+
+### Production Deployment (GitHub Secrets)
+
+The GitHub Actions workflow (`.github/workflows/deploy.yml`) creates `.env.local` at build time using **Repository Secrets**. Configure these in the GitHub repo settings (**Settings → Secrets and variables → Actions → Repository secrets**):
+
+| Secret | Value |
+|---|---|
+| `VITE_API_BASE_URL` | Production Strapi URL (e.g., `https://files.jiujitsuunicamp.com.br`) |
+| `VITE_API_TOKEN` | Strapi API token from production |
+| `VITE_GOOGLE_API_KEY` | Google Calendar API key |
+
+These secrets are **never committed** to the repository and are only accessible to the workflow during deployment.
 
 ---
 
@@ -237,7 +251,7 @@ useEffect(() => {
 
 ## Agenda / Google Calendar
 
-The **Agenda** section on the home page displays the weekly training schedule using the **Schedule-X v4** library, consuming the **Google Calendar API v3** directly (without Strapi).
+The **Agenda** section on the home page displays the weekly training schedule consuming the **Google Calendar API v3** directly (without Strapi). The layout is **responsive**: mobile uses scrollable day cards; desktop uses the **Schedule-X v4** week view.
 
 ### Dependencies
 
@@ -249,18 +263,35 @@ The **Agenda** section on the home page displays the weekly training schedule us
 | File | Responsibility |
 |---|---|
 | `src/services/calendarService.ts` | Fetches events from Google Calendar API v3 by date range |
-| `src/pages/home/_components/Agenda/Agenda.component.tsx` | Main component: Schedule-X week view, color legend, link to full calendar |
-| `src/pages/home/_components/Agenda/TimeGridEvent.component.tsx` | Custom event component: colors by training type, instructor, location with Maps link |
+| `src/pages/home/_components/Agenda/Agenda.component.tsx` | Orchestrator: renders `AgendaMobile` (< md) and Schedule-X (≥ md), color legend, link to full calendar |
+| `src/pages/home/_components/Agenda/agenda.hook.ts` | Hook `useAgendaEvents`: fetches events for the navigable week, groups by day (0=Sun..6=Sat), exposes `goToPreviousWeek`/`goToNextWeek` |
+| `src/pages/home/_components/Agenda/AgendaMobile.component.tsx` | Mobile layout (`md:hidden`): `ChevronLeft / ChevronRight` nav bar with `DD/MM – DD/MM` range, day cards with date, training type, instructor and location |
+| `src/pages/home/_components/Agenda/TimeGridEvent.component.tsx` | Custom Schedule-X component (desktop): colors by training type, instructor, location with Maps link |
 | `src/pages/home/_components/Agenda/index.ts` | Barrel export |
 
-### Schedule-X Configuration
+### Responsive Layout
+
+- **< md (mobile):** `AgendaMobile` — 7 cards (Sun–Sat), each with day name + `DD/MM` date. Navigation bar `ChevronLeft / ChevronRight` with `DD/MM – DD/MM` range in the center. Auto re-fetches on navigation.
+- **≥ md (desktop):** Schedule-X week view, 7 columns, with the library's native navigation.
+- Breakpoint: `md` (768px).
+
+### Hook `useAgendaEvents`
+
+- `weekStart` — `useState<string>` (YYYY-MM-DD of Sunday), initialized to the current week.
+- `weekEnd` — derived from `weekStart + 6 days` (no separate state).
+- `useEffect([weekStart, weekEnd])` — re-fetches whenever the week changes.
+- `goToPreviousWeek` / `goToNextWeek` — `useCallback` functions that shift `weekStart` by ±7 days.
+- Returns: `{ eventsByDay, loading, error, weekStart, weekEnd, goToPreviousWeek, goToNextWeek }`.
+- `EventsByDay = Record<number, AgendaEvent[]>` — key is the JS day of week (0=Sun..6=Sat).
+
+### Schedule-X Configuration (desktop)
 
 - `isDark: true`, locale `pt-BR`, timezone `America/Fortaleza`
 - `firstDayOfWeek: 7` (Sunday; Schedule-X uses 1-7, **not** 0-6)
-- `dayBoundaries: { start: '10:00', end: '23:00' }`, `gridHeight: 600`
+- `dayBoundaries: { start: '10:00', end: '23:00' }`, `gridHeight: 500`
 - CSS variables for dark/orange theme in `src/index.css` (selector `.sx-react-calendar-wrapper`)
 - Override of `h1-h6` in `index.css` to neutralize global styles that bleed into Schedule-X headers
-- Wrapper with `height: 750px; max-height: 80vh` for internal scrolling
+- Wrapper `hidden md:block sx-react-calendar-wrapper` with `height: 600px; max-height: 80vh`
 - Code splitting: all `@schedule-x/*` packages + `temporal-polyfill` in a separate chunk via `manualChunks` in `vite.config.ts`
 
 ### Training Types (colors derived from Google Calendar summary)
@@ -275,17 +306,22 @@ The event `summary` follows the format `"Treino <Type> - Instructor"`. The type 
 | Feminino | `#d97706` (amber) | `feminino` |
 | Fallback | `#71717a` (grey) | `fallback` |
 
+The full palettes (`main`, `container`, `onContainer`) are duplicated in `Agenda.component.tsx` (for Schedule-X) and in `AgendaMobile.component.tsx` / `TimeGridEvent.component.tsx` (for cards and custom events). If you change a color, update all three places.
+
 ### Locations
 
-Full Google Calendar addresses are mapped to friendly names (`LOCATION_DISPLAY_MAP` in `TimeGridEvent`):
+Full Google Calendar addresses are mapped to friendly names via `LOCATION_DISPLAY_MAP`:
 - "Faculdade de Educação Física..." → **LABFEF**
 - "GMU - Ginásio Multidisciplinar..." → **GMU**
+
+The map exists in two places: `agenda.hook.ts` (for mobile cards) and `TimeGridEvent.component.tsx` (for Schedule-X desktop). Keep them in sync.
 
 ### Important Notes
 
 - The Schedule-X `fetchEvents` callback receives `range.start`/`range.end` as `Temporal.PlainDate` or `Temporal.ZonedDateTime` objects — use `String(range.start).slice(0, 10)` to extract `YYYY-MM-DD`.
 - Custom Schedule-X components (`timeGridEvent`) **must** be defined at module scope (outside React components) to avoid re-creation on every render.
-- `TimeGridEvent` applies colors via inline `style` (documented exception to the Tailwind rule) because Schedule-X strips wrapper styles when a custom component is provided.
+- `TimeGridEvent` and the mobile `EventCard` apply colors via inline `style` (documented exception to the Tailwind rule) because Schedule-X strips wrapper styles when a custom component is provided.
+- `AgendaMobile` and Schedule-X fetch **independently**: `useAgendaEvents` feeds the mobile cards; Schedule-X uses its own internal `callbacks.fetchEvents`. Both call `calendarService.getEventsByRange`.
 
 ---
 
