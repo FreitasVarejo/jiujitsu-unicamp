@@ -9,11 +9,10 @@ export const Home = () => {
   return (
     <div className="flex flex-col gap-16 pb-16">
       <Hero />
-      <Agenda />
       <Guia />
 
       <div id="treinos">
-        <Treinos />
+        <Agenda />
       </div>
 
       <Location />

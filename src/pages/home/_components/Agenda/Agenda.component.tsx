@@ -7,6 +7,8 @@ import { useState } from 'react';
 import { CalendarDays } from 'lucide-react';
 import { SectionHeader } from '../shared';
 import { TimeGridEvent } from './TimeGridEvent.component';
+import { AgendaMobile } from './AgendaMobile.component';
+import { useAgendaEvents } from './agenda.hook';
 import { calendarService, GoogleCalendarEvent } from '@/services/calendarService';
 import 'temporal-polyfill/global';
 import '@schedule-x/theme-default/dist/index.css';
@@ -22,6 +24,7 @@ const TRAINING_TYPE_MAP: Record<string, string> = {
   competicao: 'competicao',
   noturno: 'noturno',
   feminino: 'feminino',
+  evento: 'evento',
 };
 
 /**
@@ -74,8 +77,17 @@ const TRAINING_CALENDARS: Record<string, {
     colorName: 'feminino',
     label: 'Treino Feminino',
     darkColors: {
-      main: '#d97706',
-      container: '#d9770630',
+      main: '#d946ef',
+      container: '#d946ef30',
+      onContainer: '#f0abfc',
+    },
+  },
+  evento: {
+    colorName: 'evento',
+    label: 'Evento',
+    darkColors: {
+      main: '#f59e0b',
+      container: '#f59e0b30',
       onContainer: '#fcd34d',
     },
   },
@@ -92,10 +104,11 @@ const TRAINING_CALENDARS: Record<string, {
 
 /** Itens da legenda de cores (exclui fallback). */
 const LEGEND_ITEMS = [
-  { label: 'Geral', color: '#d26030' },
-  { label: 'Competição', color: '#dc2626' },
-  { label: 'Noturno', color: '#6366f1' },
-  { label: 'Feminino', color: '#d97706' },
+  { label: 'Treino Geral', color: '#d26030' },
+  { label: 'Treino Competição', color: '#dc2626' },
+  { label: 'Treino Noturno', color: '#6366f1' },
+  { label: 'Treino Feminino', color: '#d946ef' },
+  { label: 'Evento', color: '#f59e0b' },
 ];
 
 /**
@@ -148,6 +161,9 @@ export const Agenda = () => {
   const [calendarControls] = useState(() => createCalendarControlsPlugin());
   const [currentTime] = useState(() => createCurrentTimePlugin({ fullWeekWidth: true }));
 
+  /* Hook para o layout mobile (cards) */
+  const { eventsByDay, loading, error, weekStart, weekEnd, goToPreviousWeek, goToNextWeek } = useAgendaEvents();
+
   const calendar = useCalendarApp({
     views: [createViewWeek()],
     defaultView: 'week',
@@ -163,7 +179,7 @@ export const Agenda = () => {
     },
     weekOptions: {
       nDays: 7,
-      gridHeight: 600,
+      gridHeight: 500,
       eventWidth: 95,
       timeAxisFormatOptions: { hour: '2-digit', minute: '2-digit' },
     },
@@ -194,27 +210,40 @@ export const Agenda = () => {
           className="text-sm font-display uppercase tracking-widest text-primary hover:text-orange-400 transition-colors"
         >
           Ver agenda completa →
-        </a>
-      </div>
+       </a>
+       </div>
 
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mb-4 text-xs text-zinc-400">
-        {LEGEND_ITEMS.map((item) => (
-          <span key={item.label} className="inline-flex items-center gap-1.5">
-            <span
-              className="inline-block w-2.5 h-2.5 rounded-sm"
-              style={{ backgroundColor: item.color }}
-            />
-            {item.label}
-          </span>
-        ))}
-      </div>
+       {/* Mobile: cards por dia da semana */}
+      <AgendaMobile
+        eventsByDay={eventsByDay}
+        loading={loading}
+        error={error}
+        weekStart={weekStart}
+        weekEnd={weekEnd}
+        onPreviousWeek={goToPreviousWeek}
+        onNextWeek={goToNextWeek}
+      />
 
-      <div className="sx-react-calendar-wrapper">
-        <ScheduleXCalendar
-          calendarApp={calendar}
-          customComponents={{ timeGridEvent: TimeGridEvent }}
-        />
-      </div>
-    </section>
-  );
+       {/* Desktop: Schedule-X week view */}
+       <div className="hidden md:block sx-react-calendar-wrapper">
+         <ScheduleXCalendar
+           calendarApp={calendar}
+           customComponents={{ timeGridEvent: TimeGridEvent }}
+         />
+       </div>
+
+       {/* Legenda de cores */}
+       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 p-4 bg-zinc-900 rounded-lg border border-zinc-800">
+         {LEGEND_ITEMS.map((item) => (
+           <div key={item.label} className="flex items-center gap-2">
+             <span
+               className="inline-block w-3 h-3 rounded shrink-0"
+               style={{ backgroundColor: item.color }}
+             />
+             <span className="text-xs text-zinc-300 font-medium">{item.label}</span>
+           </div>
+         ))}
+       </div>
+     </section>
+   );
 };

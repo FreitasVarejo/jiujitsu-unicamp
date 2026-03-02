@@ -15,7 +15,7 @@ h1, h2, h3, h4, h5, h6 {
 /* ── Schedule-X dark/orange theme ── */
 .sx-react-calendar-wrapper {
   width: 100%;
-  height: 750px;
+  height: 600px;
   max-height: 80vh;
 
   --sx-color-primary: #d26030;

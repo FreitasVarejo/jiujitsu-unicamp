@@ -19,8 +19,13 @@ const CALENDAR_COLORS: Record<string, { main: string; container: string; onConta
     onContainer: '#a5b4fc',
   },
   feminino: {
-    main: '#d97706',
-    container: 'rgba(55, 38, 8, 1)',
+    main: '#d946ef',
+    container: 'rgba(60, 25, 70, 1)',
+    onContainer: '#f0abfc',
+  },
+  evento: {
+    main: '#f59e0b',
+    container: 'rgba(60, 38, 10, 1)',
     onContainer: '#fcd34d',
   },
   fallback: {
