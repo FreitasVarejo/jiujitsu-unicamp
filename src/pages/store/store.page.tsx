@@ -1,29 +1,52 @@
-import { ShoppingBag, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { ProductCarousel } from './_components/ProductCarousel';
 import { ProductModal } from './_components/ProductModal';
 import { useProducts } from './store.hook';
 import { ProductInfo } from '@/services/mediaService';
 
-const Loja = () => {
+export const Loja = () => {
   const { products, categories, loading, error } = useProducts();
   const [selectedProduct, setSelectedProduct] = useState<ProductInfo | null>(null);
 
-  const productsByCategory = useMemo(() => {
-    return products.reduce((acc, product) => {
-      const cat = product.category || 'outros';
-      if (!acc[cat]) acc[cat] = [];
-      acc[cat].push(product);
+  const categoryMap = useMemo(() => {
+    return Object.fromEntries(categories.map((c) => [c.slug, c.name]));
+  }, [categories]);
+
+  const orderedSections = useMemo(() => {
+    const productsBySlug = products.reduce((acc, product) => {
+      const slug = product.category || 'outros';
+      if (!acc[slug]) acc[slug] = [];
+      acc[slug].push(product);
       return acc;
     }, {} as Record<string, ProductInfo[]>);
-  }, [products]);
+
+    // Iterate categories in backend order, skip empty ones
+    const sections: { slug: string; name: string; products: ProductInfo[] }[] = [];
+    for (const cat of categories) {
+      const items = productsBySlug[cat.slug];
+      if (items && items.length > 0) {
+        sections.push({ slug: cat.slug, name: cat.name, products: items });
+        delete productsBySlug[cat.slug];
+      }
+    }
+    // Append products whose category is missing or uncategorized
+    const remainingSlugs = Object.keys(productsBySlug);
+    for (const slug of remainingSlugs) {
+      const items = productsBySlug[slug];
+      if (items && items.length > 0) {
+        sections.push({ slug, name: categoryMap[slug] || slug, products: items });
+      }
+    }
+    return sections;
+  }, [products, categories, categoryMap]);
 
   return (
-    <div className="container mx-auto px-4 py-12">
-      <div className="text-center mb-16">
+    <div className="container py-12">
+      <div className="text-center mb-8">
         <h1 className="text-5xl font-display text-white mb-4">Loja Oficial</h1>
         <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-          Equipamentos e vestuário com a identidade da nossa equipe.
+          Peças sob demanda com a identidade da nossa equipe. Clique em um produto para ver detalhes e encomendar.
         </p>
       </div>
 
@@ -43,22 +66,21 @@ const Loja = () => {
           </button>
         </div>
       ) : (
-        <div className="space-y-20">
-          {Object.entries(productsByCategory).map(([catId, categoryProducts]) => (
-            <div key={catId} className="flex flex-col">
+        <div className="space-y-16">
+          {orderedSections.map((section) => (
+            <div key={section.slug} className="flex flex-col">
               <div className="flex items-center gap-4 mb-8">
                 <h2 className="text-3xl font-display text-white uppercase tracking-tight">
-                  {categories[catId] || catId}
+                  {section.name}
                 </h2>
                 <div className="h-px bg-zinc-800 flex-grow" />
                 <span className="text-sm text-gray-500 font-mono">
-                  {categoryProducts.length} {categoryProducts.length === 1 ? 'item' : 'itens'}
+                  {section.products.length} {section.products.length === 1 ? 'item' : 'itens'}
                 </span>
               </div>
               
               <ProductCarousel 
-                products={categoryProducts} 
-                categories={categories} 
+                products={section.products} 
                 onProductClick={setSelectedProduct}
               />
             </div>
@@ -70,20 +92,10 @@ const Loja = () => {
       {selectedProduct && (
         <ProductModal 
           product={selectedProduct} 
-          categoryLabel={categories[selectedProduct.category]}
+          categoryLabel={categoryMap[selectedProduct.category]}
           onClose={() => setSelectedProduct(null)}
         />
       )}
-
-      <div className="mt-16 p-8 bg-zinc-900 rounded-lg border border-zinc-800 text-center">
-        <ShoppingBag className="mx-auto text-primary mb-4" size={48} />
-        <h2 className="text-2xl font-display text-white mb-2">Como comprar?</h2>
-        <p className="text-gray-400 max-w-xl mx-auto">
-          Nossa loja funciona sob demanda. Clique no botão de encomendar para falar diretamente com o responsável pelos pedidos via WhatsApp e verificar a disponibilidade de tamanhos.
-        </p>
-      </div>
     </div>
   );
 };
-
-export default Loja;

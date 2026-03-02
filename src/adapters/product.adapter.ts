@@ -16,9 +16,10 @@ export const productAdapter = (raw: any): Product => {
     price: raw.price != null
       ? `R$ ${Number(raw.price).toFixed(2).replace('.', ',')}`
       : '',
-    category: raw.categoria?.name || raw.categoria?.slug || '',
+    category: raw.categoria?.slug || raw.categoria?.name || '',
     sizes: Array.isArray(raw.sizes) ? raw.sizes : [],
     coverImage,
     gallery,
+    formsLink: raw.formsLink || undefined,
   };
 };

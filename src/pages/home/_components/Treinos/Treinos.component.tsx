@@ -9,7 +9,7 @@ export const Treinos = () => {
 
   return (
     <div className="flex flex-col gap-16 py-12">
-      <section className="container mx-auto px-4">
+      <section className="container">
         <SectionHeader title="Horários de Treino" icon={Clock} />
 
         {loading ? (

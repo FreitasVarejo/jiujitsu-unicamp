@@ -10,19 +10,22 @@ Frontend SPA for the Jiu-Jitsu Unicamp team website. Built with React 19 + Vite 
 
 ---
 
-## Commands
+## Commands & Development
 
 **Package manager: `npm`** (never `yarn`/`pnpm`/`bun`).
 
-```bash
-npm run dev          # Vite dev server (http://localhost:5173)
-npm run build        # Type-check + bundle to dist/
-npm run preview      # Serve the production build locally
-npm run lint         # ESLint across the entire project
-docker compose up -d --build   # Build and run the production Nginx image
-```
+| Command | Purpose |
+|---------|---------|
+| `npm run dev` | Start Vite dev server at `http://localhost:5173` |
+| `npm run build` | Type-check + bundle to `dist/` (fails on TS/lint errors) |
+| `npm run preview` | Serve the production build locally for testing |
+| `npm run lint` | Run ESLint across the entire project |
+| `docker compose up -d --build` | Build and run production Nginx image |
 
-**There are no tests.** No test runner (Jest, Vitest, etc.) is installed. Do not add one unless explicitly instructed.
+**Important:** 
+- **There are no tests.** No test runner is installed. Do not add one unless explicitly instructed.
+- The build **fails on TypeScript errors or ESLint violations**. Always run `npm run lint` and `npm run build` locally before pushing to `main`.
+- ESLint config enforces: strict TS mode, no unused variables/parameters, no `any` type (use `unknown` instead), single quotes, 2-space indentation.
 
 ---
 
@@ -32,12 +35,23 @@ docker compose up -d --build   # Build and run the production Nginx image
 |---|---|---|
 | `VITE_API_BASE_URL` | Base URL of the Strapi backend | `http://localhost:1337` (dev) / `https://files.jiujitsuunicamp.com.br` (prod) |
 | `VITE_API_TOKEN` | Read-only Strapi API token — sent as `Authorization: Bearer` | *(generate in Strapi admin → API Tokens)* |
+| `VITE_GOOGLE_API_KEY` | Google API key for Calendar API v3 (HTTP referer restricted) | *(generate in Google Cloud Console → Credentials)* |
 
-Copy `.env.example` to `.env.local` and fill in both values. Both are consumed exclusively by `src/services/baseMediaService.ts`.
+### Local Development
 
-**Endpoints são privados** — `VITE_API_TOKEN` é obrigatório. Sem ele, todas as chamadas à API retornam 401/403 e o site não carrega nenhum dado.
+Copy `.env.example` to `.env.local` and fill in the values. `VITE_API_TOKEN` is optional: if absent, requests are sent without an `Authorization` header (works when Strapi endpoints are configured as public). `VITE_API_BASE_URL` and `VITE_API_TOKEN` are consumed by `src/services/baseMediaService.ts`; `VITE_GOOGLE_API_KEY` is consumed by `src/services/calendarService.ts`.
 
-Em produção, o `.env.local` é armazenado em `/home/saul/envs/jiujitsu-unicamp.env` no servidor e copiado pelo workflow de CI durante o deploy. Variáveis `VITE_*` são embutidas no bundle JS em tempo de build (não em runtime).
+### Production Deployment (GitHub Secrets)
+
+The GitHub Actions workflow (`.github/workflows/deploy.yml`) creates `.env.local` at build time using **Repository Secrets**. Configure these in the GitHub repo settings (**Settings → Secrets and variables → Actions → Repository secrets**):
+
+| Secret | Value |
+|---|---|
+| `VITE_API_BASE_URL` | Production Strapi URL (e.g., `https://files.jiujitsuunicamp.com.br`) |
+| `VITE_API_TOKEN` | Strapi API token from production |
+| `VITE_GOOGLE_API_KEY` | Google Calendar API key |
+
+These secrets are **never committed** to the repository and are only accessible to the workflow during deployment.
 
 ---
 
@@ -50,11 +64,11 @@ src/
 ├── constants/       # Enums + lookup maps: Belt, Weekday, TrainingType
 ├── layouts/         # App shell: Layout.tsx wraps every page with navbar + footer
 ├── pages/           # Route-level pages; each feature is self-contained:
-│   ├── home/        #   _components/ → local sub-components, *.hook.ts → data
+│   ├── home/        #   _components/ → local sub-components (incl. Agenda/), *.hook.ts → data
 │   ├── eventos/     #   event.hook.ts + event.page.tsx + detalhes/ sub-route
 │   ├── store/
 │   └── not-found/
-├── services/        # HTTP layer: BaseMediaService (low-level) + mediaService (public API)
+├── services/        # HTTP layer: BaseMediaService (low-level) + mediaService (Strapi) + calendarService (Google Calendar)
 ├── types/           # Shared TypeScript interfaces (media.ts)
 ├── App.tsx          # React Router <Routes> definition
 └── main.tsx         # ReactDOM.createRoot entry point
@@ -72,7 +86,7 @@ interface BaseEntity     { id: string; title: string; }          // id is always
 interface Instructor     extends BaseEntity { year: string; course: string; belt: Belt; photo: Image; }
 interface EventSummary   extends BaseEntity { date: string; location: string; coverImage: Image; }
 interface Event          extends EventSummary { description: string; category: string; gallery: Image[]; }
-interface Product        extends BaseEntity { description: string; category: string; price: string; sizes: string[]; coverImage: Image; gallery: Image[]; }
+interface Product        extends BaseEntity { description: string; category: string; price: string; sizes: string[]; coverImage: Image; gallery: Image[]; formsLink?: string; }
 interface TrainingSchedule extends BaseEntity { startTime: string; endTime: string; instructor: string; weekday: Weekday; category: TrainingType; }
 ```
 
@@ -102,6 +116,16 @@ Public singleton. All methods call `BaseMediaService.get()`, then run the result
 | `getEventDetails(slug)` | `GET /api/eventos?filters[slug][$eq]={slug}&populate[cover]=true&populate[gallery]=true` |
 | `getAllProducts()` | `GET /api/produtos?populate[cover]=true&populate[gallery]=true&populate[categoria]=true&pagination[limit]=250` |
 | `getProductCategories()` | `GET /api/categoria-produtos?pagination[limit]=250` → `Record<slug, name>` |
+
+### `calendarService` (`src/services/calendarService.ts`)
+
+Fetches events from the **Google Calendar API v3** (public calendar, API key auth). Completely independent from Strapi — no adapters needed.
+
+| Method | API call |
+|---|---|
+| `getEventsByRange(start, end)` | `GET https://www.googleapis.com/calendar/v3/calendars/{calendarId}/events?timeMin=...&timeMax=...` → `GoogleCalendarEvent[]` |
+
+`GoogleCalendarEvent` interface: `{ id, summary, start: { dateTime?, date? }, end: { dateTime?, date? }, location?, description? }`.
 
 ### Adapters (`src/adapters/`)
 
@@ -135,7 +159,7 @@ Single-type endpoints return `{ "data": { ...fields } }`. Media fields are objec
 | `instrutores` | `/api/instrutores` | `slug`, `title`, `year` *(string)*, `course` *(string)*, `belt` *(enum — see below)*, `photo` *(media)* |
 | `treinos` | `/api/treinos` | `slug`, `title`, `weekday` *(int)*, `category` *(int)*, `startTime` *(time HH:MM:SS)*, `endTime` *(time HH:MM:SS)*, `instructor` *(string)* |
 | `eventos` | `/api/eventos` | `slug`, `title`, `date` *(date YYYY-MM-DD)*, `location`, `description`, `category`, `cover` *(media)*, `gallery` *(media array)* |
-| `produtos` | `/api/produtos` | `slug`, `title`, `description`, `price` *(string)*, `sizes` *(JSON string array)*, `cover` *(media)*, `gallery` *(media array)*, `categoria` *(relation → `categoria-produtos`)* |
+| `produtos` | `/api/produtos` | `slug`, `title`, `description`, `price` *(string)*, `sizes` *(JSON string array)*, `cover` *(media)*, `gallery` *(media array)*, `categoria` *(relation → `categoria-produtos`)*, `formsLink` *(string, opcional)* |
 | `categoria-produtos` | `/api/categoria-produtos` | `slug`, `name` |
 
 ### Enum / Integer Constraints
@@ -157,12 +181,34 @@ Single-type endpoints return `{ "data": { ...fields } }`. Media fields are objec
 
 ---
 
-## Code Style
+## Code Style & Formatting
 
-No Prettier. Match surrounding code manually:
-- 2-space indentation, single quotes, trailing commas in multi-line structures.
-- Import order: **external libraries → `@/` absolute → relative**. Do not mix.
-- **Named exports only** for components, hooks, and utilities. Default exports exist only in `App.tsx`, `Layout.tsx`, and `ScrollToTop.tsx` for legacy reasons — do not add new ones.
+**No Prettier.** Match surrounding code manually:
+
+### Indentation & Spacing
+- **2-space indentation** (not 4, not tabs).
+- **Single quotes** for strings (not double quotes).
+- **Trailing commas** in multi-line arrays, objects, function parameters.
+- No semicolons (let ESLint enforce this).
+
+### Imports
+Order imports as: **external libraries → `@/` absolute → relative**. Do not mix.
+```ts
+import React from 'react'  // External
+import { useService } from '@/services'  // Absolute
+import { LocalComponent } from './local'  // Relative
+```
+
+### Exports
+- **Named exports only** for components, hooks, and utilities.
+- Default exports exist only in `App.tsx`, `Layout.tsx`, and `ScrollToTop.tsx` for legacy reasons — do not add new ones.
+- Always export in barrel `index.ts` files.
+
+### Type Safety
+- **Strict TypeScript mode** is enforced (`strict: true`). The build fails on violations.
+- Avoid `any` type — use `unknown` and narrow it. Reserve `any` only at adapter/service boundaries with `// eslint-disable-next-line @typescript-eslint/no-explicit-any`.
+- Prefix intentionally unused parameters with `_` (e.g., `_event`, `_error`).
+- Never use `Function` type; use proper signatures like `() => void` or `(x: T) => U`.
 
 ---
 
@@ -219,23 +265,104 @@ useEffect(() => {
 
 ## Styling (Tailwind CSS)
 
-- Utility classes only — no CSS modules, no inline `style` props, no plain CSS (except global resets in `index.css`).
+- Utility classes only — no CSS modules, no inline `style` props, no plain CSS (except global resets in `index.css`). **Exception:** Schedule-X custom components (e.g. `TimeGridEvent`) require inline `style` for dynamic calendar colors — the library strips wrapper styles when a custom component is provided.
 - Custom theme tokens: `primary` (#d26030 orange), `background` (black), `surface` (light grey).
 - Custom fonts: `font-sans` → Inter, `font-display` → Oswald.
 - Responsive: use Tailwind breakpoint prefixes (`sm:`, `md:`, `lg:`, `xl:`).
 - SVG assets: import as React components via `vite-plugin-svgr` (`import Logo from "@/assets/logo.svg?react"`).
+- The `container` class is configured with `max-width: 1440px` starting at the `xl` breakpoint (≥1440px), with `2rem` padding at `lg` and `xl`. Always use `container` for page-level wrappers — never use `max-w-7xl mx-auto px-...` directly in page components.
+
+---
+
+## Agenda / Google Calendar
+
+The **Agenda** section on the home page displays the weekly training schedule consuming the **Google Calendar API v3** directly (without Strapi). The layout is **responsive**: mobile uses scrollable day cards; desktop uses the **Schedule-X v4** week view.
+
+### Dependencies
+
+- `@schedule-x/react`, `@schedule-x/calendar`, `@schedule-x/theme-default`, `@schedule-x/events-service`, `@schedule-x/calendar-controls`, `@schedule-x/current-time`
+- `temporal-polyfill` — Schedule-X v4 uses the Temporal API internally
+
+### Files
+
+| File | Responsibility |
+|---|---|
+| `src/services/calendarService.ts` | Fetches events from Google Calendar API v3 by date range |
+| `src/pages/home/_components/Agenda/Agenda.component.tsx` | Orchestrator: renders `AgendaMobile` (< md) and Schedule-X (≥ md), color legend, link to full calendar |
+| `src/pages/home/_components/Agenda/agenda.hook.ts` | Hook `useAgendaEvents`: fetches events for the navigable week, groups by day (0=Sun..6=Sat), exposes `goToPreviousWeek`/`goToNextWeek` |
+| `src/pages/home/_components/Agenda/AgendaMobile.component.tsx` | Mobile layout (`md:hidden`): `ChevronLeft / ChevronRight` nav bar with `DD/MM – DD/MM` range, day cards with date, training type, instructor and location |
+| `src/pages/home/_components/Agenda/TimeGridEvent.component.tsx` | Custom Schedule-X component (desktop): colors by training type, instructor, location with Maps link |
+| `src/pages/home/_components/Agenda/index.ts` | Barrel export |
+
+### Responsive Layout
+
+- **< md (mobile):** `AgendaMobile` — 7 cards (Sun–Sat), each with day name + `DD/MM` date. Navigation bar `ChevronLeft / ChevronRight` with `DD/MM – DD/MM` range in the center. Auto re-fetches on navigation.
+- **≥ md (desktop):** Schedule-X week view, 7 columns, with the library's native navigation.
+- Breakpoint: `md` (768px).
+
+### Hook `useAgendaEvents`
+
+- `weekStart` — `useState<string>` (YYYY-MM-DD of Sunday), initialized to the current week.
+- `weekEnd` — derived from `weekStart + 6 days` (no separate state).
+- `useEffect([weekStart, weekEnd])` — re-fetches whenever the week changes.
+- `goToPreviousWeek` / `goToNextWeek` — `useCallback` functions that shift `weekStart` by ±7 days.
+- Returns: `{ eventsByDay, loading, error, weekStart, weekEnd, goToPreviousWeek, goToNextWeek }`.
+- `EventsByDay = Record<number, AgendaEvent[]>` — key is the JS day of week (0=Sun..6=Sat).
+
+### Schedule-X Configuration (desktop)
+
+- `isDark: true`, locale `pt-BR`, timezone `America/Fortaleza`
+- `firstDayOfWeek: 7` (Sunday; Schedule-X uses 1-7, **not** 0-6)
+- `dayBoundaries: { start: '10:00', end: '23:00' }`, `gridHeight: 500`
+- CSS variables for dark/orange theme in `src/index.css` (selector `.sx-react-calendar-wrapper`)
+- Override of `h1-h6` in `index.css` to neutralize global styles that bleed into Schedule-X headers
+- Wrapper `hidden md:block sx-react-calendar-wrapper` with `height: 600px; max-height: 80vh`
+- Code splitting: all `@schedule-x/*` packages + `temporal-polyfill` in a separate chunk via `manualChunks` in `vite.config.ts`
+
+### Training Types (colors derived from Google Calendar summary)
+
+The event `summary` follows the format `"Treino <Type> - Instructor"`. The type is inferred by `inferCalendarId()` with case-insensitive, accent-insensitive matching:
+
+| Type | Color | calendarId |
+|---|---|---|
+| Geral | `#d26030` (orange, primary) | `geral` |
+| Competição | `#dc2626` (red) | `competicao` |
+| Noturno | `#6366f1` (indigo) | `noturno` |
+| Feminino | `#d97706` (amber) | `feminino` |
+| Fallback | `#71717a` (grey) | `fallback` |
+
+The full palettes (`main`, `container`, `onContainer`) are duplicated in `Agenda.component.tsx` (for Schedule-X) and in `AgendaMobile.component.tsx` / `TimeGridEvent.component.tsx` (for cards and custom events). If you change a color, update all three places.
+
+### Locations
+
+Full Google Calendar addresses are mapped to friendly names via `LOCATION_DISPLAY_MAP`:
+- "Faculdade de Educação Física..." → **LABFEF**
+- "GMU - Ginásio Multidisciplinar..." → **GMU**
+
+The map exists in two places: `agenda.hook.ts` (for mobile cards) and `TimeGridEvent.component.tsx` (for Schedule-X desktop). Keep them in sync.
+
+### Important Notes
+
+- The Schedule-X `fetchEvents` callback receives `range.start`/`range.end` as `Temporal.PlainDate` or `Temporal.ZonedDateTime` objects — use `String(range.start).slice(0, 10)` to extract `YYYY-MM-DD`.
+- Custom Schedule-X components (`timeGridEvent`) **must** be defined at module scope (outside React components) to avoid re-creation on every render.
+- `TimeGridEvent` and the mobile `EventCard` apply colors via inline `style` (documented exception to the Tailwind rule) because Schedule-X strips wrapper styles when a custom component is provided.
+- `AgendaMobile` and Schedule-X fetch **independently**: `useAgendaEvents` feeds the mobile cards; Schedule-X uses its own internal `callbacks.fetchEvents`. Both call `calendarService.getEventsByRange`.
 
 ---
 
 ## CI/CD
 
-The GitHub Actions workflow at `.github/workflows/deploy.yml` triggers on every push to `main`. It runs on a **self-hosted runner** on the production server. The runner:
-
-1. Checks out the code
-2. Copies `/home/saul/envs/jiujitsu-unicamp.env` to `.env.local` in the checkout directory
-3. Runs `docker compose -f docker-compose.yml up -d --build --remove-orphans`
-4. Runs `docker image prune -f`
-
-The `.env.local` copy step is critical: without it, `VITE_API_BASE_URL` and `VITE_API_TOKEN` are missing from the Vite build and the production bundle cannot reach the backend. No GitHub Secrets are needed -- the runner has local access to the env file.
+The GitHub Actions workflow at `.github/workflows/deploy.yml` triggers on every push to `main`. It runs `docker compose up -d --build` on the self-hosted runner, which rebuilds the Nginx production image and restarts the container.
 
 **There are no lint or type-check gates in CI.** Run `npm run lint` and `npm run build` locally and confirm both pass before pushing to `main`.
+
+---
+
+## Store Ordering Flow
+
+The `ProductModal` component has two states driven by `product.formsLink`:
+
+- **`formsLink` present** (orders open): primary orange button (`bg-primary`) labeled "Fazer encomenda" opens the Google Forms link in a new tab. Status bullet shows green + "Encomendas abertas". Helper text: "Formulário com instruções de pagamento incluso."
+- **`formsLink` absent** (orders closed): zinc button (`bg-zinc-700`) labeled "Acompanhar disponibilidade" opens the WhatsApp group link. Status bullet shows gray + "Encomendas encerradas no momento". Helper text: "Avisamos no grupo quando novas encomendas abrirem."
+
+The WhatsApp group invite link is hardcoded in the constant `WHATSAPP_GROUP_URL` at the top of `src/pages/store/_components/ProductModal.tsx`. Update it directly when the invite link changes — no backend change needed.

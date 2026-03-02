@@ -1,4 +1,5 @@
 import { Hero } from "./_components/Hero";
+import { Agenda } from "./_components/Agenda";
 import { Guia } from "./_components/Guia";
 import { Treinos } from "./_components/Treinos";
 import { Location } from "./_components/Location";
@@ -11,11 +12,11 @@ export const Home = () => {
       <Guia />
 
       <div id="treinos">
-        <Treinos />
+        <Agenda />
       </div>
 
-      <Location />
       <Team />
+      <Location />
     </div>
   );
 };
