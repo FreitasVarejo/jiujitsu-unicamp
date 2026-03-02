@@ -15,8 +15,8 @@ export const Home = () => {
         <Agenda />
       </div>
 
-      <Location />
       <Team />
+      <Location />
     </div>
   );
 };
