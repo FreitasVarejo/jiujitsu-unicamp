@@ -1,5 +1,6 @@
 import { MapPin, User } from 'lucide-react';
-import { CALENDAR_TYPE_INFO, parseEventTitle, getDisplayLocation, buildMapsUrl } from '@/constants';
+import { CALENDAR_TYPE_INFO } from '@/constants';
+import { parseEventTitle, getDisplayLocation, buildMapsUrl } from './agenda-helpers';
 
 /* ── Tipos ── */
 

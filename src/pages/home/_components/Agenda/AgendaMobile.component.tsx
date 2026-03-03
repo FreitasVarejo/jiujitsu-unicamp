@@ -1,6 +1,7 @@
 import { Loader2, AlertCircle, MapPin, User, ChevronLeft, ChevronRight } from 'lucide-react';
 import { AgendaEvent, EventsByDay } from './agenda.hook';
-import { CALENDAR_TYPE_INFO, buildMapsUrl } from '@/constants';
+import { CALENDAR_TYPE_INFO } from '@/constants';
+import { buildMapsUrl } from './agenda-helpers';
 
 /* ── Constantes ── */
 

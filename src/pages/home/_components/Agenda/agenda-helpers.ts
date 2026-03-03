@@ -1,5 +1,5 @@
-import { CalendarType, CALENDAR_TYPE_INFO } from './calendar-type';
-import { CALENDAR_LOCATION_INFO, ADDRESS_TO_LOCATION } from './calendar-location';
+import { CalendarType, CALENDAR_TYPE_INFO } from '@/constants';
+import { CALENDAR_LOCATION_INFO, ADDRESS_TO_LOCATION } from '@/constants';
 
 /**
  * Infere o tipo de calendário (CalendarType) a partir do summary do evento.

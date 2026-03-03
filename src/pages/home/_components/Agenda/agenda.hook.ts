@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { calendarService, GoogleCalendarEvent } from '@/services/calendarService';
-import { inferCalendarType, parseEventTitle, getDisplayLocation } from '@/constants';
+import { inferCalendarType, parseEventTitle, getDisplayLocation } from './agenda-helpers';
 
 /* ── Tipos ── */
 

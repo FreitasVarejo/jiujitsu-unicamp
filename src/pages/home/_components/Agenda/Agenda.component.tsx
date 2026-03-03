@@ -10,7 +10,8 @@ import { TimeGridEvent } from './TimeGridEvent.component';
 import { AgendaMobile } from './AgendaMobile.component';
 import { useAgendaEvents } from './agenda.hook';
 import { calendarService, GoogleCalendarEvent } from '@/services/calendarService';
-import { CalendarType, CALENDAR_TYPE_INFO, inferCalendarType } from '@/constants';
+import { CalendarType, CALENDAR_TYPE_INFO } from '@/constants';
+import { inferCalendarType } from './agenda-helpers';
 import 'temporal-polyfill/global';
 import '@schedule-x/theme-default/dist/index.css';
 
