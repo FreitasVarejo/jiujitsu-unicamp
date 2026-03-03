@@ -1,6 +1,6 @@
 import { MapPin, User } from 'lucide-react';
 import { CALENDAR_TYPE_INFO } from '@/constants';
-import { parseEventTitle, getDisplayLocation, buildMapsUrl, isPastEventFromDateTime } from './agenda-helpers';
+import { parseEventTitle, getDisplayLocation, buildMapsUrl, isPastEventFromDateTime, isCancelledEvent } from './agenda-helpers';
 
 /* ── Tipos ── */
 
@@ -31,11 +31,21 @@ interface TimeGridEventProps {
  * Deve ser definido no escopo do módulo (fora de componentes React)
  * conforme exigido pelo Schedule-X.
  */
+
+const CANCELLED_COLORS = {
+  container: 'rgba(30, 30, 30, 0.7)',
+  main: 'rgba(100, 100, 100, 0.6)',
+  onContainer: 'rgba(160, 160, 160, 0.7)',
+};
+
 export const TimeGridEvent = ({ calendarEvent }: TimeGridEventProps) => {
+  const cancelled = isCancelledEvent(calendarEvent.title ?? '');
   const isPast = isPastEventFromDateTime(calendarEvent.startRaw);
-  const colors = isPast
-    ? (CALENDAR_TYPE_INFO[calendarEvent.calendarId as keyof typeof CALENDAR_TYPE_INFO] ?? CALENDAR_TYPE_INFO.fallback).darkColorsRgbaPast
-    : (CALENDAR_TYPE_INFO[calendarEvent.calendarId as keyof typeof CALENDAR_TYPE_INFO] ?? CALENDAR_TYPE_INFO.fallback).darkColorsRgba;
+  const colors = cancelled
+    ? CANCELLED_COLORS
+    : isPast
+      ? (CALENDAR_TYPE_INFO[calendarEvent.calendarId as keyof typeof CALENDAR_TYPE_INFO] ?? CALENDAR_TYPE_INFO.fallback).darkColorsRgbaPast
+      : (CALENDAR_TYPE_INFO[calendarEvent.calendarId as keyof typeof CALENDAR_TYPE_INFO] ?? CALENDAR_TYPE_INFO.fallback).darkColorsRgba;
   const { type, instructor } = parseEventTitle(calendarEvent.title ?? 'Sem título');
 
   return (
@@ -47,7 +57,18 @@ export const TimeGridEvent = ({ calendarEvent }: TimeGridEventProps) => {
         color: colors.onContainer,
       }}
     >
-      <span className="inline-flex items-center gap-0.5 font-semibold truncate">
+      {cancelled && (
+        <span
+          className="inline-block text-xs font-bold tracking-wider truncate"
+          style={{ color: '#ef4444' }}
+        >
+          CANCELADO
+        </span>
+      )}
+      <span
+        className="inline-flex items-center gap-0.5 font-semibold truncate"
+        style={{ textDecoration: cancelled ? 'line-through' : 'none' }}
+      >
         {instructor ? (
           <>
             <User size={10} className="shrink-0" />
@@ -66,7 +87,10 @@ export const TimeGridEvent = ({ calendarEvent }: TimeGridEventProps) => {
           className="inline-flex items-center gap-0.5 opacity-80 hover:opacity-100 underline underline-offset-2 transition-opacity"
           onClick={(e) => e.stopPropagation()}
           title={calendarEvent.location}
-          style={{ color: colors.onContainer }}
+          style={{
+            color: colors.onContainer,
+            textDecoration: cancelled ? 'line-through' : 'underline',
+          }}
         >
           <MapPin size={10} className="shrink-0" />
           <span className="truncate">{getDisplayLocation(calendarEvent.location)}</span>

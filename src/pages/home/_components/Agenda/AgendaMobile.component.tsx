@@ -37,11 +37,19 @@ const fmtDDMM = (d: Date): string =>
 
 /* ── Sub-componentes ── */
 
+const CANCELLED_COLORS = {
+  container: 'rgba(30, 30, 30, 0.7)',
+  main: 'rgba(100, 100, 100, 0.6)',
+  onContainer: 'rgba(160, 160, 160, 0.7)',
+};
+
 const EventCard = ({ event }: { event: AgendaEvent }) => {
   const isPast = isPastEventFromDateTime(event.startDateTime);
-  const colors = isPast
-    ? (CALENDAR_TYPE_INFO[event.calendarId as keyof typeof CALENDAR_TYPE_INFO] ?? CALENDAR_TYPE_INFO.fallback).darkColorsRgbaPast
-    : (CALENDAR_TYPE_INFO[event.calendarId as keyof typeof CALENDAR_TYPE_INFO] ?? CALENDAR_TYPE_INFO.fallback).darkColorsRgba;
+  const colors = event.cancelled
+    ? CANCELLED_COLORS
+    : isPast
+      ? (CALENDAR_TYPE_INFO[event.calendarId as keyof typeof CALENDAR_TYPE_INFO] ?? CALENDAR_TYPE_INFO.fallback).darkColorsRgbaPast
+      : (CALENDAR_TYPE_INFO[event.calendarId as keyof typeof CALENDAR_TYPE_INFO] ?? CALENDAR_TYPE_INFO.fallback).darkColorsRgba;
 
   return (
     <div
@@ -49,12 +57,29 @@ const EventCard = ({ event }: { event: AgendaEvent }) => {
       style={{ backgroundColor: colors.container, borderLeft: `3px solid ${colors.main}` }}
     >
       <div className="flex flex-col gap-0.5 min-w-0">
-        <span className="text-sm font-semibold" style={{ color: colors.onContainer }}>
+        {event.cancelled && (
+          <span
+            className="inline-block text-xs font-bold tracking-wider"
+            style={{ color: '#ef4444' }}
+          >
+            CANCELADO
+          </span>
+        )}
+        <span
+          className="text-sm font-semibold"
+          style={{
+            color: colors.onContainer,
+            textDecoration: event.cancelled ? 'line-through' : 'none',
+          }}
+        >
           {event.type}
         </span>
         <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs" style={{ color: colors.onContainer }}>
           {event.instructor && (
-            <span className="inline-flex items-center gap-0.5 opacity-80">
+            <span
+              className="inline-flex items-center gap-0.5 opacity-80"
+              style={{ textDecoration: event.cancelled ? 'line-through' : 'none' }}
+            >
               <User size={10} className="shrink-0" />
               <span>{event.instructor}</span>
             </span>
@@ -65,7 +90,10 @@ const EventCard = ({ event }: { event: AgendaEvent }) => {
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-0.5 opacity-80 hover:opacity-100 underline underline-offset-2 transition-opacity"
-              style={{ color: colors.onContainer }}
+              style={{
+                color: colors.onContainer,
+                textDecoration: event.cancelled ? 'line-through' : 'underline',
+              }}
             >
               <MapPin size={10} className="shrink-0" />
               <span>{event.location}</span>
@@ -75,7 +103,10 @@ const EventCard = ({ event }: { event: AgendaEvent }) => {
       </div>
       <span
         className="text-sm font-medium whitespace-nowrap shrink-0"
-        style={{ color: colors.onContainer }}
+        style={{
+          color: colors.onContainer,
+          textDecoration: event.cancelled ? 'line-through' : 'none',
+        }}
       >
         {event.endTime && event.endTime !== event.startTime
           ? `${event.startTime} – ${event.endTime}`

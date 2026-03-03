@@ -148,5 +148,6 @@ GitHub Actions workflow at `.github/workflows/deploy.yml` triggers on push to `m
 
 ## Recent Refactors
 
+- **Cancelled event detection & styling** (current): Added `isCancelledEvent()` detector in `agenda-helpers.ts` for event titles starting with `*` (e.g., `"*Treino Geral - Lucas Senno"`). Updated `parseEventTitle()` to strip the leading `*` before parsing type/instructor. Added `cancelled: boolean` field to `AgendaEvent`. Styled cancelled events with neutral grey colors, red "CANCELADO" badge, and `line-through` decoration on type, instructor, location, and time across both mobile (`AgendaMobile.component.tsx`) and desktop (`TimeGridEvent.component.tsx`) views.
 - **Past event styling** (commit `69afa0e`): Added `darkColorsRgbaPast` to `CALENDAR_TYPE_INFO` enum map for each calendar type. Implements visual distinction for past events using darkened, semi-transparent colors. Detection via `isPastEvent()` and `isPastEventFromDateTime()` in `agenda-helpers.ts`. Applied in `TimeGridEvent.component.tsx` and `AgendaMobile.component.tsx`.
 - **Calendar constants** (commit `2a3c9ab`): Extracted `calendar-type.ts`, `calendar-location.ts`, `calendar-helpers.ts` following enum architecture. Eliminated triplication of colors and location mappings.

@@ -2,6 +2,17 @@ import { CalendarType, CALENDAR_TYPE_INFO } from '@/constants';
 import { CALENDAR_LOCATION_INFO, ADDRESS_TO_LOCATION } from '@/constants';
 
 /**
+ * Verifica se um evento foi cancelado.
+ * Um evento é considerado cancelado se seu título começa com '*'.
+ *
+ * @param summary - Título do evento do Google Calendar
+ * @returns true se o evento foi cancelado, false caso contrário
+ */
+export const isCancelledEvent = (summary: string): boolean => {
+  return summary.trimStart().startsWith('*');
+};
+
+/**
  * Infere o tipo de calendário (CalendarType) a partir do summary do evento.
  * Espera formato "Treino <Tipo> - Instrutor" ou "Treino <Tipo>".
  * Retorna o CalendarType correspondente, ou CalendarType.FALLBACK como fallback.
@@ -31,9 +42,11 @@ export const inferCalendarType = (summary: string): CalendarType => {
 /**
  * Extrai o tipo de treino (antes do '-') e o nome do instrutor (depois do '-')
  * a partir do título completo do evento.
+ * Remove asterisco inicial se presente (marca de evento cancelado).
  *
  * @example
  * "Treino Geral - Pablo Viana" → { type: "TREINO GERAL", instructor: "Pablo Viana" }
+ * "*Treino Geral - Pablo Viana" → { type: "TREINO GERAL", instructor: "Pablo Viana" }
  * "Treino Noturno"             → { type: "TREINO NOTURNO", instructor: undefined }
  * "Evento Qualquer"            → { type: "EVENTO QUALQUER", instructor: undefined }
  *
@@ -41,14 +54,16 @@ export const inferCalendarType = (summary: string): CalendarType => {
  * @returns Objeto com tipo e instrutor (opcional)
  */
 export const parseEventTitle = (raw: string): { type: string; instructor?: string } => {
-  const dashIndex = raw.indexOf('-');
+  // Remove asterisco inicial se presente
+  const cleaned = raw.trimStart().replace(/^\*\s*/, '');
+  const dashIndex = cleaned.indexOf('-');
 
   if (dashIndex === -1) {
-    return { type: raw.trim().toUpperCase() };
+    return { type: cleaned.trim().toUpperCase() };
   }
 
-  const type = raw.slice(0, dashIndex).trim().toUpperCase();
-  const instructor = raw.slice(dashIndex + 1).trim() || undefined;
+  const type = cleaned.slice(0, dashIndex).trim().toUpperCase();
+  const instructor = cleaned.slice(dashIndex + 1).trim() || undefined;
   return { type, instructor };
 };
 

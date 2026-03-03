@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { calendarService, GoogleCalendarEvent } from '@/services/calendarService';
-import { inferCalendarType, parseEventTitle, getDisplayLocation } from './agenda-helpers';
+import { inferCalendarType, parseEventTitle, getDisplayLocation, isCancelledEvent } from './agenda-helpers';
 
 /* ── Tipos ── */
 
@@ -14,6 +14,7 @@ export interface AgendaEvent {
   rawLocation?: string;
   calendarId: string;
   startDateTime?: string;
+  cancelled: boolean;
 }
 
 export type EventsByDay = Record<number, AgendaEvent[]>;
@@ -49,6 +50,7 @@ const getDayOfWeek = (dateTime?: string, date?: string): number => {
 const convertEvent = (event: GoogleCalendarEvent): AgendaEvent => {
   const { type, instructor } = parseEventTitle(event.summary || 'Sem título');
   const calendarId = inferCalendarType(event.summary || '');
+  const cancelled = isCancelledEvent(event.summary || '');
 
   return {
     id: event.id,
@@ -60,6 +62,7 @@ const convertEvent = (event: GoogleCalendarEvent): AgendaEvent => {
     rawLocation: event.location,
     calendarId,
     startDateTime: event.start.dateTime,
+    cancelled,
   };
 };
 
