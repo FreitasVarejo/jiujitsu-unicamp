@@ -1,5 +1,6 @@
 import { Loader2, AlertCircle, MapPin, User, ChevronLeft, ChevronRight } from 'lucide-react';
 import { AgendaEvent, EventsByDay } from './agenda.hook';
+import { CALENDAR_TYPE_INFO, buildMapsUrl } from '@/constants';
 
 /* ── Constantes ── */
 
@@ -15,21 +16,7 @@ const DAY_LABELS: Record<number, string> = {
 
 const ALL_DAYS = [0, 1, 2, 3, 4, 5, 6];
 
-const CALENDAR_COLORS: Record<string, { main: string; container: string; onContainer: string }> = {
-  geral: { main: '#d26030', container: 'rgba(60, 28, 14, 1)', onContainer: '#f4a882' },
-  competicao: { main: '#dc2626', container: 'rgba(55, 15, 15, 1)', onContainer: '#fca5a5' },
-  noturno: { main: '#6366f1', container: 'rgba(25, 25, 60, 1)', onContainer: '#a5b4fc' },
-  feminino: { main: '#d946ef', container: 'rgba(60, 25, 70, 1)', onContainer: '#f0abfc' },
-  evento: { main: '#f59e0b', container: 'rgba(60, 38, 10, 1)', onContainer: '#fcd34d' },
-  fallback: { main: '#71717a', container: 'rgba(39, 39, 42, 1)', onContainer: '#e4e4e7' },
-};
-
-const DEFAULT_COLORS = CALENDAR_COLORS.fallback;
-
 /* ── Helpers ── */
-
-const buildMapsUrl = (location: string): string =>
-  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`;
 
 /**
  * Adiciona `days` a uma data YYYY-MM-DD e retorna o Date resultante.
@@ -50,7 +37,7 @@ const fmtDDMM = (d: Date): string =>
 /* ── Sub-componentes ── */
 
 const EventCard = ({ event }: { event: AgendaEvent }) => {
-  const colors = CALENDAR_COLORS[event.calendarId] ?? DEFAULT_COLORS;
+  const colors = (CALENDAR_TYPE_INFO[event.calendarId as keyof typeof CALENDAR_TYPE_INFO] ?? CALENDAR_TYPE_INFO.fallback).darkColorsRgba;
 
   return (
     <div

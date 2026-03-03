@@ -10,107 +10,41 @@ import { TimeGridEvent } from './TimeGridEvent.component';
 import { AgendaMobile } from './AgendaMobile.component';
 import { useAgendaEvents } from './agenda.hook';
 import { calendarService, GoogleCalendarEvent } from '@/services/calendarService';
+import { CalendarType, CALENDAR_TYPE_INFO, inferCalendarType } from '@/constants';
 import 'temporal-polyfill/global';
 import '@schedule-x/theme-default/dist/index.css';
 
 const CALENDAR_URL =
   'https://calendar.google.com/calendar/embed?src=f481afb9999dfafe1079be33ac43d3ab2695409949b092b3d894ea42cc903f5c%40group.calendar.google.com&ctz=America%2FFortaleza';
 
-/* ── Mapeamento de tipo de treino para calendarId ── */
-
-const TRAINING_TYPE_MAP: Record<string, string> = {
-  geral: 'geral',
-  'competição': 'competicao',
-  competicao: 'competicao',
-  noturno: 'noturno',
-  feminino: 'feminino',
-  evento: 'evento',
-};
-
-/**
- * Extrai o tipo de treino a partir do summary do evento.
- * Espera formato "Treino <Tipo> - Instrutor" ou "Treino <Tipo>".
- * Retorna o calendarId correspondente, ou 'geral' como fallback.
- */
-const inferCalendarId = (summary: string): string => {
-  const match = summary.match(/^treino\s+(\S+)/i);
-  if (!match) return 'fallback';
-
-  const keyword = match[1].toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-  return TRAINING_TYPE_MAP[keyword] ?? 'fallback';
-};
-
 /** Paleta de cores para cada tipo de treino (tema escuro). */
 const TRAINING_CALENDARS: Record<string, {
   colorName: string;
   label: string;
   darkColors: { main: string; container: string; onContainer: string };
-}> = {
-  geral: {
-    colorName: 'geral',
-    label: 'Treino Geral',
-    darkColors: {
-      main: '#d26030',
-      container: '#d2603030',
-      onContainer: '#f4a882',
-    },
+}> = Object.entries(CALENDAR_TYPE_INFO).reduce(
+  (acc, [type, info]) => {
+    acc[type] = {
+      colorName: type,
+      label: info.label,
+      darkColors: info.darkColors,
+    };
+    return acc;
   },
-  competicao: {
-    colorName: 'competicao',
-    label: 'Treino Competição',
-    darkColors: {
-      main: '#dc2626',
-      container: '#dc262630',
-      onContainer: '#fca5a5',
-    },
-  },
-  noturno: {
-    colorName: 'noturno',
-    label: 'Treino Noturno',
-    darkColors: {
-      main: '#6366f1',
-      container: '#6366f130',
-      onContainer: '#a5b4fc',
-    },
-  },
-  feminino: {
-    colorName: 'feminino',
-    label: 'Treino Feminino',
-    darkColors: {
-      main: '#d946ef',
-      container: '#d946ef30',
-      onContainer: '#f0abfc',
-    },
-  },
-  evento: {
-    colorName: 'evento',
-    label: 'Evento',
-    darkColors: {
-      main: '#f59e0b',
-      container: '#f59e0b30',
-      onContainer: '#fcd34d',
-    },
-  },
-  fallback: {
-    colorName: 'fallback',
-    label: 'Outro',
-    darkColors: {
-      main: '#71717a',
-      container: '#27272a',
-      onContainer: '#e4e4e7',
-    },
-  },
-};
+  {} as Record<string, {
+    colorName: string;
+    label: string;
+    darkColors: { main: string; container: string; onContainer: string };
+  }>
+);
 
 /** Itens da legenda de cores (exclui fallback). */
-const LEGEND_ITEMS = [
-  { label: 'Treino Geral', color: '#d26030' },
-  { label: 'Treino Competição', color: '#dc2626' },
-  { label: 'Treino Noturno', color: '#6366f1' },
-  { label: 'Treino Feminino', color: '#d946ef' },
-  { label: 'Evento', color: '#f59e0b' },
-];
-
+const LEGEND_ITEMS = Object.entries(CALENDAR_TYPE_INFO)
+  .filter(([type]) => type !== CalendarType.FALLBACK)
+  .map(([_type, info]) => ({
+    label: info.label,
+    color: info.darkColors.main,
+  }));
 /**
  * Calcula o domingo de referência para exibição:
  * - Dom → hoje
@@ -131,7 +65,7 @@ const getTargetSunday = (): Temporal.PlainDate => {
 const toScheduleXEvent = (event: GoogleCalendarEvent) => {
   const startRaw = event.start.dateTime ?? event.start.date ?? '';
   const endRaw = event.end.dateTime ?? event.end.date ?? '';
-  const calendarId = inferCalendarId(event.summary || '');
+  const calendarId = inferCalendarType(event.summary || '');
 
   if (event.start.dateTime) {
     return {

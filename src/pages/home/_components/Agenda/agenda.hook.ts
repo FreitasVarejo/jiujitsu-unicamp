@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { calendarService, GoogleCalendarEvent } from '@/services/calendarService';
+import { inferCalendarType, parseEventTitle, getDisplayLocation } from '@/constants';
 
 /* ── Tipos ── */
 
@@ -16,42 +17,7 @@ export interface AgendaEvent {
 
 export type EventsByDay = Record<number, AgendaEvent[]>;
 
-/* ── Mapas auxiliares ── */
-
-const TRAINING_TYPE_MAP: Record<string, string> = {
-  geral: 'geral',
-  'competição': 'competicao',
-  competicao: 'competicao',
-  noturno: 'noturno',
-  feminino: 'feminino',
-};
-
-const LOCATION_DISPLAY_MAP: Record<string, string> = {
-  'Faculdade de Educação Física da Unicamp, Av. Érico Veríssimo, 701 - Geraldo, Campinas - SP, 13083-851, Brasil': 'LABFEF',
-  'GMU - Ginásio Multidisciplinar da Unicamp - Cidade Universitária, Campinas - SP, 13083-854, Brasil': 'GMU',
-};
-
 /* ── Helpers ── */
-
-const inferCalendarId = (summary: string): string => {
-  const match = summary.match(/^treino\s+(\S+)/i);
-  if (!match) return 'fallback';
-
-  const keyword = match[1].toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-  return TRAINING_TYPE_MAP[keyword] ?? 'fallback';
-};
-
-const parseTitle = (raw: string): { type: string; instructor?: string } => {
-  const dashIndex = raw.indexOf('-');
-  if (dashIndex === -1) return { type: raw.trim().toUpperCase() };
-
-  const type = raw.slice(0, dashIndex).trim().toUpperCase();
-  const instructor = raw.slice(dashIndex + 1).trim() || undefined;
-  return { type, instructor };
-};
-
-const getDisplayLocation = (raw: string): string =>
-  LOCATION_DISPLAY_MAP[raw] ?? raw;
 
 /**
  * Extrai HH:MM de um datetime ISO.
@@ -80,8 +46,8 @@ const getDayOfWeek = (dateTime?: string, date?: string): number => {
 };
 
 const convertEvent = (event: GoogleCalendarEvent): AgendaEvent => {
-  const { type, instructor } = parseTitle(event.summary || 'Sem título');
-  const calendarId = inferCalendarId(event.summary || '');
+  const { type, instructor } = parseEventTitle(event.summary || 'Sem título');
+  const calendarId = inferCalendarType(event.summary || '');
 
   return {
     id: event.id,
