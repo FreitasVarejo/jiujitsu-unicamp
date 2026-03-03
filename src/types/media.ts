@@ -1,4 +1,4 @@
-import { Belt, Weekday, TrainingType } from "@/constants";
+import { Belt } from "@/constants";
 
 export interface Image {
   url: string;
@@ -38,12 +38,4 @@ export interface Product extends BaseEntity {
   coverImage: Image;
   gallery: Image[];
   formsLink?: string;
-}
-
-export interface TrainingSchedule {
-  startTime: string;
-  endTime: string;
-  instructor: string;
-  weekday: Weekday;
-  category: TrainingType;
 }

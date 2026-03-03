@@ -5,6 +5,4 @@ export * from "./shared";
 export * from "./Hero";
 export * from "./Agenda";
 export * from "./Guia";
-export * from "./Treinos";
 export * from "./Location";
-export * from "./Team";

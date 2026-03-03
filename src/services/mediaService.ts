@@ -4,9 +4,8 @@ import {
   eventSummaryAdapter,
   productAdapter,
   instructorAdapter,
-  trainingAdapter,
 } from '../adapters';
-import { Image, Event, EventSummary, Product, Instructor, TrainingSchedule } from '../types/media';
+import { Image, Event, EventSummary, Product, Instructor } from '../types/media';
 
 export type EventInfo = Event;
 export type EventSummaryInfo = EventSummary;
@@ -82,22 +81,6 @@ export const mediaService = {
       },
     );
     return response.data.map((raw) => instructorAdapter(raw));
-  },
-
-  /**
-   * Busca todos os horários de treino.
-   * Endpoint: GET /api/treinos?sort=weekday,startTime&pagination[limit]=250
-   */
-  getAllTrainings: async (): Promise<TrainingSchedule[]> => {
-    const response = await BaseMediaService.get<StrapiListResponse>(
-      '/api/treinos',
-      {
-        'sort[0]': 'weekday',
-        'sort[1]': 'startTime',
-        'pagination[limit]': '250',
-      },
-    );
-    return response.data.map((raw) => trainingAdapter(raw));
   },
 
   /**
