@@ -266,7 +266,9 @@ useEffect(() => {
 
 **Purpose:** Provide visual feedback while data loads. Skeletons are placeholder components that mimic the shape of actual content using animated gray boxes (`bg-zinc-800` + `animate-pulse`).
 
-### Skeleton Components (`src/components/skeletons/`)
+### Skeleton Components
+
+**Global skeletons** (`src/components/skeletons/`):
 
 | Component | Usage |
 |---|---|
@@ -274,6 +276,12 @@ useEffect(() => {
 | *(Future)* `SkeletonCard` | Placeholder for product/event cards |
 | *(Future)* `SkeletonImage` | Placeholder for images |
 | *(Future)* `SkeletonGrid` | Placeholder for N-column grids |
+
+**Feature-specific skeletons** (`src/pages/<feature>/_components/`):
+
+| Component | Usage |
+|---|---|
+| **`SkeletonHero`** (`src/pages/home/_components/Hero/`) | Placeholder for hero section during logo + carousel image loading. Maintains `h-[95vh]` layout stability. Shows animated placeholders for logo, title (3 lines), subtitle (2 lines), and buttons. Used by `Hero.component.tsx` via `Promise.all()` until both `getHeroImages()` and `getLogo()` complete. |
 
 ### Font Loading Hook (`src/hooks/useFontsLoaded`)
 
@@ -285,6 +293,14 @@ The `useFontsLoaded()` hook detects when Google Fonts (Oswald, Inter) finish loa
 - Google Fonts use `display=block` (not `swap`) to prevent font flash: text is invisible until Oswald/Inter arrive (~1-2s)
 - When fonts load, navbar skeleton is replaced with the real navbar
 - Footer renders immediately (uses system fallback fonts)
+
+### Hero Data Loading Strategy (`src/pages/home/_components/Hero/`)
+
+The `Hero.component.tsx` fetches logo and carousel images in **parallel** via `Promise.all()`. While loading:
+- `SkeletonHero` is rendered (placeholder animations, maintains `h-[95vh]` layout)
+- Both API calls proceed in parallel: `mediaService.getHeroImages()` + `mediaService.getLogo()`
+- Once both complete (or after timeout via `finally`), `isLoaded` → `true` and `Hero` renders
+- This prevents **visual flashing** where logo/images appear at different times
 
 ---
 
