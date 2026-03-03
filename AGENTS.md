@@ -60,8 +60,11 @@ These secrets are **never committed** to the repository and are only accessible 
 ```
 src/
 ├── adapters/        # Strapi REST response → typed domain model (one file per entity)
-├── components/      # Globally shared React components (e.g. ScrollToTop)
+├── components/      # Globally shared React components
+│   ├── skeletons/   #   Skeleton/placeholder components for loading states
+│   └── ...          #   (e.g. ScrollToTop)
 ├── constants/       # Enums + lookup maps: Belt, Weekday, TrainingType
+├── hooks/           # Custom React hooks (e.g. useFontsLoaded)
 ├── layouts/         # App shell: Layout.tsx wraps every page with navbar + footer
 ├── pages/           # Route-level pages; each feature is self-contained:
 │   ├── home/        #   _components/ → local sub-components (incl. Agenda/), *.hook.ts → data
@@ -256,6 +259,32 @@ useEffect(() => {
 **In services:** throw immediately on non-OK: `if (!response.ok) throw new Error(...)`.
 
 **Parallel fetches:** wrap each call in its own `try/catch` returning `null` so one failure doesn't abort `Promise.all`.
+
+---
+
+## Skeletons & Loading States
+
+**Purpose:** Provide visual feedback while data loads. Skeletons are placeholder components that mimic the shape of actual content using animated gray boxes (`bg-zinc-800` + `animate-pulse`).
+
+### Skeleton Components (`src/components/skeletons/`)
+
+| Component | Usage |
+|---|---|
+| **`SkeletonNavbar`** | Placeholder for the navbar while custom fonts load (uses `useFontsLoaded` hook) |
+| *(Future)* `SkeletonCard` | Placeholder for product/event cards |
+| *(Future)* `SkeletonImage` | Placeholder for images |
+| *(Future)* `SkeletonGrid` | Placeholder for N-column grids |
+
+### Font Loading Hook (`src/hooks/useFontsLoaded`)
+
+The `useFontsLoaded()` hook detects when Google Fonts (Oswald, Inter) finish loading via the **Font Loading API** (`document.fonts.ready`). Used to:
+- Show `SkeletonNavbar` while fonts are unavailable
+- Add `fonts-loaded` class to `<body>` for CSS-based animations when fonts arrive
+
+**Font Loading Strategy:**
+- Google Fonts use `display=block` (not `swap`) to prevent font flash: text is invisible until Oswald/Inter arrive (~1-2s)
+- When fonts load, navbar skeleton is replaced with the real navbar
+- Footer renders immediately (uses system fallback fonts)
 
 ---
 
