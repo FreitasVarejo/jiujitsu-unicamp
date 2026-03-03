@@ -74,8 +74,6 @@ src/
 └── main.tsx         # ReactDOM.createRoot entry point
 ```
 
-Every folder exposes a barrel `index.ts`. Always update or create it when adding new exports.
-
 ---
 
 ## Domain Types (`src/types/media.ts`)
@@ -87,7 +85,6 @@ interface Instructor     extends BaseEntity { year: string; course: string; belt
 interface EventSummary   extends BaseEntity { date: string; location: string; coverImage: Image; }
 interface Event          extends EventSummary { description: string; category: string; gallery: Image[]; }
 interface Product        extends BaseEntity { description: string; category: string; price: string; sizes: string[]; coverImage: Image; gallery: Image[]; formsLink?: string; }
-interface TrainingSchedule extends BaseEntity { startTime: string; endTime: string; instructor: string; weekday: Weekday; category: TrainingType; }
 ```
 
 `Image` is used everywhere images appear — never plain `string` URLs.
@@ -111,7 +108,6 @@ Public singleton. All methods call `BaseMediaService.get()`, then run the result
 | `getLogo()` | `GET /api/site-config?populate=logo` |
 | `getHeroImages()` | `GET /api/hero-carousel?populate=images` → `Image[]` |
 | `getAllInstructors()` | `GET /api/instrutores?populate=photo&pagination[limit]=250` |
-| `getAllTrainings()` | `GET /api/treinos?sort[0]=weekday&sort[1]=startTime&pagination[limit]=250` |
 | `getEventSummaries()` | `GET /api/eventos?populate[cover]=true&fields[0..3]=slug,title,date,location&sort[0]=date:desc&pagination[limit]=250` |
 | `getEventDetails(slug)` | `GET /api/eventos?filters[slug][$eq]={slug}&populate[cover]=true&populate[gallery]=true` |
 | `getAllProducts()` | `GET /api/produtos?populate[cover]=true&populate[gallery]=true&populate[categoria]=true&pagination[limit]=250` |
@@ -366,3 +362,30 @@ The `ProductModal` component has two states driven by `product.formsLink`:
 - **`formsLink` absent** (orders closed): zinc button (`bg-zinc-700`) labeled "Acompanhar disponibilidade" opens the WhatsApp group link. Status bullet shows gray + "Encomendas encerradas no momento". Helper text: "Avisamos no grupo quando novas encomendas abrirem."
 
 The WhatsApp group invite link is hardcoded in the constant `WHATSAPP_GROUP_URL` at the top of `src/pages/store/_components/ProductModal.tsx`. Update it directly when the invite link changes — no backend change needed.
+
+---
+
+## Deadcode Cleanup History
+
+### Removed Components & Code (Commit: `refactor: remove deadcode`)
+
+The following unused code was removed to improve codebase clarity:
+
+**Removed:**
+- `src/pages/home/_components/Treinos/` — entire folder (6 files)
+  - Treinos component and related hooks (`useTrainings.hook.ts`, utilities)
+  - TrainingScheduleMobile and TrainingScheduleDesktop components
+  - Reason: The training schedule is now fetched via Google Calendar API (Agenda component), not Strapi
+- `src/services/mediaService.ts:getAllTrainings()` — unused method
+  - Was meant to fetch `/api/treinos` from Strapi
+  - Replaced by `calendarService.getEventsByRange()` for Google Calendar
+- `src/types/media.ts:TrainingSchedule` — unused interface
+  - Was only used by the removed `getAllTrainings()` method
+- `src/constants/media.ts` — entire file
+  - Contained unused `MediaType` enum and `MEDIA_INFO` object
+  - No code references existed; legacy from earlier architecture
+- `src/pages/store/_components/ProductGrid.tsx` — unused component
+  - Store page uses `ProductCarousel` instead
+  - ProductGrid was completely disconnected
+
+All removals were validated with `npm run lint` and `npm run build` before commit.
