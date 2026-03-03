@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { mediaService } from '@/services/mediaService';
 import { Image } from '@/types/media';
+import { SkeletonHero } from './SkeletonHero.component';
 
 const INTERVAL_MS = 5000;
 const FADE_MS = 1500;
@@ -12,14 +13,26 @@ export const Hero = () => {
   const [next, setNext] = useState<number | null>(null);
   const [nextVisible, setNextVisible] = useState(false);
   const lockRef = useRef(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    mediaService.getHeroImages().then((imgs) => {
-      if (imgs.length > 0) setImages(imgs);
-    });
-    mediaService.getLogo().then((img) => {
-      if (img) setLogo(img);
-    });
+    const loadData = async () => {
+      try {
+        const [imgs, logo] = await Promise.all([
+          mediaService.getHeroImages(),
+          mediaService.getLogo(),
+        ]);
+
+        if (imgs.length > 0) setImages(imgs);
+        if (logo) setLogo(logo);
+      } catch (err) {
+        console.error('Erro ao carregar dados do Hero:', err);
+      } finally {
+        setIsLoaded(true);
+      }
+    };
+
+    loadData();
   }, []);
 
   useEffect(() => {
@@ -58,6 +71,10 @@ export const Hero = () => {
     backgroundImage: `url('${url}')`,
     filter: 'grayscale(100%)',
   });
+
+  if (!isLoaded) {
+    return <SkeletonHero />;
+  }
 
   return (
     <section className="relative h-[95vh] flex items-center justify-center overflow-hidden">
