@@ -13,7 +13,10 @@ export const Hero = () => {
   const [next, setNext] = useState<number | null>(null);
   const [nextVisible, setNextVisible] = useState(false);
   const lockRef = useRef(false);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [logoLoaded, setLogoLoaded] = useState(false);
+
+  const isLoaded = imagesLoaded && logoLoaded;
 
   useEffect(() => {
     const loadData = async () => {
@@ -23,12 +26,19 @@ export const Hero = () => {
           mediaService.getLogo(),
         ]);
 
-        if (imgs.length > 0) setImages(imgs);
-        if (logo) setLogo(logo);
+        if (imgs.length > 0) {
+          setImages(imgs);
+        }
+        setImagesLoaded(true);
+
+        if (logo) {
+          setLogo(logo);
+        }
+        setLogoLoaded(true);
       } catch (err) {
         console.error('Erro ao carregar dados do Hero:', err);
-      } finally {
-        setIsLoaded(true);
+        setImagesLoaded(true);
+        setLogoLoaded(true);
       }
     };
 
