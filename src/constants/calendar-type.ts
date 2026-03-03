@@ -23,6 +23,11 @@ export const CALENDAR_TYPE_INFO: Record<
       container: string;
       onContainer: string;
     };
+    darkColorsRgbaPast: {
+      main: string;
+      container: string;
+      onContainer: string;
+    };
   }
 > = {
   [CalendarType.GERAL]: {
@@ -39,6 +44,11 @@ export const CALENDAR_TYPE_INFO: Record<
       container: "rgba(60, 28, 14, 1)",
       onContainer: "#f4a882",
     },
+    darkColorsRgbaPast: {
+      main: "#8B3F1E",
+      container: "rgba(40, 15, 8, 0.6)",
+      onContainer: "rgba(244, 168, 130, 0.6)",
+    },
   },
   [CalendarType.COMPETICAO]: {
     id: "COMPETICAO",
@@ -53,6 +63,11 @@ export const CALENDAR_TYPE_INFO: Record<
       main: "#dc2626",
       container: "rgba(55, 15, 15, 1)",
       onContainer: "#fca5a5",
+    },
+    darkColorsRgbaPast: {
+      main: "#8B1515",
+      container: "rgba(35, 10, 10, 0.6)",
+      onContainer: "rgba(252, 165, 165, 0.6)",
     },
   },
   [CalendarType.NOTURNO]: {
@@ -69,6 +84,11 @@ export const CALENDAR_TYPE_INFO: Record<
       container: "rgba(25, 25, 60, 1)",
       onContainer: "#a5b4fc",
     },
+    darkColorsRgbaPast: {
+      main: "#3D3E8C",
+      container: "rgba(15, 15, 35, 0.6)",
+      onContainer: "rgba(165, 180, 252, 0.6)",
+    },
   },
   [CalendarType.FEMININO]: {
     id: "FEMININO",
@@ -83,6 +103,11 @@ export const CALENDAR_TYPE_INFO: Record<
       main: "#d946ef",
       container: "rgba(60, 25, 70, 1)",
       onContainer: "#f0abfc",
+    },
+    darkColorsRgbaPast: {
+      main: "#8B2E8F",
+      container: "rgba(40, 15, 45, 0.6)",
+      onContainer: "rgba(240, 171, 252, 0.6)",
     },
   },
   [CalendarType.EVENTO]: {
@@ -99,6 +124,11 @@ export const CALENDAR_TYPE_INFO: Record<
       container: "rgba(60, 38, 10, 1)",
       onContainer: "#fcd34d",
     },
+    darkColorsRgbaPast: {
+      main: "#9D6209",
+      container: "rgba(40, 25, 7, 0.6)",
+      onContainer: "rgba(252, 211, 77, 0.6)",
+    },
   },
   [CalendarType.FALLBACK]: {
     id: "FALLBACK",
@@ -113,6 +143,11 @@ export const CALENDAR_TYPE_INFO: Record<
       main: "#71717a",
       container: "rgba(39, 39, 42, 1)",
       onContainer: "#e4e4e7",
+    },
+    darkColorsRgbaPast: {
+      main: "#52525B",
+      container: "rgba(24, 24, 27, 0.6)",
+      onContainer: "rgba(228, 228, 231, 0.6)",
     },
   },
 };

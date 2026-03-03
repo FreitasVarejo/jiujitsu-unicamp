@@ -77,6 +77,7 @@ const toScheduleXEvent = (event: GoogleCalendarEvent) => {
       location: event.location,
       description: event.description,
       calendarId,
+      startRaw,
     };
   }
 
@@ -88,6 +89,7 @@ const toScheduleXEvent = (event: GoogleCalendarEvent) => {
     location: event.location,
     description: event.description,
     calendarId,
+    startRaw,
   };
 };
 

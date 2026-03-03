@@ -1,6 +1,6 @@
 import { MapPin, User } from 'lucide-react';
 import { CALENDAR_TYPE_INFO } from '@/constants';
-import { parseEventTitle, getDisplayLocation, buildMapsUrl } from './agenda-helpers';
+import { parseEventTitle, getDisplayLocation, buildMapsUrl, isPastEventFromDateTime } from './agenda-helpers';
 
 /* ── Tipos ── */
 
@@ -10,6 +10,8 @@ interface CalendarEventProps {
   location?: string;
   description?: string;
   calendarId?: string;
+  start?: string;
+  startRaw?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }
@@ -30,7 +32,10 @@ interface TimeGridEventProps {
  * conforme exigido pelo Schedule-X.
  */
 export const TimeGridEvent = ({ calendarEvent }: TimeGridEventProps) => {
-  const colors = (CALENDAR_TYPE_INFO[calendarEvent.calendarId as keyof typeof CALENDAR_TYPE_INFO] ?? CALENDAR_TYPE_INFO.fallback).darkColorsRgba;
+  const isPast = isPastEventFromDateTime(calendarEvent.startRaw);
+  const colors = isPast
+    ? (CALENDAR_TYPE_INFO[calendarEvent.calendarId as keyof typeof CALENDAR_TYPE_INFO] ?? CALENDAR_TYPE_INFO.fallback).darkColorsRgbaPast
+    : (CALENDAR_TYPE_INFO[calendarEvent.calendarId as keyof typeof CALENDAR_TYPE_INFO] ?? CALENDAR_TYPE_INFO.fallback).darkColorsRgba;
   const { type, instructor } = parseEventTitle(calendarEvent.title ?? 'Sem título');
 
   return (

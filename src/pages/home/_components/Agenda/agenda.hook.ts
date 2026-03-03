@@ -13,6 +13,7 @@ export interface AgendaEvent {
   location?: string;
   rawLocation?: string;
   calendarId: string;
+  startDateTime?: string;
 }
 
 export type EventsByDay = Record<number, AgendaEvent[]>;
@@ -58,6 +59,7 @@ const convertEvent = (event: GoogleCalendarEvent): AgendaEvent => {
     location: event.location ? getDisplayLocation(event.location) : undefined,
     rawLocation: event.location,
     calendarId,
+    startDateTime: event.start.dateTime,
   };
 };
 

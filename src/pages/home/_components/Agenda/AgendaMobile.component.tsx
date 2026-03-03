@@ -1,7 +1,7 @@
 import { Loader2, AlertCircle, MapPin, User, ChevronLeft, ChevronRight } from 'lucide-react';
 import { AgendaEvent, EventsByDay } from './agenda.hook';
 import { CALENDAR_TYPE_INFO } from '@/constants';
-import { buildMapsUrl } from './agenda-helpers';
+import { buildMapsUrl, isPastEventFromDateTime } from './agenda-helpers';
 
 /* ── Constantes ── */
 
@@ -38,7 +38,10 @@ const fmtDDMM = (d: Date): string =>
 /* ── Sub-componentes ── */
 
 const EventCard = ({ event }: { event: AgendaEvent }) => {
-  const colors = (CALENDAR_TYPE_INFO[event.calendarId as keyof typeof CALENDAR_TYPE_INFO] ?? CALENDAR_TYPE_INFO.fallback).darkColorsRgba;
+  const isPast = isPastEventFromDateTime(event.startDateTime);
+  const colors = isPast
+    ? (CALENDAR_TYPE_INFO[event.calendarId as keyof typeof CALENDAR_TYPE_INFO] ?? CALENDAR_TYPE_INFO.fallback).darkColorsRgbaPast
+    : (CALENDAR_TYPE_INFO[event.calendarId as keyof typeof CALENDAR_TYPE_INFO] ?? CALENDAR_TYPE_INFO.fallback).darkColorsRgba;
 
   return (
     <div

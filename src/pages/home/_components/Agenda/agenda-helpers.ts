@@ -53,6 +53,43 @@ export const parseEventTitle = (raw: string): { type: string; instructor?: strin
 };
 
 /**
+ * Verifica se um evento já passou (começou/terminou no passado).
+ * Compara a hora de início do evento com a hora atual.
+ *
+ * @param startTime - Hora de início no formato "HH:MM" (ex: "14:30")
+ * @returns true se o evento já começou/passou, false caso contrário
+ */
+export const isPastEvent = (startTime: string): boolean => {
+  if (!startTime || startTime === 'Dia inteiro') return false;
+
+  const now = new Date();
+  const [eventHours, eventMinutes] = startTime.split(':').map(Number);
+  const eventTimeInMinutes = eventHours * 60 + eventMinutes;
+  const nowTimeInMinutes = now.getHours() * 60 + now.getMinutes();
+
+  return nowTimeInMinutes >= eventTimeInMinutes;
+};
+
+/**
+ * Verifica se um evento (com datetime completo) já passou.
+ * Compara a hora de início do evento com a hora atual.
+ *
+ * @param dateTime - Datetime no formato ISO (ex: "2026-03-01T14:30:00") ou datetime completo
+ * @returns true se o evento já começou, false caso contrário
+ */
+export const isPastEventFromDateTime = (dateTime?: string): boolean => {
+  if (!dateTime) return false;
+
+  try {
+    const eventDate = new Date(dateTime);
+    const now = new Date();
+    return now >= eventDate;
+  } catch {
+    return false;
+  }
+};
+
+/**
  * Retorna o nome amigável da localização se existir no mapa,
  * senão retorna o endereço original.
  *
