@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { Loader2, AlertCircle, MapPin, User, ChevronLeft, ChevronRight } from 'lucide-react';
 import { AgendaEvent, EventsByDay } from './agenda.hook';
 import { CALENDAR_TYPE_INFO } from '@/constants';
@@ -154,49 +154,97 @@ export const AgendaMobile = ({
   const rangeLabel = `${fmtDDMM(weekStartDate)} – ${fmtDDMM(weekEndDate)}`;
 
   /**
+   * Executa o scroll adaptativo para o card de hoje.
+   */
+  const performScroll = useCallback((container: HTMLDivElement, todayCard: HTMLDivElement) => {
+    // Calcula a posição do card dentro do container
+    const cardOffsetTop = todayCard.offsetTop;
+    const containerHeight = container.clientHeight;
+    const scrollHeight = container.scrollHeight;
+    const maxScroll = scrollHeight - containerHeight;
+
+    console.log('[AgendaMobile] Container metrics:', {
+      cardOffsetTop,
+      containerHeight,
+      scrollHeight,
+      maxScroll,
+      hasScroll: scrollHeight > containerHeight,
+    });
+
+    // Determina dia da semana parseando YYYY-MM-DD manualmente (ignora timezone)
+    const [year, month, day] = today.split('-').map(Number);
+    const todayDate = new Date(year, month - 1, day);
+    const dayOfWeek = todayDate.getDay();
+
+    console.log('[AgendaMobile] Date parsing:', { today, year, month, day, dayOfWeek, dayName: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'][dayOfWeek] });
+
+    let targetScroll: number;
+
+    if (dayOfWeek === 0) {
+      // Domingo (primeiro card): scroll para topo
+      targetScroll = 0;
+      console.log('[AgendaMobile] Sunday detected → scroll to top');
+    } else if (dayOfWeek === 6) {
+      // Sábado (último card): scroll máximo (mostra sábado no final do viewport)
+      targetScroll = maxScroll;
+      console.log('[AgendaMobile] Saturday detected → scroll to max', { targetScroll });
+    } else {
+      // Segunda-feira a sexta-feira: posiciona card em 35% do topo
+      targetScroll = Math.max(0, Math.min(maxScroll, cardOffsetTop - containerHeight * 0.35));
+      console.log('[AgendaMobile] Weekday (Mon-Fri) detected → scroll to 35% position', { targetScroll });
+    }
+
+    // Executa scroll suave
+    console.log('[AgendaMobile] Executing scroll:', { targetScroll, behavior: 'smooth' });
+    container.scrollTo({ top: targetScroll, behavior: 'smooth' });
+  }, [today]);
+
+  /**
    * Auto-scroll para o dia de hoje quando a semana contém today.
    * Posicionamento adaptativo: domingo = topo, seg-sex = 35% do topo, sábado = máximo possível.
    */
   useEffect(() => {
     // Verifica se hoje está na semana sendo exibida
     const isTodayInWeek = today >= weekStart && today <= weekEnd;
-    if (!isTodayInWeek || !containerRef.current || !todayRef.current) return;
+    console.log('[AgendaMobile] Auto-scroll check:', { today, weekStart, weekEnd, isTodayInWeek });
 
-    // Aguarda DOM estar pronto (50ms de margem de segurança)
+    if (!isTodayInWeek) {
+      console.log('[AgendaMobile] Today not in current week, skipping auto-scroll');
+      return;
+    }
+
+    // Aguarda DOM estar pronto e refs disponíveis (300ms com retry logic)
     const scrollTimer = setTimeout(() => {
       const container = containerRef.current;
       const todayCard = todayRef.current;
 
-      if (!container || !todayCard) return;
+      console.log('[AgendaMobile] Checking refs after timeout:', { containerRef: !!container, todayRef: !!todayCard });
 
-      // Calcula a posição do card dentro do container
-      const cardOffsetTop = todayCard.offsetTop;
-      const containerHeight = container.clientHeight;
-      const maxScroll = container.scrollHeight - containerHeight;
+      if (!container || !todayCard) {
+        console.log('[AgendaMobile] Refs not available, retrying in 100ms');
+        // Retry uma vez se as refs ainda não estiverem prontas
+        const retryTimer = setTimeout(() => {
+          const retryContainer = containerRef.current;
+          const retryCard = todayRef.current;
 
-      // Determina dia da semana (0=Dom..6=Sáb)
-      const todayDate = new Date(today);
-      const dayOfWeek = todayDate.getDay();
+          console.log('[AgendaMobile] Retry check:', { containerRef: !!retryContainer, todayRef: !!retryCard });
 
-      let targetScroll: number;
+          if (!retryContainer || !retryCard) {
+            console.log('[AgendaMobile] Refs still not available, giving up');
+            return;
+          }
 
-      if (dayOfWeek === 0) {
-        // Domingo (primeiro card): scroll para topo
-        targetScroll = 0;
-      } else if (dayOfWeek === 6) {
-        // Sábado (último card): scroll máximo (mostra sábado no final do viewport)
-        targetScroll = maxScroll;
-      } else {
-        // Segunda-feira a sexta-feira: posiciona card em 35% do topo
-        targetScroll = Math.max(0, Math.min(maxScroll, cardOffsetTop - containerHeight * 0.35));
+          performScroll(retryContainer, retryCard);
+        }, 100);
+
+        return () => clearTimeout(retryTimer);
       }
 
-      // Executa scroll suave
-      container.scrollTo({ top: targetScroll, behavior: 'smooth' });
-    }, 50);
+      performScroll(container, todayCard);
+    }, 300);
 
     return () => clearTimeout(scrollTimer);
-  }, [today, weekStart, weekEnd]);
+  }, [today, weekStart, weekEnd, performScroll]);
 
   const navBar = (
     <div className="flex items-center justify-between mb-4">
