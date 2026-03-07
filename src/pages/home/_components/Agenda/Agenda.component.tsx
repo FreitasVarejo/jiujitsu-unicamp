@@ -38,14 +38,6 @@ const TRAINING_CALENDARS: Record<string, {
     darkColors: { main: string; container: string; onContainer: string };
   }>
 );
-
-/** Itens da legenda de cores (exclui fallback). */
-const LEGEND_ITEMS = Object.entries(CALENDAR_TYPE_INFO)
-  .filter(([type]) => type !== CalendarType.FALLBACK)
-  .map(([_type, info]) => ({
-    label: info.label,
-    color: info.darkColors.main,
-  }));
 /**
  * Calcula o domingo de referência para exibição:
  * - Dom → hoje
@@ -99,7 +91,7 @@ export const Agenda = () => {
   const [currentTime] = useState(() => createCurrentTimePlugin({ fullWeekWidth: true }));
 
   /* Hook para o layout mobile (cards) */
-  const { eventsByDay, loading, error, weekStart, weekEnd, goToPreviousWeek, goToNextWeek } = useAgendaEvents();
+  const { eventsByDay, loading, error, weekStart, weekEnd, today, goToPreviousWeek, goToNextWeek } = useAgendaEvents();
 
   const calendar = useCalendarApp({
     views: [createViewWeek()],
@@ -150,16 +142,17 @@ export const Agenda = () => {
        </a>
        </div>
 
-       {/* Mobile: cards por dia da semana */}
-       <AgendaMobile
-         eventsByDay={eventsByDay}
-         loading={loading}
-         error={error}
-         weekStart={weekStart}
-         weekEnd={weekEnd}
-         onPreviousWeek={goToPreviousWeek}
-         onNextWeek={goToNextWeek}
-       />
+        {/* Mobile: cards por dia da semana */}
+        <AgendaMobile
+          eventsByDay={eventsByDay}
+          loading={loading}
+          error={error}
+          weekStart={weekStart}
+          weekEnd={weekEnd}
+          today={today}
+          onPreviousWeek={goToPreviousWeek}
+          onNextWeek={goToNextWeek}
+        />
 
        {/* Desktop: Schedule-X week view */}
        <div className="hidden md:block sx-react-calendar-wrapper">
@@ -169,18 +162,7 @@ export const Agenda = () => {
          />
        </div>
 
-       {/* Legenda de cores */}
-       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 p-4 bg-zinc-900 rounded-lg border border-zinc-800">
-         {LEGEND_ITEMS.map((item) => (
-           <div key={item.label} className="flex items-center gap-2">
-             <span
-               className="inline-block w-3 h-3 rounded shrink-0"
-               style={{ backgroundColor: item.color }}
-             />
-             <span className="text-xs text-zinc-300 font-medium">{item.label}</span>
-           </div>
-         ))}
-       </div>
+
      </section>
    );
 };
