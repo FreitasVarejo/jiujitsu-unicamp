@@ -16,14 +16,16 @@ export const InfoCard = ({
   iconColor 
 }: InfoCardProps) => {
   return (
-    <div className={`bg-zinc-900 p-6 rounded-lg border-t-4 ${borderColor}`}>
-      <Icon className={iconColor} size={32} />
-      <h3 className="text-xl font-display text-white mb-2 mt-4">
-        {title}
-      </h3>
-      <p className="text-sm text-gray-400">
-        {description}
-      </p>
+    <div className={`bg-zinc-900 p-6 rounded-lg border-t-4 ${borderColor} flex gap-4`}>
+      <Icon className={`${iconColor} flex-shrink-0`} size={32} />
+      <div>
+        <h3 className="text-xl font-display text-white mb-2">
+          {title}
+        </h3>
+        <p className="text-sm text-gray-400">
+          {description}
+        </p>
+      </div>
     </div>
   );
 };

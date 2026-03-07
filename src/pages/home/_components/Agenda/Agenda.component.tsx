@@ -151,15 +151,15 @@ export const Agenda = () => {
        </div>
 
        {/* Mobile: cards por dia da semana */}
-      <AgendaMobile
-        eventsByDay={eventsByDay}
-        loading={loading}
-        error={error}
-        weekStart={weekStart}
-        weekEnd={weekEnd}
-        onPreviousWeek={goToPreviousWeek}
-        onNextWeek={goToNextWeek}
-      />
+       <AgendaMobile
+         eventsByDay={eventsByDay}
+         loading={loading}
+         error={error}
+         weekStart={weekStart}
+         weekEnd={weekEnd}
+         onPreviousWeek={goToPreviousWeek}
+         onNextWeek={goToNextWeek}
+       />
 
        {/* Desktop: Schedule-X week view */}
        <div className="hidden md:block sx-react-calendar-wrapper">
