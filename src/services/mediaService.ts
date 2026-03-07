@@ -48,23 +48,40 @@ export const mediaService = {
   },
 
   /**
-   * Busca as imagens do carrossel hero.
-   * Endpoint: GET /api/hero-carousel?populate=images
-   */
-  getHeroImages: async (): Promise<Image[]> => {
+    * Busca as imagens do carrossel hero (desktop e mobile).
+    * Endpoint: GET /api/hero-carousel?populate[imagesDesktop]=true&populate[imagesMobile]=true
+    */
+  getHeroImages: async (): Promise<{ desktop: Image[]; mobile: Image[] }> => {
     try {
-      const response = await BaseMediaService.get<StrapiSingleResponse<{ images: { url: string; alternativeText?: string }[] }>>(
+      const response = await BaseMediaService.get<
+        StrapiSingleResponse<{
+          imagesDesktop: { url: string; alternativeText?: string }[];
+          imagesMobile: { url: string; alternativeText?: string }[];
+        }>
+      >(
         '/api/hero-carousel',
-        { 'populate': 'images' },
+        {
+          'populate[imagesDesktop]': 'true',
+          'populate[imagesMobile]': 'true',
+        },
       );
-      const images = response.data?.images || [];
-      return images.map((img) => ({
-        url: BaseMediaService.resolveMediaUrl(img.url),
-        alternativeText: img.alternativeText || '',
-      }));
+
+      const imagesDesktop = response.data?.imagesDesktop || [];
+      const imagesMobile = response.data?.imagesMobile || [];
+
+      return {
+        desktop: imagesDesktop.map((img) => ({
+          url: BaseMediaService.resolveMediaUrl(img.url),
+          alternativeText: img.alternativeText || '',
+        })),
+        mobile: imagesMobile.map((img) => ({
+          url: BaseMediaService.resolveMediaUrl(img.url),
+          alternativeText: img.alternativeText || '',
+        })),
+      };
     } catch (error) {
       console.error('Erro ao buscar imagens do hero:', error);
-      return [];
+      return { desktop: [], mobile: [] };
     }
   },
 

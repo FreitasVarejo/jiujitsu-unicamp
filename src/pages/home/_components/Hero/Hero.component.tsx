@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import { mediaService } from '@/services/mediaService';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { Image } from '@/types/media';
 import { SkeletonHero } from './SkeletonHero.component';
 
@@ -7,7 +8,7 @@ const INTERVAL_MS = 5000;
 const FADE_MS = 1500;
 
 export const Hero = () => {
-  const [images, setImages] = useState<Image[]>([]);
+  const [images, setImages] = useState<{ desktop: Image[]; mobile: Image[] }>({ desktop: [], mobile: [] });
   const [logo, setLogo] = useState<Image | null>(null);
   const [current, setCurrent] = useState(0);
   const [next, setNext] = useState<number | null>(null);
@@ -15,8 +16,15 @@ export const Hero = () => {
   const lockRef = useRef(false);
   const [imagesLoaded, setImagesLoaded] = useState(false);
   const [logoLoaded, setLogoLoaded] = useState(false);
+  const isMediumOrLarger = useMediaQuery('(min-width: 768px)');
 
   const isLoaded = imagesLoaded && logoLoaded;
+
+  // Memoizar a seleção de imagens e a chave de carrossel
+  const carouselKey = useMemo(() => isMediumOrLarger ? 'desktop' : 'mobile', [isMediumOrLarger]);
+  const imagesToShow = useMemo(() => (
+    isMediumOrLarger ? images.desktop : images.mobile
+  ), [isMediumOrLarger, images]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -26,7 +34,7 @@ export const Hero = () => {
           mediaService.getLogo(),
         ]);
 
-        if (imgs.length > 0) {
+        if (imgs.desktop.length > 0 || imgs.mobile.length > 0) {
           setImages(imgs);
         }
         setImagesLoaded(true);
@@ -46,13 +54,13 @@ export const Hero = () => {
   }, []);
 
   useEffect(() => {
-    if (images.length <= 1) return;
+    if (imagesToShow.length <= 1) return;
 
     const interval = setInterval(() => {
       if (lockRef.current) return;
       lockRef.current = true;
 
-      const nextIndex = (current + 1) % images.length;
+      const nextIndex = (current + 1) % imagesToShow.length;
 
       // Monta a próxima imagem invisível (opacity 0)
       setNext(nextIndex);
@@ -75,7 +83,18 @@ export const Hero = () => {
     }, INTERVAL_MS);
 
     return () => clearInterval(interval);
-  }, [images, current]);
+  }, [imagesToShow, current]);
+
+  // Efeito separado: quando a chave do carrossel muda (desktop/mobile),
+  // reseta o índice. Necessário para sincronizar o carousel ao trocar de breakpoint.
+  useEffect(() => {
+    // Reset do carrossel quando muda entre desktop/mobile
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setCurrent(0);
+    setNext(null);
+    setNextVisible(false);
+    lockRef.current = false;
+  }, [carouselKey]);
 
   const bgStyle = (url: string) => ({
     backgroundImage: `url('${url}')`,
@@ -87,21 +106,21 @@ export const Hero = () => {
   }
 
   return (
-    <section className="relative h-[95vh] flex items-center justify-center overflow-hidden">
+    <section className="relative h-screen flex items-center justify-center overflow-hidden">
       {/* Imagem atual — sempre opaca, fica embaixo */}
-      {images.length > 0 && (
+      {imagesToShow.length > 0 && (
         <div
           className="absolute inset-0 bg-cover bg-center z-[1]"
-          style={bgStyle(images[current].url)}
+          style={bgStyle(imagesToShow[current].url)}
         />
       )}
 
       {/* Próxima imagem — faz fade in por cima */}
-      {next !== null && images[next] && (
+      {next !== null && imagesToShow[next] && (
         <div
           className="absolute inset-0 bg-cover bg-center z-[2]"
           style={{
-            ...bgStyle(images[next].url),
+            ...bgStyle(imagesToShow[next].url),
             opacity: nextVisible ? 1 : 0,
             transition: `opacity ${FADE_MS}ms ease-in-out`,
           }}
@@ -109,7 +128,7 @@ export const Hero = () => {
       )}
 
       {/* Fallback enquanto carrega */}
-      {images.length === 0 && (
+      {imagesToShow.length === 0 && (
         <div className="absolute inset-0 bg-zinc-900 z-[1]" />
       )}
 
