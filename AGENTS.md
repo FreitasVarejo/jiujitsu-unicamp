@@ -146,8 +146,62 @@ GitHub Actions workflow at `.github/workflows/deploy.yml` triggers on push to `m
 
 ---
 
+## Focal Point das Imagens (Frontend)
+
+Todas as imagens do Strapi suportam **focal point** (ponto focal) para melhor posicionamento ao recortar. O focal point é um par de coordenadas percentuais `{ x: number, y: number }` que indicam a área importante da imagem que deve ser preservada.
+
+### Cobertura Implementada
+
+| Contexto | Componente | Uso | CSS |
+|---|---|---|---|
+| **Eventos** | `EventCard`, `event-details.page` | Cover + galeria | `object-cover` + `objectPosition` |
+| **Produtos (card)** | `ProductCard` | Cover image (3:4 ratio) | `object-cover` + `objectPosition` |
+| **Produtos (modal)** | `ProductModal` | Cover + carrossel galeria | `object-contain` + `objectPosition` |
+| **Instrutores** | `InstructorCard` | Avatar circular 16x16 | `object-cover` + `objectPosition` |
+| **Hero carousel** | `Hero.component` | Desktop + mobile | `object-cover` + `objectPosition` |
+
+### Padrão de Implementação
+
+```ts
+// Helper function (padrão em todos os componentes)
+const imgStyle = (focalPoint: Image['focalPoint']): CSSProperties => ({
+  objectFit: 'cover', // ou 'contain' no ProductModal
+  objectPosition: focalPoint ? `${focalPoint.x}% ${focalPoint.y}%` : 'center',
+});
+
+// Uso em componente
+<img
+  src={image.url}
+  alt={image.alternativeText}
+  style={imgStyle(image.focalPoint)}
+/>
+```
+
+### Proporções de Imagem
+
+- **ProductCard:** `aspect-[3/4]` (retrato 3:4) — apropriado para roupas/camisetas
+- **EventCard:** `h-64` (altura fixa) — cards em grid
+- **Hero:** Full viewport (`h-screen`) — responsivo desktop/mobile
+- **InstructorCard:** `w-16 h-16` (avatar circular) — 1:1 ratio
+- **ProductModal:** Fluido (sem aspect-ratio fixo)
+
+### Extração de Focal Point
+
+Os adapters (`adapters.handlers.ts`) extraem focal point automaticamente:
+- `resolveImage(file)`: Extrai `focalPoint` da resposta Strapi → objeto `Image`
+- `resolveGallery(files[])`: Aplica `resolveImage()` a cada arquivo da galeria
+
+**Endpoints Strapi que enviam focal point:**
+- `GET /api/hero-carousel?populate[imagesDesktop]=true&populate[imagesMobile]=true`
+- `GET /api/eventos?populate[cover]=true&populate[gallery]=true`
+- `GET /api/produtos?populate[cover]=true&populate[gallery]=true`
+- `GET /api/instrutores?populate=photo`
+
+---
+
 ## Recent Refactors
 
+- **Focal point em todas as imagens**: Implementado suporte consistente a focal point em todos os contextos de imagens (hero, eventos, produtos, instrutores). Conversão do Hero de `background-image` para `<img>` tag com `objectPosition` inline. ProductCard alterado de `aspect-square` para `aspect-[3/4]` (retrato 3:4) adequado para roupas/camisetas. Helper function `imgStyle()` padroniza a implementação com fallback `center` se focal point for null. Adapters já extraem focal point automaticamente via `resolveImage()` e `resolveGallery()`. Endpoints Strapi retornam `focalPoint: { x, y }` em todas as chamadas com `populate` ativo.
 - **Mobile agenda auto-scroll** (current): Implemented adaptive auto-scroll to today's card on mobile viewport. Uses `useRef` hooks (`containerRef`, `todayRef`) with `useCallback` and `useEffect` for robust DOM synchronization. Smart scroll positioning based on day-of-week: Sunday = top (0px), Monday-Friday = 35% from viewport top, Saturday = max scroll. Date parsing uses manual YYYY-MM-DD split to avoid timezone issues (GMT-3). Includes retry logic (300ms + 100ms) with comprehensive debug logs (`[AgendaMobile]` console prefix). Visual indicator added: today's card has orange border (`border-primary border-2`) + lighter background (`bg-zinc-800`). Only auto-scrolls when current week contains today; silent skip for past/future weeks. Smooth scroll animation via `behavior: 'smooth'` for polished UX.
 - **Cancelled event detection & styling** (commit `61eced4`): Added `isCancelledEvent()` detector in `agenda-helpers.ts` for event titles starting with `*` (e.g., `"*Treino Geral - Lucas Senno"`). Updated `parseEventTitle()` to strip the leading `*` before parsing type/instructor. Added `cancelled: boolean` field to `AgendaEvent`. Styled cancelled events with neutral grey colors, red "CANCELADO" badge, and `line-through` decoration on type, instructor, location, and time across both mobile (`AgendaMobile.component.tsx`) and desktop (`TimeGridEvent.component.tsx`) views.
 - **Past event styling** (commit `69afa0e`): Added `darkColorsRgbaPast` to `CALENDAR_TYPE_INFO` enum map for each calendar type. Implements visual distinction for past events using darkened, semi-transparent colors. Detection via `isPastEvent()` and `isPastEventFromDateTime()` in `agenda-helpers.ts`. Applied in `TimeGridEvent.component.tsx` and `AgendaMobile.component.tsx`.
