@@ -5,6 +5,7 @@ import { createCalendarControlsPlugin } from '@schedule-x/calendar-controls';
 import { createCurrentTimePlugin } from '@schedule-x/current-time';
 import { useState } from 'react';
 import { TimeGridEvent } from './TimeGridEvent.component.tsx';
+import { CalendarLegend } from './CalendarLegend.component';
 import { calendarService, GoogleCalendarEvent } from '@/services/calendarService';
 import { CALENDAR_TYPE_INFO } from '@/constants';
 import { inferCalendarType } from '../agenda-helpers';
@@ -125,6 +126,7 @@ export const AgendaDesktop = () => {
         calendarApp={calendar}
         customComponents={{ timeGridEvent: TimeGridEvent }}
       />
+      <CalendarLegend />
     </div>
   );
 };
