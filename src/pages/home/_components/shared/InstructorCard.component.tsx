@@ -1,9 +1,15 @@
+import { CSSProperties } from 'react';
 import { Instructor } from '@/types/media';
 import { BELT_INFO } from '@/constants';
 
 interface InstructorCardProps {
   instructor: Instructor;
 }
+
+const imgStyle = (focalPoint: Instructor['photo']['focalPoint']): CSSProperties => ({
+  objectFit: 'cover',
+  objectPosition: focalPoint ? `${focalPoint.x}% ${focalPoint.y}%` : 'center',
+});
 
 export const InstructorCard = ({ instructor }: InstructorCardProps) => {
   return (
@@ -24,7 +30,8 @@ export const InstructorCard = ({ instructor }: InstructorCardProps) => {
             <img
               src={instructor.photo.url}
               alt={instructor.photo.alternativeText || instructor.title}
-              className="w-full h-full object-cover"
+              className="w-full h-full"
+              style={imgStyle(instructor.photo.focalPoint)}
             />
           )}
         </div>

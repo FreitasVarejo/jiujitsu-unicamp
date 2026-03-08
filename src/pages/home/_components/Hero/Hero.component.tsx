@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useMemo } from 'react';
+import { CSSProperties, useEffect, useRef, useState, useMemo } from 'react';
 import { mediaService } from '@/services/mediaService';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { Image } from '@/types/media';
@@ -96,8 +96,9 @@ export const Hero = () => {
     lockRef.current = false;
   }, [carouselKey]);
 
-  const bgStyle = (url: string) => ({
-    backgroundImage: `url('${url}')`,
+  const imgStyle = (focalPoint: Image['focalPoint']): CSSProperties => ({
+    objectFit: 'cover',
+    objectPosition: focalPoint ? `${focalPoint.x}% ${focalPoint.y}%` : 'center',
     filter: 'grayscale(100%)',
   });
 
@@ -109,18 +110,22 @@ export const Hero = () => {
     <section className="relative h-screen flex items-center justify-center overflow-hidden">
       {/* Imagem atual — sempre opaca, fica embaixo */}
       {imagesToShow.length > 0 && (
-        <div
-          className="absolute inset-0 bg-cover bg-center z-[1]"
-          style={bgStyle(imagesToShow[current].url)}
+        <img
+          src={imagesToShow[current].url}
+          alt={imagesToShow[current].alternativeText}
+          className="absolute inset-0 w-full h-full z-[1]"
+          style={imgStyle(imagesToShow[current].focalPoint)}
         />
       )}
 
       {/* Próxima imagem — faz fade in por cima */}
       {next !== null && imagesToShow[next] && (
-        <div
-          className="absolute inset-0 bg-cover bg-center z-[2]"
+        <img
+          src={imagesToShow[next].url}
+          alt={imagesToShow[next].alternativeText}
+          className="absolute inset-0 w-full h-full z-[2]"
           style={{
-            ...bgStyle(imagesToShow[next].url),
+            ...imgStyle(imagesToShow[next].focalPoint),
             opacity: nextVisible ? 1 : 0,
             transition: `opacity ${FADE_MS}ms ease-in-out`,
           }}

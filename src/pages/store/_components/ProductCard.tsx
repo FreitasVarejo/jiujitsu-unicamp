@@ -1,4 +1,5 @@
 import { Eye } from 'lucide-react';
+import { CSSProperties } from 'react';
 import { ProductInfo } from '@/services/mediaService';
 
 interface ProductCardProps {
@@ -7,21 +8,27 @@ interface ProductCardProps {
   onClick: (product: ProductInfo) => void;
 }
 
+const imgStyle = (focalPoint: ProductInfo['coverImage']['focalPoint']): CSSProperties => ({
+  objectFit: 'cover',
+  objectPosition: focalPoint ? `${focalPoint.x}% ${focalPoint.y}%` : 'center',
+});
+
 export const ProductCard = ({ product, categoryLabel: _categoryLabel, onClick }: ProductCardProps) => {
-  const coverImage = product.coverImage?.url || `https://placehold.co/500x500/18181b/d26030?text=${product.title.replace(/ /g, '+')}`;
+  const coverImage = product.coverImage?.url || `https://placehold.co/500x400/18181b/d26030?text=${product.title.replace(/ /g, '+')}`;
 
   return (
     <div 
       onClick={() => onClick(product)}
       className="bg-zinc-900 rounded-lg overflow-hidden border border-zinc-800 group hover:border-primary/50 transition-all cursor-pointer flex flex-col h-full hover:translate-y-[-4px]"
     >
-      <div className="aspect-square bg-zinc-800 relative overflow-hidden shrink-0">
+      <div className="aspect-[3/4] bg-zinc-800 relative overflow-hidden shrink-0">
         <img 
           src={coverImage} 
           alt={product.title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          className="w-full h-full transition-transform duration-500 group-hover:scale-110"
+          style={imgStyle(product.coverImage?.focalPoint)}
           onError={(e) => {
-            (e.target as HTMLImageElement).src = `https://placehold.co/500x500/18181b/d26030?text=${product.title.replace(/ /g, '+')}`;
+            (e.target as HTMLImageElement).src = `https://placehold.co/500x400/18181b/d26030?text=${product.title.replace(/ /g, '+')}`;
           }}
         />
         

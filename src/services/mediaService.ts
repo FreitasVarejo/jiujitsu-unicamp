@@ -55,8 +55,8 @@ export const mediaService = {
     try {
       const response = await BaseMediaService.get<
         StrapiSingleResponse<{
-          imagesDesktop: { url: string; alternativeText?: string }[];
-          imagesMobile: { url: string; alternativeText?: string }[];
+          imagesDesktop: { url: string; alternativeText?: string; focalPoint?: { x: number; y: number } | null }[];
+          imagesMobile: { url: string; alternativeText?: string; focalPoint?: { x: number; y: number } | null }[];
         }>
       >(
         '/api/hero-carousel',
@@ -73,10 +73,12 @@ export const mediaService = {
         desktop: imagesDesktop.map((img) => ({
           url: BaseMediaService.resolveMediaUrl(img.url),
           alternativeText: img.alternativeText || '',
+          focalPoint: img.focalPoint ?? null,
         })),
         mobile: imagesMobile.map((img) => ({
           url: BaseMediaService.resolveMediaUrl(img.url),
           alternativeText: img.alternativeText || '',
+          focalPoint: img.focalPoint ?? null,
         })),
       };
     } catch (error) {

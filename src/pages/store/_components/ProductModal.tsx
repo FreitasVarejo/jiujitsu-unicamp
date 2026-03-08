@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, CSSProperties } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { X, MessageCircle, ClipboardList, ChevronLeft, ChevronRight } from 'lucide-react';
 import { ProductInfo } from '@/services/mediaService';
@@ -6,6 +6,10 @@ import { ProductInfo } from '@/services/mediaService';
 // Link de convite do grupo de avisos da loja no WhatsApp
 // Atualize este valor quando o link de convite for gerado/renovado
 const WHATSAPP_GROUP_URL = 'https://chat.whatsapp.com/SUBSTITUA_PELO_LINK_DO_GRUPO';
+
+const imgStyle = (focalPoint: ProductInfo['coverImage']['focalPoint']): CSSProperties => ({
+  objectPosition: focalPoint ? `${focalPoint.x}% ${focalPoint.y}%` : 'center',
+});
 
 interface ProductModalProps {
   product: ProductInfo | null;
@@ -82,6 +86,7 @@ export const ProductModal = ({ product, onClose, categoryLabel }: ProductModalPr
                     src={img.url}
                     alt={img.alternativeText || `${product.title} - ${idx + 1}`}
                     className="w-full h-full object-contain"
+                    style={imgStyle(img.focalPoint)}
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = `https://placehold.co/800x800/18181b/d26030?text=${product.title.replace(/ /g, '+')}`;
                     }}
