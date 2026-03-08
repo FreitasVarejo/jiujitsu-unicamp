@@ -52,7 +52,7 @@ export const CALENDAR_TYPE_INFO: Record<
   },
   [CalendarType.COMPETICAO]: {
     id: "COMPETICAO",
-    label: "Treino Competição",
+    label: "Treino de Competição",
     trainingTypeKeywords: ["competição", "competicao"],
     darkColors: {
       main: "#dc2626",
