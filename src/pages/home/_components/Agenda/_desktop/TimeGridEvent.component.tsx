@@ -1,6 +1,6 @@
 import { MapPin, User } from 'lucide-react';
 import { CALENDAR_TYPE_INFO } from '@/constants';
-import { parseEventTitle, getDisplayLocation, buildMapsUrl, isPastEventFromDateTime, isCancelledEvent } from './agenda-helpers';
+import { parseEventTitle, getDisplayLocation, buildMapsUrl, isPastEventFromDateTime, isCancelledEvent } from '../agenda-helpers';
 
 /* ── Tipos ── */
 
