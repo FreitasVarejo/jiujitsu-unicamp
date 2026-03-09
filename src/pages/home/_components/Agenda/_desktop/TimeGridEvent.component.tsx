@@ -46,7 +46,7 @@ export const TimeGridEvent = ({ calendarEvent }: TimeGridEventProps) => {
     : isPast
       ? (CALENDAR_TYPE_INFO[calendarEvent.calendarId as keyof typeof CALENDAR_TYPE_INFO] ?? CALENDAR_TYPE_INFO.fallback).darkColorsRgbaPast
       : (CALENDAR_TYPE_INFO[calendarEvent.calendarId as keyof typeof CALENDAR_TYPE_INFO] ?? CALENDAR_TYPE_INFO.fallback).darkColorsRgba;
-  const { type, instructor } = parseEventTitle(calendarEvent.title ?? 'Sem título');
+  const { type, instructor, eventName } = parseEventTitle(calendarEvent.title ?? 'Sem título');
 
   return (
     <div
@@ -69,7 +69,9 @@ export const TimeGridEvent = ({ calendarEvent }: TimeGridEventProps) => {
         className="inline-flex items-center gap-0.5 font-semibold truncate"
         style={{ textDecoration: cancelled ? 'line-through' : 'none' }}
       >
-        {instructor ? (
+        {eventName ? (
+          <span className="truncate">{eventName}</span>
+        ) : instructor ? (
           <>
             <User size={10} className="shrink-0" />
             <span className="truncate">{instructor}</span>

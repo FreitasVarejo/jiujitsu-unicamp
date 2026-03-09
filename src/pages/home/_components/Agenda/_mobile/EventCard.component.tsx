@@ -42,7 +42,7 @@ export const EventCard = ({ event }: EventCardProps) => {
             textDecoration: event.cancelled ? 'line-through' : 'none',
           }}
         >
-          {event.type}
+          {event.eventName || event.type}
         </span>
         <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs" style={{ color: colors.onContainer }}>
           {event.instructor && (

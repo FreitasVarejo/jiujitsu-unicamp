@@ -8,6 +8,7 @@ export interface AgendaEvent {
   id: string;
   type: string;
   instructor?: string;
+  eventName?: string;
   startTime: string;
   endTime: string;
   location?: string;
@@ -48,7 +49,7 @@ const getDayOfWeek = (dateTime?: string, date?: string): number => {
 };
 
 const convertEvent = (event: GoogleCalendarEvent): AgendaEvent => {
-  const { type, instructor } = parseEventTitle(event.summary || 'Sem título');
+  const { type, instructor, eventName } = parseEventTitle(event.summary || 'Sem título');
   const calendarId = inferCalendarType(event.summary || '');
   const cancelled = isCancelledEvent(event.summary || '');
 
@@ -56,6 +57,7 @@ const convertEvent = (event: GoogleCalendarEvent): AgendaEvent => {
     id: event.id,
     type,
     instructor,
+    eventName,
     startTime: extractTime(event.start.dateTime, event.start.date),
     endTime: extractTime(event.end.dateTime, event.end.date),
     location: event.location ? getDisplayLocation(event.location) : undefined,

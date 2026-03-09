@@ -14,13 +14,19 @@ export const isCancelledEvent = (summary: string): boolean => {
 
 /**
  * Infere o tipo de calendário (CalendarType) a partir do summary do evento.
- * Espera formato "Treino <Tipo> - Instrutor" ou "Treino <Tipo>".
+ * Espera formato "Treino <Tipo> - Instrutor" ou "Treino <Tipo>" ou "Evento - Nome".
  * Retorna o CalendarType correspondente, ou CalendarType.FALLBACK como fallback.
  *
  * @param summary - Título do evento do Google Calendar
  * @returns CalendarType inferido
  */
 export const inferCalendarType = (summary: string): CalendarType => {
+  // Verifica se é um evento (começa com "Evento")
+  if (summary.match(/^evento\s*(-|$)/i)) {
+    return CalendarType.EVENTO;
+  }
+
+  // Procura por "Treino <Tipo>"
   const match = summary.match(/^treino\s+(\S+)/i);
   if (!match) return CalendarType.FALLBACK;
 
@@ -40,20 +46,25 @@ export const inferCalendarType = (summary: string): CalendarType => {
 };
 
 /**
- * Extrai o tipo de treino (antes do '-') e o nome do instrutor (depois do '-')
+ * Extrai o tipo de treino (antes do '-') e o nome do instrutor ou evento (depois do '-')
  * a partir do título completo do evento.
  * Remove asterisco inicial se presente (marca de evento cancelado).
  *
+ * Eventos (tipo "Evento") não possuem instrutor, apenas nome do evento.
+ *
  * @example
- * "Treino Geral - Pablo Viana" → { type: "TREINO GERAL", instructor: "Pablo Viana" }
- * "*Treino Geral - Pablo Viana" → { type: "TREINO GERAL", instructor: "Pablo Viana" }
- * "Treino Noturno"             → { type: "TREINO NOTURNO", instructor: undefined }
- * "Evento Qualquer"            → { type: "EVENTO QUALQUER", instructor: undefined }
+ * "Treino Geral - Pablo Viana"       → { type: "TREINO GERAL", instructor: "Pablo Viana" }
+ * "*Treino Geral - Pablo Viana"      → { type: "TREINO GERAL", instructor: "Pablo Viana" }
+ * "Evento - Seminário Gracie"        → { type: "EVENTO", eventName: "Seminário Gracie" }
+ * "Treino Noturno"                   → { type: "TREINO NOTURNO", instructor: undefined }
+ * "Evento Qualquer"                  → { type: "EVENTO QUALQUER", instructor: undefined }
  *
  * @param raw - Título bruto do evento
- * @returns Objeto com tipo e instrutor (opcional)
+ * @returns Objeto com tipo, instrutor (opcional) e eventName (opcional)
  */
-export const parseEventTitle = (raw: string): { type: string; instructor?: string } => {
+export const parseEventTitle = (
+  raw: string,
+): { type: string; instructor?: string; eventName?: string } => {
   // Remove asterisco inicial se presente
   const cleaned = raw.trimStart().replace(/^\*\s*/, '');
   const dashIndex = cleaned.indexOf('-');
@@ -62,9 +73,16 @@ export const parseEventTitle = (raw: string): { type: string; instructor?: strin
     return { type: cleaned.trim().toUpperCase() };
   }
 
-  const type = cleaned.slice(0, dashIndex).trim().toUpperCase();
-  const instructor = cleaned.slice(dashIndex + 1).trim() || undefined;
-  return { type, instructor };
+  const typeSegment = cleaned.slice(0, dashIndex).trim().toUpperCase();
+  const secondSegment = cleaned.slice(dashIndex + 1).trim() || undefined;
+
+  // Se o tipo é "EVENTO", trata o segundo segmento como nome do evento
+  if (typeSegment === 'EVENTO') {
+    return { type: typeSegment, eventName: secondSegment };
+  }
+
+  // Caso contrário, é um instrutor
+  return { type: typeSegment, instructor: secondSegment };
 };
 
 /**
