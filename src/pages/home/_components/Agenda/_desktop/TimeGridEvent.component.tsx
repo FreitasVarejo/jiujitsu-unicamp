@@ -1,6 +1,6 @@
 import { MapPin, User } from 'lucide-react';
 import { CALENDAR_TYPE_INFO } from '@/constants';
-import { parseEventTitle, getDisplayLocation, buildMapsUrl, isPastEventFromDateTime, isCancelledEvent } from '../agenda-helpers';
+import { parseEventTitle, getDisplayLocation, buildMapsUrl, isPastEventFromDateTime, isCancelledEvent, isNoGiEvent } from '../agenda-helpers';
 
 /* ── Tipos ── */
 
@@ -40,6 +40,7 @@ const CANCELLED_COLORS = {
 
 export const TimeGridEvent = ({ calendarEvent }: TimeGridEventProps) => {
   const cancelled = isCancelledEvent(calendarEvent.title ?? '');
+  const noGi = isNoGiEvent(calendarEvent.title ?? '');
   const isPast = isPastEventFromDateTime(calendarEvent.startRaw);
   const colors = cancelled
     ? CANCELLED_COLORS
@@ -66,7 +67,7 @@ export const TimeGridEvent = ({ calendarEvent }: TimeGridEventProps) => {
         </span>
       )}
       <span
-        className="inline-flex items-center gap-0.5 font-semibold truncate"
+        className="inline-flex items-center gap-1 font-semibold truncate"
         style={{ textDecoration: cancelled ? 'line-through' : 'none' }}
       >
         {eventName ? (
@@ -81,22 +82,34 @@ export const TimeGridEvent = ({ calendarEvent }: TimeGridEventProps) => {
         )}
       </span>
 
-      {calendarEvent.location && (
-        <a
-          href={buildMapsUrl(calendarEvent.location)}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-0.5 opacity-80 hover:opacity-100 underline underline-offset-2 transition-opacity"
-          onClick={(e) => e.stopPropagation()}
-          title={calendarEvent.location}
-          style={{
-            color: colors.onContainer,
-            textDecoration: cancelled ? 'line-through' : 'underline',
-          }}
-        >
-          <MapPin size={10} className="shrink-0" />
-          <span className="truncate">{getDisplayLocation(calendarEvent.location)}</span>
-        </a>
+      {(calendarEvent.location || noGi) && (
+        <span className="inline-flex items-center gap-1">
+          {calendarEvent.location && (
+            <a
+              href={buildMapsUrl(calendarEvent.location)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-0.5 opacity-80 hover:opacity-100 underline underline-offset-2 transition-opacity"
+              onClick={(e) => e.stopPropagation()}
+              title={calendarEvent.location}
+              style={{
+                color: colors.onContainer,
+                textDecoration: cancelled ? 'line-through' : 'underline',
+              }}
+            >
+              <MapPin size={10} className="shrink-0" />
+              <span className="truncate">{getDisplayLocation(calendarEvent.location)}</span>
+            </a>
+          )}
+          {noGi && (
+            <span
+              className="shrink-0 text-xs font-medium px-1 py-px rounded"
+              style={{ backgroundColor: 'rgba(255,255,255,0.08)', color: colors.onContainer, opacity: 0.85 }}
+            >
+              NoGi
+            </span>
+          )}
+        </span>
       )}
     </div>
   );

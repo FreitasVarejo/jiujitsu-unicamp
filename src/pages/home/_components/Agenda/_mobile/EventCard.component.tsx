@@ -36,13 +36,21 @@ export const EventCard = ({ event }: EventCardProps) => {
           </span>
         )}
         <span
-          className="text-sm font-semibold"
+          className="inline-flex items-center gap-1.5 text-sm font-semibold"
           style={{
             color: colors.onContainer,
             textDecoration: event.cancelled ? 'line-through' : 'none',
           }}
         >
           {event.eventName || event.type}
+          {event.noGi && (
+            <span
+              className="text-xs font-medium px-1 py-px rounded"
+              style={{ backgroundColor: 'rgba(255,255,255,0.08)', color: colors.onContainer, opacity: 0.85 }}
+            >
+              NoGi
+            </span>
+          )}
         </span>
         <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs" style={{ color: colors.onContainer }}>
           {event.instructor && (

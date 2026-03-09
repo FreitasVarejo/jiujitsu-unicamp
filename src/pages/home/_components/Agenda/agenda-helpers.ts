@@ -13,6 +13,21 @@ export const isCancelledEvent = (summary: string): boolean => {
 };
 
 /**
+ * Verifica se um evento é NoGi (sem kimono).
+ * Um evento é considerado NoGi se seu título contém "(NoGi)" (case-insensitive).
+ *
+ * @example
+ * "Treino Geral - Pablo Viana (NoGi)" → true
+ * "Treino Geral - Pablo Viana"        → false
+ *
+ * @param summary - Título do evento do Google Calendar
+ * @returns true se o evento é NoGi, false caso contrário
+ */
+export const isNoGiEvent = (summary: string): boolean => {
+  return /\(nogi\)/i.test(summary);
+};
+
+/**
  * Infere o tipo de calendário (CalendarType) a partir do summary do evento.
  * Espera formato "Treino <Tipo> - Instrutor" ou "Treino <Tipo>" ou "Evento - Nome".
  * Retorna o CalendarType correspondente, ou CalendarType.FALLBACK como fallback.
@@ -53,11 +68,12 @@ export const inferCalendarType = (summary: string): CalendarType => {
  * Eventos (tipo "Evento") não possuem instrutor, apenas nome do evento.
  *
  * @example
- * "Treino Geral - Pablo Viana"       → { type: "TREINO GERAL", instructor: "Pablo Viana" }
- * "*Treino Geral - Pablo Viana"      → { type: "TREINO GERAL", instructor: "Pablo Viana" }
- * "Evento - Seminário Gracie"        → { type: "EVENTO", eventName: "Seminário Gracie" }
- * "Treino Noturno"                   → { type: "TREINO NOTURNO", instructor: undefined }
- * "Evento Qualquer"                  → { type: "EVENTO QUALQUER", instructor: undefined }
+ * "Treino Geral - Pablo Viana"            → { type: "TREINO GERAL", instructor: "Pablo Viana" }
+ * "*Treino Geral - Pablo Viana"           → { type: "TREINO GERAL", instructor: "Pablo Viana" }
+ * "Treino Geral - Pablo Viana (NoGi)"    → { type: "TREINO GERAL", instructor: "Pablo Viana" }
+ * "Evento - Seminário Gracie"             → { type: "EVENTO", eventName: "Seminário Gracie" }
+ * "Treino Noturno"                        → { type: "TREINO NOTURNO", instructor: undefined }
+ * "Evento Qualquer"                       → { type: "EVENTO QUALQUER", instructor: undefined }
  *
  * @param raw - Título bruto do evento
  * @returns Objeto com tipo, instrutor (opcional) e eventName (opcional)
@@ -65,8 +81,8 @@ export const inferCalendarType = (summary: string): CalendarType => {
 export const parseEventTitle = (
   raw: string,
 ): { type: string; instructor?: string; eventName?: string } => {
-  // Remove asterisco inicial se presente
-  const cleaned = raw.trimStart().replace(/^\*\s*/, '');
+  // Remove asterisco inicial se presente e remove marcador NoGi em qualquer posição
+  const cleaned = raw.trimStart().replace(/^\*\s*/, '').replace(/\s*\(nogi\)/gi, '').trim();
   const dashIndex = cleaned.indexOf('-');
 
   if (dashIndex === -1) {
