@@ -1,11 +1,9 @@
 import { useCallback, useEffect, useState, CSSProperties } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
-import { X, MessageCircle, ClipboardList, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X, Instagram, ClipboardList, ChevronLeft, ChevronRight } from 'lucide-react';
 import { ProductInfo } from '@/services/mediaService';
 
-// Link de convite do grupo de avisos da loja no WhatsApp
-// Atualize este valor quando o link de convite for gerado/renovado
-const WHATSAPP_GROUP_URL = 'https://chat.whatsapp.com/SUBSTITUA_PELO_LINK_DO_GRUPO';
+const INSTAGRAM_URL = 'https://www.instagram.com/jiujitsu.unicamp/';
 
 const imgStyle = (focalPoint: ProductInfo['coverImage']['focalPoint']): CSSProperties => ({
   objectPosition: focalPoint ? `${focalPoint.x}% ${focalPoint.y}%` : 'center',
@@ -198,19 +196,19 @@ export const ProductModal = ({ product, onClose, categoryLabel }: ProductModalPr
               </a>
             ) : (
               <a
-                href={WHATSAPP_GROUP_URL}
+                href={INSTAGRAM_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full flex items-center justify-center gap-3 bg-zinc-700 hover:bg-zinc-600 text-white py-3 md:py-4 rounded-xl transition-all font-display uppercase tracking-wider text-sm md:text-base transform hover:scale-[1.02] active:scale-[0.98]"
               >
-                <MessageCircle size={20} />
-                Acompanhar disponibilidade
+                <Instagram size={20} />
+                Entrar em contato
               </a>
             )}
             <p className="text-center text-[10px] md:text-xs text-gray-500 mt-3 px-4">
               {formsOpen
                 ? 'Formulário com instruções de pagamento incluso.'
-                : 'Avisamos no grupo quando novas encomendas abrirem.'}
+                : 'Solicite via Direct para participar do grupo de pedidos.'}
             </p>
           </div>
         </div>
