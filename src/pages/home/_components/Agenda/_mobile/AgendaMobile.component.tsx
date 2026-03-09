@@ -84,7 +84,7 @@ export const AgendaMobile = ({
       <button
         onClick={onPreviousWeek}
         aria-label="Semana anterior"
-        className="p-2 rounded-md text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+        className="p-2 rounded-md text-zinc-400 hover:text-white hover:bg-zinc-700 transition-colors"
       >
         <ChevronLeft size={20} />
       </button>
@@ -94,7 +94,7 @@ export const AgendaMobile = ({
       <button
         onClick={onNextWeek}
         aria-label="Próxima semana"
-        className="p-2 rounded-md text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+        className="p-2 rounded-md text-zinc-400 hover:text-white hover:bg-zinc-700 transition-colors"
       >
         <ChevronRight size={20} />
       </button>
@@ -144,13 +144,13 @@ export const AgendaMobile = ({
                 ref={isToday ? todayRef : null}
                 className={`rounded-lg border-2 p-4 ${
                   isToday
-                    ? 'border-primary bg-zinc-800'
-                    : 'border-zinc-800 bg-zinc-900'
+                    ? 'border-primary bg-zinc-700'
+                    : 'border-zinc-700 bg-zinc-800'
                 }`}
               >
                 <h3 className="font-display text-lg text-white mb-3 flex items-baseline gap-2">
                   {DAY_LABELS[dayOfWeek]}
-                  <span className="text-sm font-sans normal-case text-zinc-500 tracking-normal">
+                  <span className="text-sm font-sans normal-case text-zinc-400 tracking-normal">
                     {dateLabel}
                   </span>
                 </h3>
@@ -162,7 +162,7 @@ export const AgendaMobile = ({
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-gray-500">Sem treino neste dia.</p>
+                  <p className="text-sm text-zinc-400">Sem treino neste dia.</p>
                 )}
               </div>
             );

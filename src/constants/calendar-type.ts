@@ -41,8 +41,8 @@ export const CALENDAR_TYPE_INFO: Record<
     },
     darkColorsRgba: {
       main: "#d26030",
-      container: "rgba(60, 28, 14, 1)",
-      onContainer: "#f4a882",
+      container: "rgba(90, 42, 18, 1)",
+      onContainer: "#ffd4bc",
     },
     darkColorsRgbaPast: {
       main: "#8B3F1E",
@@ -61,8 +61,8 @@ export const CALENDAR_TYPE_INFO: Record<
     },
     darkColorsRgba: {
       main: "#dc2626",
-      container: "rgba(55, 15, 15, 1)",
-      onContainer: "#fca5a5",
+      container: "rgba(85, 20, 20, 1)",
+      onContainer: "#ffd5d5",
     },
     darkColorsRgbaPast: {
       main: "#8B1515",
@@ -81,8 +81,8 @@ export const CALENDAR_TYPE_INFO: Record<
     },
     darkColorsRgba: {
       main: "#6366f1",
-      container: "rgba(25, 25, 60, 1)",
-      onContainer: "#a5b4fc",
+      container: "rgba(38, 38, 95, 1)",
+      onContainer: "#d4daff",
     },
     darkColorsRgbaPast: {
       main: "#3D3E8C",
@@ -101,8 +101,8 @@ export const CALENDAR_TYPE_INFO: Record<
     },
     darkColorsRgba: {
       main: "#d946ef",
-      container: "rgba(60, 25, 70, 1)",
-      onContainer: "#f0abfc",
+      container: "rgba(70, 38, 78, 1)",
+      onContainer: "#f5d0ff",
     },
     darkColorsRgbaPast: {
       main: "#8B2E8F",
@@ -121,8 +121,8 @@ export const CALENDAR_TYPE_INFO: Record<
     },
     darkColorsRgba: {
       main: "#f59e0b",
-      container: "rgba(60, 38, 10, 1)",
-      onContainer: "#fcd34d",
+      container: "rgba(92, 58, 12, 1)",
+      onContainer: "#ffe99a",
     },
     darkColorsRgbaPast: {
       main: "#9D6209",
@@ -141,8 +141,8 @@ export const CALENDAR_TYPE_INFO: Record<
     },
     darkColorsRgba: {
       main: "#71717a",
-      container: "rgba(39, 39, 42, 1)",
-      onContainer: "#e4e4e7",
+      container: "rgba(60, 60, 65, 1)",
+      onContainer: "#f4f4f5",
     },
     darkColorsRgbaPast: {
       main: "#52525B",

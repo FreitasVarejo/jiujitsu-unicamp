@@ -10,7 +10,7 @@ export const CalendarLegend = () => {
     }))
 
   return (
-    <div className="mt-4 flex flex-wrap items-center gap-4 text-xs text-zinc-500">
+    <div className="mt-4 flex flex-wrap items-center gap-4 text-xs text-zinc-400">
       {legendItems.map((item) => (
         <div key={item.type} className="flex items-center gap-2">
           {/* Swatch de cor minimalista */}
@@ -19,7 +19,7 @@ export const CalendarLegend = () => {
             style={{ backgroundColor: item.darkColors.main }}
           />
           {/* Label discreto */}
-          <span className="text-zinc-500">{item.label}</span>
+          <span className="text-zinc-400">{item.label}</span>
         </div>
       ))}
     </div>
