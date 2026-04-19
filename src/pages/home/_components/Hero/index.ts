@@ -1,2 +1,2 @@
-export * from './Hero.component';
-export * from './SkeletonHero.component';
+export * from "./Hero.component";
+export * from "./SkeletonHero.component";

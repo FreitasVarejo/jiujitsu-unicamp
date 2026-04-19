@@ -1,5 +1,5 @@
-import { ChevronRight } from 'lucide-react';
-import { EventSummaryInfo } from '@/services/mediaService';
+import { ChevronRight } from "lucide-react";
+import { EventSummaryInfo } from "@/services/mediaService";
 
 interface SeeMoreCardProps {
   event: EventSummaryInfo;
@@ -8,11 +8,16 @@ interface SeeMoreCardProps {
   onClick: (year: string) => void;
 }
 
-export const SeeMoreCard = ({ event, year, remaining, onClick }: SeeMoreCardProps) => {
+export const SeeMoreCard = ({
+  event,
+  year,
+  remaining,
+  onClick,
+}: SeeMoreCardProps) => {
   return (
     <button
       onClick={() => onClick(year)}
-      className="group relative h-64 overflow-hidden rounded-xl bg-zinc-900 border border-zinc-800 flex items-end text-left"
+      className="group relative flex h-64 items-end overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900 text-left"
     >
       <div className="absolute inset-0">
         {event.coverImage.url && (
@@ -20,20 +25,20 @@ export const SeeMoreCard = ({ event, year, remaining, onClick }: SeeMoreCardProp
             src={event.coverImage.url}
             alt={event.coverImage.alternativeText || event.title}
             loading="lazy"
-            className="w-full h-full object-cover transition-transform duration-700 grayscale blur-[2px]"
+            className="h-full w-full object-cover blur-[2px] grayscale transition-transform duration-700"
           />
         )}
-        <div className="absolute inset-0 bg-black/60 group-hover:bg-black/40 transition-colors"></div>
+        <div className="absolute inset-0 bg-black/60 transition-colors group-hover:bg-black/40"></div>
       </div>
 
-      <div className="absolute inset-0 flex flex-col items-center justify-center z-20">
-        <div className="bg-primary/20 p-4 rounded-full mb-3 group-hover:scale-110 transition-transform">
-          <ChevronRight size={32} className="text-primary rotate-90" />
+      <div className="absolute inset-0 z-20 flex flex-col items-center justify-center">
+        <div className="mb-3 rounded-full bg-primary/20 p-4 transition-transform group-hover:scale-110">
+          <ChevronRight size={32} className="rotate-90 text-primary" />
         </div>
-        <span className="text-white font-display text-xl uppercase tracking-widest">
+        <span className="font-display text-xl uppercase tracking-widest text-white">
           Ver mais {year}
         </span>
-        <span className="text-primary/80 text-sm font-sans mt-1">
+        <span className="mt-1 font-sans text-sm text-primary/80">
           +{remaining} eventos registrados
         </span>
       </div>

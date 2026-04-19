@@ -1,8 +1,15 @@
-import { useEffect, useRef } from 'react';
-import { Loader2, AlertCircle, ChevronLeft, ChevronRight } from 'lucide-react';
-import { EventsByDay } from '../agenda.hook';
-import { EventCard } from './EventCard.component';
-import { performScroll, addDays, fmtDDMM, fmtDate, DAY_LABELS, ALL_DAYS } from './mobile-helpers';
+import { useEffect, useRef } from "react";
+import { Loader2, AlertCircle, ChevronLeft, ChevronRight } from "lucide-react";
+import { EventsByDay } from "../agenda.hook";
+import { EventCard } from "./EventCard.component";
+import {
+  performScroll,
+  addDays,
+  fmtDDMM,
+  fmtDate,
+  DAY_LABELS,
+  ALL_DAYS,
+} from "./mobile-helpers";
 
 interface AgendaMobileProps {
   eventsByDay: EventsByDay;
@@ -39,10 +46,17 @@ export const AgendaMobile = ({
   useEffect(() => {
     // Verifica se hoje está na semana sendo exibida
     const isTodayInWeek = today >= weekStart && today <= weekEnd;
-    console.log('[AgendaMobile] Auto-scroll check:', { today, weekStart, weekEnd, isTodayInWeek });
+    console.log("[AgendaMobile] Auto-scroll check:", {
+      today,
+      weekStart,
+      weekEnd,
+      isTodayInWeek,
+    });
 
     if (!isTodayInWeek) {
-      console.log('[AgendaMobile] Today not in current week, skipping auto-scroll');
+      console.log(
+        "[AgendaMobile] Today not in current week, skipping auto-scroll"
+      );
       return;
     }
 
@@ -51,19 +65,25 @@ export const AgendaMobile = ({
       const container = containerRef.current;
       const todayCard = todayRef.current;
 
-      console.log('[AgendaMobile] Checking refs after timeout:', { containerRef: !!container, todayRef: !!todayCard });
+      console.log("[AgendaMobile] Checking refs after timeout:", {
+        containerRef: !!container,
+        todayRef: !!todayCard,
+      });
 
       if (!container || !todayCard) {
-        console.log('[AgendaMobile] Refs not available, retrying in 100ms');
+        console.log("[AgendaMobile] Refs not available, retrying in 100ms");
         // Retry uma vez se as refs ainda não estiverem prontas
         const retryTimer = setTimeout(() => {
           const retryContainer = containerRef.current;
           const retryCard = todayRef.current;
 
-          console.log('[AgendaMobile] Retry check:', { containerRef: !!retryContainer, todayRef: !!retryCard });
+          console.log("[AgendaMobile] Retry check:", {
+            containerRef: !!retryContainer,
+            todayRef: !!retryCard,
+          });
 
           if (!retryContainer || !retryCard) {
-            console.log('[AgendaMobile] Refs still not available, giving up');
+            console.log("[AgendaMobile] Refs still not available, giving up");
             return;
           }
 
@@ -80,21 +100,21 @@ export const AgendaMobile = ({
   }, [today, weekStart, weekEnd]);
 
   const navBar = (
-    <div className="flex items-center justify-between mb-4">
+    <div className="mb-4 flex items-center justify-between">
       <button
         onClick={onPreviousWeek}
         aria-label="Semana anterior"
-        className="p-2 rounded-md text-zinc-400 hover:text-white hover:bg-zinc-700 transition-colors"
+        className="rounded-md p-2 text-zinc-400 transition-colors hover:bg-zinc-700 hover:text-white"
       >
         <ChevronLeft size={20} />
       </button>
-      <span className="text-sm font-display uppercase tracking-widest text-zinc-300">
+      <span className="font-display text-sm uppercase tracking-widest text-zinc-300">
         {rangeLabel}
       </span>
       <button
         onClick={onNextWeek}
         aria-label="Próxima semana"
-        className="p-2 rounded-md text-zinc-400 hover:text-white hover:bg-zinc-700 transition-colors"
+        className="rounded-md p-2 text-zinc-400 transition-colors hover:bg-zinc-700 hover:text-white"
       >
         <ChevronRight size={20} />
       </button>
@@ -103,10 +123,10 @@ export const AgendaMobile = ({
 
   if (loading) {
     return (
-      <div className="md:hidden flex flex-col">
+      <div className="flex flex-col md:hidden">
         {navBar}
-        <div className="flex justify-center py-12 flex-1">
-          <Loader2 className="w-8 h-8 text-primary animate-spin" />
+        <div className="flex flex-1 justify-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
       </div>
     );
@@ -114,19 +134,21 @@ export const AgendaMobile = ({
 
   if (error) {
     return (
-      <div className="md:hidden flex flex-col">
+      <div className="flex flex-col md:hidden">
         {navBar}
-        <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-8 text-center flex-1">
-          <AlertCircle className="w-10 h-10 text-red-500 mx-auto mb-3" />
-          <h3 className="text-lg font-display text-white mb-1">Ops! Algo deu errado</h3>
-          <p className="text-gray-400 text-sm">{error}</p>
+        <div className="flex-1 rounded-lg border border-red-500/20 bg-red-500/10 p-8 text-center">
+          <AlertCircle className="mx-auto mb-3 h-10 w-10 text-red-500" />
+          <h3 className="mb-1 font-display text-lg text-white">
+            Ops! Algo deu errado
+          </h3>
+          <p className="text-sm text-gray-400">{error}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="md:hidden flex flex-col">
+    <div className="flex flex-col md:hidden">
       {navBar}
       <div className="max-h-[70vh] overflow-y-auto" ref={containerRef}>
         <div className="space-y-4">
@@ -144,13 +166,13 @@ export const AgendaMobile = ({
                 ref={isToday ? todayRef : null}
                 className={`rounded-lg border-2 p-4 ${
                   isToday
-                    ? 'border-primary bg-zinc-700'
-                    : 'border-zinc-700 bg-zinc-800'
+                    ? "border-primary bg-zinc-700"
+                    : "border-zinc-700 bg-zinc-800"
                 }`}
               >
-                <h3 className="font-display text-lg text-white mb-3 flex items-baseline gap-2">
+                <h3 className="mb-3 flex items-baseline gap-2 font-display text-lg text-white">
                   {DAY_LABELS[dayOfWeek]}
-                  <span className="text-sm font-sans normal-case text-zinc-400 tracking-normal">
+                  <span className="font-sans text-sm normal-case tracking-normal text-zinc-400">
                     {dateLabel}
                   </span>
                 </h3>

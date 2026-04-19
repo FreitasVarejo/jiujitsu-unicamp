@@ -1,2 +1,2 @@
-export * from './Location.component';
-export * from './location.constants';
+export * from "./Location.component";
+export * from "./location.constants";

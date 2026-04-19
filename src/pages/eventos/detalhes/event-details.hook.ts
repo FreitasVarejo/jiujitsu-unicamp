@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { mediaService, EventInfo } from '@/services/mediaService';
-import { Image } from '@/types/media';
+import { useState, useEffect } from "react";
+import { mediaService, EventInfo } from "@/services/mediaService";
+import { Image } from "@/types/media";
 
 export const useEventDetails = (id?: string) => {
   const [details, setDetails] = useState<EventInfo | null>(null);
@@ -15,8 +15,8 @@ export const useEventDetails = (id?: string) => {
         const info = await mediaService.getEventDetails(id);
         setDetails(info);
       } catch (err) {
-        console.error('Erro ao carregar detalhes:', err);
-        setError('Não foi possível carregar as informações deste evento.');
+        console.error("Erro ao carregar detalhes:", err);
+        setError("Não foi possível carregar as informações deste evento.");
       } finally {
         setLoading(false);
       }

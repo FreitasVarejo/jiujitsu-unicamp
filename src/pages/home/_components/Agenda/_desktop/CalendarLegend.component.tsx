@@ -1,4 +1,4 @@
-import { CALENDAR_TYPE_INFO, CalendarType } from '@/constants'
+import { CALENDAR_TYPE_INFO, CalendarType } from "@/constants";
 
 export const CalendarLegend = () => {
   // Filtra todos os tipos exceto FALLBACK
@@ -7,7 +7,7 @@ export const CalendarLegend = () => {
     .map((type) => ({
       type,
       ...CALENDAR_TYPE_INFO[type],
-    }))
+    }));
 
   return (
     <div className="mt-4 flex flex-wrap items-center gap-4 text-xs text-zinc-400">
@@ -15,7 +15,7 @@ export const CalendarLegend = () => {
         <div key={item.type} className="flex items-center gap-2">
           {/* Swatch de cor minimalista */}
           <div
-            className="w-3 h-3 rounded-full flex-shrink-0"
+            className="h-3 w-3 flex-shrink-0 rounded-full"
             style={{ backgroundColor: item.darkColors.main }}
           />
           {/* Label discreto */}
@@ -23,5 +23,5 @@ export const CalendarLegend = () => {
         </div>
       ))}
     </div>
-  )
-}
+  );
+};

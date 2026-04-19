@@ -1,4 +1,4 @@
-import { useSyncExternalStore } from 'react'
+import { useSyncExternalStore } from "react";
 
 /**
  * Custom hook para detectar se uma media query é atendida.
@@ -15,39 +15,39 @@ export const useMediaQuery = (query: string): boolean => {
   return useSyncExternalStore(
     (onStoreChange) => {
       // Evita erro se window não estiver disponível (SSR)
-      if (typeof window === 'undefined') {
-        return () => {}
+      if (typeof window === "undefined") {
+        return () => {};
       }
 
-      const mediaQueryList = window.matchMedia(query)
+      const mediaQueryList = window.matchMedia(query);
 
       // Listener para mudanças
       const handleChange = () => {
-        onStoreChange()
-      }
+        onStoreChange();
+      };
 
-      mediaQueryList.addEventListener('change', handleChange)
+      mediaQueryList.addEventListener("change", handleChange);
 
       // Cleanup
       return () => {
-        mediaQueryList.removeEventListener('change', handleChange)
-      }
+        mediaQueryList.removeEventListener("change", handleChange);
+      };
     },
     () => {
       // Servidor: retorna false por padrão (SSR)
-      if (typeof window === 'undefined') {
-        return false
+      if (typeof window === "undefined") {
+        return false;
       }
 
-      return window.matchMedia(query).matches
+      return window.matchMedia(query).matches;
     },
     () => {
       // Snapshot inicial do servidor
-      if (typeof window === 'undefined') {
-        return false
+      if (typeof window === "undefined") {
+        return false;
       }
 
-      return window.matchMedia(query).matches
-    },
-  )
-}
+      return window.matchMedia(query).matches;
+    }
+  );
+};

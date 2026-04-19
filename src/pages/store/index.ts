@@ -1,1 +1,1 @@
-export { Loja } from './store.page';
+export { Loja } from "./store.page";

@@ -1,4 +1,4 @@
-import type { LocationData } from '../location.constants';
+import type { LocationData } from "../location.constants";
 
 interface LocationCardProps {
   location: LocationData;
@@ -6,19 +6,17 @@ interface LocationCardProps {
 
 export const LocationCard = ({ location }: LocationCardProps) => {
   return (
-    <div className="grid md:grid-cols-3 gap-8 bg-zinc-900 rounded-lg overflow-hidden border border-zinc-800">
-      <div className="p-8 col-span-1 flex flex-col justify-center">
-        <h3 className="text-2xl font-display text-white mb-2">
+    <div className="grid gap-8 overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900 md:grid-cols-3">
+      <div className="col-span-1 flex flex-col justify-center p-8">
+        <h3 className="mb-2 font-display text-2xl text-white">
           {location.title}
         </h3>
-        <p className="text-gray-400 mb-6 whitespace-pre-line">
+        <p className="mb-6 whitespace-pre-line text-gray-400">
           {location.address}
         </p>
-        <p className="text-sm text-gray-500 italic">
-          {location.reference}
-        </p>
+        <p className="text-sm italic text-gray-500">{location.reference}</p>
       </div>
-      <div className="col-span-1 md:col-span-2 h-64 md:h-auto min-h-[300px]">
+      <div className="col-span-1 h-64 min-h-[300px] md:col-span-2 md:h-auto">
         <iframe
           src={location.mapsEmbedUrl}
           width="100%"
@@ -27,7 +25,7 @@ export const LocationCard = ({ location }: LocationCardProps) => {
           allowFullScreen
           aria-hidden={false}
           tabIndex={0}
-          className="filter grayscale invert contrast-125 brightness-75 hover:filter-none transition-all duration-500"
+          className="brightness-75 contrast-125 grayscale invert filter transition-all duration-500 hover:filter-none"
         />
       </div>
     </div>

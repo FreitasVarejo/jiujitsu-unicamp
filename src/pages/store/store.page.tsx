@@ -1,28 +1,34 @@
-import { Loader2 } from 'lucide-react';
-import { useMemo, useState } from 'react';
-import { ProductCarousel } from './_components/ProductCarousel';
-import { ProductModal } from './_components/ProductModal';
-import { useProducts } from './store.hook';
-import { ProductInfo } from '@/services/mediaService';
+import { Loader2 } from "lucide-react";
+import { useMemo, useState } from "react";
+import { ProductCarousel } from "./_components/ProductCarousel";
+import { ProductModal } from "./_components/ProductModal";
+import { useProducts } from "./store.hook";
+import { ProductInfo } from "@/services/mediaService";
 
 export const Loja = () => {
   const { products, categories, loading, error } = useProducts();
-  const [selectedProduct, setSelectedProduct] = useState<ProductInfo | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<ProductInfo | null>(
+    null
+  );
 
   const categoryMap = useMemo(() => {
     return Object.fromEntries(categories.map((c) => [c.slug, c.name]));
   }, [categories]);
 
   const orderedSections = useMemo(() => {
-    const productsBySlug = products.reduce((acc, product) => {
-      const slug = product.category || 'outros';
-      if (!acc[slug]) acc[slug] = [];
-      acc[slug].push(product);
-      return acc;
-    }, {} as Record<string, ProductInfo[]>);
+    const productsBySlug = products.reduce(
+      (acc, product) => {
+        const slug = product.category || "outros";
+        if (!acc[slug]) acc[slug] = [];
+        acc[slug].push(product);
+        return acc;
+      },
+      {} as Record<string, ProductInfo[]>
+    );
 
     // Iterate categories in backend order, skip empty ones
-    const sections: { slug: string; name: string; products: ProductInfo[] }[] = [];
+    const sections: { slug: string; name: string; products: ProductInfo[] }[] =
+      [];
     for (const cat of categories) {
       const items = productsBySlug[cat.slug];
       if (items && items.length > 0) {
@@ -35,7 +41,11 @@ export const Loja = () => {
     for (const slug of remainingSlugs) {
       const items = productsBySlug[slug];
       if (items && items.length > 0) {
-        sections.push({ slug, name: categoryMap[slug] || slug, products: items });
+        sections.push({
+          slug,
+          name: categoryMap[slug] || slug,
+          products: items,
+        });
       }
     }
     return sections;
@@ -43,22 +53,23 @@ export const Loja = () => {
 
   return (
     <div className="container py-12">
-      <div className="text-center mb-8">
-        <h1 className="text-5xl font-display text-white mb-4">Loja Oficial</h1>
-        <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-          Peças sob demanda com a identidade da nossa equipe. Clique em um produto para ver detalhes e encomendar.
+      <div className="mb-8 text-center">
+        <h1 className="mb-4 font-display text-5xl text-white">Loja Oficial</h1>
+        <p className="mx-auto max-w-2xl text-xl text-gray-400">
+          Peças sob demanda com a identidade da nossa equipe. Clique em um
+          produto para ver detalhes e encomendar.
         </p>
       </div>
 
       {loading ? (
         <div className="flex flex-col items-center justify-center py-20">
-          <Loader2 className="w-12 h-12 text-primary animate-spin mb-4" />
+          <Loader2 className="mb-4 h-12 w-12 animate-spin text-primary" />
           <p className="text-gray-400">Carregando produtos...</p>
         </div>
       ) : error ? (
-        <div className="text-center py-20">
-          <p className="text-red-500 mb-4">{error}</p>
-          <button 
+        <div className="py-20 text-center">
+          <p className="mb-4 text-red-500">{error}</p>
+          <button
             onClick={() => window.location.reload()}
             className="text-primary hover:underline"
           >
@@ -69,18 +80,19 @@ export const Loja = () => {
         <div className="space-y-16">
           {orderedSections.map((section) => (
             <div key={section.slug} className="flex flex-col">
-              <div className="flex items-center gap-4 mb-8">
-                <h2 className="text-3xl font-display text-white uppercase tracking-tight">
+              <div className="mb-8 flex items-center gap-4">
+                <h2 className="font-display text-3xl uppercase tracking-tight text-white">
                   {section.name}
                 </h2>
-                <div className="h-px bg-zinc-800 flex-grow" />
-                <span className="text-sm text-gray-500 font-mono">
-                  {section.products.length} {section.products.length === 1 ? 'item' : 'itens'}
+                <div className="h-px flex-grow bg-zinc-800" />
+                <span className="font-mono text-sm text-gray-500">
+                  {section.products.length}{" "}
+                  {section.products.length === 1 ? "item" : "itens"}
                 </span>
               </div>
-              
-              <ProductCarousel 
-                products={section.products} 
+
+              <ProductCarousel
+                products={section.products}
                 onProductClick={setSelectedProduct}
               />
             </div>
@@ -90,8 +102,8 @@ export const Loja = () => {
 
       {/* Product Modal */}
       {selectedProduct && (
-        <ProductModal 
-          product={selectedProduct} 
+        <ProductModal
+          product={selectedProduct}
           categoryLabel={categoryMap[selectedProduct.category]}
           onClose={() => setSelectedProduct(null)}
         />

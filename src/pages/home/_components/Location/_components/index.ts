@@ -1,1 +1,1 @@
-export * from './LocationCard.component';
+export * from "./LocationCard.component";

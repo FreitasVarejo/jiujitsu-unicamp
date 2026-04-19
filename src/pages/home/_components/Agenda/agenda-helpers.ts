@@ -1,5 +1,5 @@
-import { CalendarType, CALENDAR_TYPE_INFO } from '@/constants';
-import { CALENDAR_LOCATION_INFO, ADDRESS_TO_LOCATION } from '@/constants';
+import { CalendarType, CALENDAR_TYPE_INFO } from "@/constants";
+import { CALENDAR_LOCATION_INFO, ADDRESS_TO_LOCATION } from "@/constants";
 
 /**
  * Verifica se um evento foi cancelado.
@@ -9,7 +9,7 @@ import { CALENDAR_LOCATION_INFO, ADDRESS_TO_LOCATION } from '@/constants';
  * @returns true se o evento foi cancelado, false caso contrário
  */
 export const isCancelledEvent = (summary: string): boolean => {
-  return summary.trimStart().startsWith('*');
+  return summary.trimStart().startsWith("*");
 };
 
 /**
@@ -47,8 +47,8 @@ export const inferCalendarType = (summary: string): CalendarType => {
 
   const keyword = match[1]
     .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '');
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
 
   // Procura o tipo nos keywords de cada CalendarType
   for (const [type, info] of Object.entries(CALENDAR_TYPE_INFO)) {
@@ -79,11 +79,15 @@ export const inferCalendarType = (summary: string): CalendarType => {
  * @returns Objeto com tipo, instrutor (opcional) e eventName (opcional)
  */
 export const parseEventTitle = (
-  raw: string,
+  raw: string
 ): { type: string; instructor?: string; eventName?: string } => {
   // Remove asterisco inicial se presente e remove marcador NoGi em qualquer posição
-  const cleaned = raw.trimStart().replace(/^\*\s*/, '').replace(/\s*\(nogi\)/gi, '').trim();
-  const dashIndex = cleaned.indexOf('-');
+  const cleaned = raw
+    .trimStart()
+    .replace(/^\*\s*/, "")
+    .replace(/\s*\(nogi\)/gi, "")
+    .trim();
+  const dashIndex = cleaned.indexOf("-");
 
   if (dashIndex === -1) {
     return { type: cleaned.trim().toUpperCase() };
@@ -93,7 +97,7 @@ export const parseEventTitle = (
   const secondSegment = cleaned.slice(dashIndex + 1).trim() || undefined;
 
   // Se o tipo é "EVENTO", trata o segundo segmento como nome do evento
-  if (typeSegment === 'EVENTO') {
+  if (typeSegment === "EVENTO") {
     return { type: typeSegment, eventName: secondSegment };
   }
 
@@ -109,10 +113,10 @@ export const parseEventTitle = (
  * @returns true se o evento já começou/passou, false caso contrário
  */
 export const isPastEvent = (startTime: string): boolean => {
-  if (!startTime || startTime === 'Dia inteiro') return false;
+  if (!startTime || startTime === "Dia inteiro") return false;
 
   const now = new Date();
-  const [eventHours, eventMinutes] = startTime.split(':').map(Number);
+  const [eventHours, eventMinutes] = startTime.split(":").map(Number);
   const eventTimeInMinutes = eventHours * 60 + eventMinutes;
   const nowTimeInMinutes = now.getHours() * 60 + now.getMinutes();
 

@@ -1,6 +1,6 @@
-import { Eye } from 'lucide-react';
-import { CSSProperties } from 'react';
-import { ProductInfo } from '@/services/mediaService';
+import { Eye } from "lucide-react";
+import { CSSProperties } from "react";
+import { ProductInfo } from "@/services/mediaService";
 
 interface ProductCardProps {
   product: ProductInfo;
@@ -8,55 +8,66 @@ interface ProductCardProps {
   onClick: (product: ProductInfo) => void;
 }
 
-const imgStyle = (focalPoint: ProductInfo['coverImage']['focalPoint']): CSSProperties => ({
-  objectFit: 'cover',
-  objectPosition: focalPoint ? `${focalPoint.x}% ${focalPoint.y}%` : 'center',
+const imgStyle = (
+  focalPoint: ProductInfo["coverImage"]["focalPoint"]
+): CSSProperties => ({
+  objectFit: "cover",
+  objectPosition: focalPoint ? `${focalPoint.x}% ${focalPoint.y}%` : "center",
 });
 
-export const ProductCard = ({ product, categoryLabel: _categoryLabel, onClick }: ProductCardProps) => {
-  const coverImage = product.coverImage?.url || `https://placehold.co/500x400/18181b/d26030?text=${product.title.replace(/ /g, '+')}`;
+export const ProductCard = ({
+  product,
+  categoryLabel: _categoryLabel,
+  onClick,
+}: ProductCardProps) => {
+  const coverImage =
+    product.coverImage?.url ||
+    `https://placehold.co/500x400/18181b/d26030?text=${product.title.replace(/ /g, "+")}`;
 
   return (
-    <div 
+    <div
       onClick={() => onClick(product)}
-      className="bg-zinc-900 rounded-lg overflow-hidden border border-zinc-800 group hover:border-primary/50 transition-all cursor-pointer flex flex-col h-full hover:translate-y-[-4px]"
+      className="group flex h-full cursor-pointer flex-col overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900 transition-all hover:translate-y-[-4px] hover:border-primary/50"
     >
-      <div className="aspect-[3/4] bg-zinc-800 relative overflow-hidden shrink-0">
-        <img 
-          src={coverImage} 
+      <div className="relative aspect-[3/4] shrink-0 overflow-hidden bg-zinc-800">
+        <img
+          src={coverImage}
           alt={product.title}
-          className="w-full h-full transition-transform duration-500 group-hover:scale-110"
+          className="h-full w-full transition-transform duration-500 group-hover:scale-110"
           style={imgStyle(product.coverImage?.focalPoint)}
           onError={(e) => {
-            (e.target as HTMLImageElement).src = `https://placehold.co/500x400/18181b/d26030?text=${product.title.replace(/ /g, '+')}`;
+            (e.target as HTMLImageElement).src =
+              `https://placehold.co/500x400/18181b/d26030?text=${product.title.replace(/ /g, "+")}`;
           }}
         />
-        
+
         {/* Overlay on hover */}
-        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+        <div className="pointer-events-none absolute inset-0 bg-black/40 opacity-0 transition-opacity group-hover:opacity-100" />
 
         {/* Price Tag */}
-        <div className="absolute top-3 right-3 bg-black text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg z-10 border-2 border-primary">
+        <div className="absolute right-3 top-3 z-10 rounded-full border-2 border-primary bg-black px-3 py-1 text-sm font-bold text-white shadow-lg">
           {product.price}
         </div>
 
         {/* Badge for multiple photos */}
         {product.gallery.length > 1 && (
-          <div className="absolute bottom-3 right-3 bg-zinc-900/80 backdrop-blur text-white/70 text-[10px] px-2 py-0.5 rounded uppercase tracking-widest font-bold border border-white/5">
+          <div className="absolute bottom-3 right-3 rounded border border-white/5 bg-zinc-900/80 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-white/70 backdrop-blur">
             +{product.gallery.length - 1} fotos
           </div>
         )}
       </div>
 
-      <div className="p-4 flex flex-col flex-grow">
-        <h3 className="text-lg font-display text-white group-hover:text-primary transition-colors line-clamp-1 mb-3">
+      <div className="flex flex-grow flex-col p-4">
+        <h3 className="mb-3 line-clamp-1 font-display text-lg text-white transition-colors group-hover:text-primary">
           {product.title}
         </h3>
-        
+
         <div className="mt-auto flex items-center justify-between">
-          <span className="text-zinc-500 text-sm font-medium">Ver detalhes</span>
-          <div className="text-primary group-hover:translate-x-1 transition-transform">
-             <Eye size={18} />
+          <span className="text-sm font-medium text-zinc-500">
+            Ver detalhes
+          </span>
+          <div className="text-primary transition-transform group-hover:translate-x-1">
+            <Eye size={18} />
           </div>
         </div>
       </div>

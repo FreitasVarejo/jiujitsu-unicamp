@@ -1,11 +1,17 @@
-import { BaseMediaService } from './baseMediaService';
+import { BaseMediaService } from "./baseMediaService";
 import {
   eventAdapter,
   eventSummaryAdapter,
   productAdapter,
   instructorAdapter,
-} from '../adapters';
-import { Image, Event, EventSummary, Product, Instructor } from '../types/media';
+} from "../adapters";
+import {
+  Image,
+  Event,
+  EventSummary,
+  Product,
+  Instructor,
+} from "../types/media";
 
 export type EventInfo = Event;
 export type EventSummaryInfo = EventSummary;
@@ -16,7 +22,14 @@ export type ProductCategories = { slug: string; name: string }[];
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 interface StrapiListResponse<T = any> {
   data: T[];
-  meta: { pagination: { page: number; pageSize: number; pageCount: number; total: number } };
+  meta: {
+    pagination: {
+      page: number;
+      pageSize: number;
+      pageCount: number;
+      total: number;
+    };
+  };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -31,40 +44,46 @@ export const mediaService = {
    */
   getLogo: async (): Promise<Image | null> => {
     try {
-      const response = await BaseMediaService.get<StrapiSingleResponse<{ logo: { url: string; alternativeText?: string } }>>(
-        '/api/site-config',
-        { 'populate': 'logo' },
-      );
+      const response = await BaseMediaService.get<
+        StrapiSingleResponse<{
+          logo: { url: string; alternativeText?: string };
+        }>
+      >("/api/site-config", { populate: "logo" });
       const logo = response.data?.logo;
       if (!logo?.url) return null;
       return {
         url: BaseMediaService.resolveMediaUrl(logo.url),
-        alternativeText: logo.alternativeText || 'Logo Jiu-Jitsu Unicamp',
+        alternativeText: logo.alternativeText || "Logo Jiu-Jitsu Unicamp",
       };
     } catch (error) {
-      console.error('Erro ao buscar logo:', error);
+      console.error("Erro ao buscar logo:", error);
       return null;
     }
   },
 
   /**
-    * Busca as imagens do carrossel hero (desktop e mobile).
-    * Endpoint: GET /api/hero-carousel?populate[imagesDesktop]=true&populate[imagesMobile]=true
-    */
+   * Busca as imagens do carrossel hero (desktop e mobile).
+   * Endpoint: GET /api/hero-carousel?populate[imagesDesktop]=true&populate[imagesMobile]=true
+   */
   getHeroImages: async (): Promise<{ desktop: Image[]; mobile: Image[] }> => {
     try {
       const response = await BaseMediaService.get<
         StrapiSingleResponse<{
-          imagesDesktop: { url: string; alternativeText?: string; focalPoint?: { x: number; y: number } | null }[];
-          imagesMobile: { url: string; alternativeText?: string; focalPoint?: { x: number; y: number } | null }[];
+          imagesDesktop: {
+            url: string;
+            alternativeText?: string;
+            focalPoint?: { x: number; y: number } | null;
+          }[];
+          imagesMobile: {
+            url: string;
+            alternativeText?: string;
+            focalPoint?: { x: number; y: number } | null;
+          }[];
         }>
-      >(
-        '/api/hero-carousel',
-        {
-          'populate[imagesDesktop]': 'true',
-          'populate[imagesMobile]': 'true',
-        },
-      );
+      >("/api/hero-carousel", {
+        "populate[imagesDesktop]": "true",
+        "populate[imagesMobile]": "true",
+      });
 
       const imagesDesktop = response.data?.imagesDesktop || [];
       const imagesMobile = response.data?.imagesMobile || [];
@@ -72,17 +91,17 @@ export const mediaService = {
       return {
         desktop: imagesDesktop.map((img) => ({
           url: BaseMediaService.resolveMediaUrl(img.url),
-          alternativeText: img.alternativeText || '',
+          alternativeText: img.alternativeText || "",
           focalPoint: img.focalPoint ?? null,
         })),
         mobile: imagesMobile.map((img) => ({
           url: BaseMediaService.resolveMediaUrl(img.url),
-          alternativeText: img.alternativeText || '',
+          alternativeText: img.alternativeText || "",
           focalPoint: img.focalPoint ?? null,
         })),
       };
     } catch (error) {
-      console.error('Erro ao buscar imagens do hero:', error);
+      console.error("Erro ao buscar imagens do hero:", error);
       return { desktop: [], mobile: [] };
     }
   },
@@ -93,11 +112,11 @@ export const mediaService = {
    */
   getAllInstructors: async (): Promise<InstructorInfo[]> => {
     const response = await BaseMediaService.get<StrapiListResponse>(
-      '/api/instrutores',
+      "/api/instrutores",
       {
-        'populate': 'photo',
-        'pagination[limit]': '250',
-      },
+        populate: "photo",
+        "pagination[limit]": "250",
+      }
     );
     return response.data.map((raw) => instructorAdapter(raw));
   },
@@ -108,16 +127,16 @@ export const mediaService = {
    */
   getEventSummaries: async (): Promise<EventSummaryInfo[]> => {
     const response = await BaseMediaService.get<StrapiListResponse>(
-      '/api/eventos',
+      "/api/eventos",
       {
-        'populate[cover]': 'true',
-        'fields[0]': 'slug',
-        'fields[1]': 'title',
-        'fields[2]': 'date',
-        'fields[3]': 'location',
-        'sort[0]': 'date:desc',
-        'pagination[limit]': '250',
-      },
+        "populate[cover]": "true",
+        "fields[0]": "slug",
+        "fields[1]": "title",
+        "fields[2]": "date",
+        "fields[3]": "location",
+        "sort[0]": "date:desc",
+        "pagination[limit]": "250",
+      }
     );
     return response.data.map((raw) => eventSummaryAdapter(raw));
   },
@@ -128,12 +147,12 @@ export const mediaService = {
    */
   getEventDetails: async (slug: string): Promise<EventInfo> => {
     const response = await BaseMediaService.get<StrapiListResponse>(
-      '/api/eventos',
+      "/api/eventos",
       {
-        'filters[slug][$eq]': slug,
-        'populate[cover]': 'true',
-        'populate[gallery]': 'true',
-      },
+        "filters[slug][$eq]": slug,
+        "populate[cover]": "true",
+        "populate[gallery]": "true",
+      }
     );
     const item = response.data[0];
     if (!item) throw new Error(`Evento não encontrado: ${slug}`);
@@ -146,15 +165,15 @@ export const mediaService = {
    */
   getAllProducts: async (): Promise<ProductInfo[]> => {
     const response = await BaseMediaService.get<StrapiListResponse>(
-      '/api/produtos',
+      "/api/produtos",
       {
-        'populate[cover]': 'true',
-        'populate[gallery]': 'true',
-        'populate[categoria]': 'true',
-        'sort[0]': 'order:asc',
-        'sort[1]': 'createdAt:asc',
-        'pagination[limit]': '250',
-      },
+        "populate[cover]": "true",
+        "populate[gallery]": "true",
+        "populate[categoria]": "true",
+        "sort[0]": "order:asc",
+        "sort[1]": "createdAt:asc",
+        "pagination[limit]": "250",
+      }
     );
     return response.data.map((raw) => productAdapter(raw));
   },
@@ -165,14 +184,17 @@ export const mediaService = {
    */
   getProductCategories: async (): Promise<ProductCategories> => {
     const response = await BaseMediaService.get<StrapiListResponse>(
-      '/api/categoria-produtos',
+      "/api/categoria-produtos",
       {
-        'sort[0]': 'order:asc',
-        'sort[1]': 'createdAt:asc',
-        'pagination[limit]': '250',
-      },
+        "sort[0]": "order:asc",
+        "sort[1]": "createdAt:asc",
+        "pagination[limit]": "250",
+      }
     );
-    return response.data.map((raw) => ({ slug: raw.slug as string, name: raw.name as string }));
+    return response.data.map((raw) => ({
+      slug: raw.slug as string,
+      name: raw.name as string,
+    }));
   },
 
   /**

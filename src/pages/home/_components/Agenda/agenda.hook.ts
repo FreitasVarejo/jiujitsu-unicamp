@@ -1,6 +1,15 @@
-import { useCallback, useEffect, useState } from 'react';
-import { calendarService, GoogleCalendarEvent } from '@/services/calendarService';
-import { inferCalendarType, parseEventTitle, getDisplayLocation, isCancelledEvent, isNoGiEvent } from './agenda-helpers';
+import { useCallback, useEffect, useState } from "react";
+import {
+  calendarService,
+  GoogleCalendarEvent,
+} from "@/services/calendarService";
+import {
+  inferCalendarType,
+  parseEventTitle,
+  getDisplayLocation,
+  isCancelledEvent,
+  isNoGiEvent,
+} from "./agenda-helpers";
 
 /* ── Tipos ── */
 
@@ -30,30 +39,32 @@ export type EventsByDay = Record<number, AgendaEvent[]>;
 const extractTime = (dateTime?: string, date?: string): string => {
   if (dateTime) {
     const match = dateTime.match(/T(\d{2}:\d{2})/);
-    return match ? match[1] : '';
+    return match ? match[1] : "";
   }
-  if (date) return 'Dia inteiro';
-  return '';
+  if (date) return "Dia inteiro";
+  return "";
 };
 
 /**
  * Retorna o dia da semana (0=Dom..6=Sáb) a partir de um datetime ou date ISO.
  */
 const getDayOfWeek = (dateTime?: string, date?: string): number => {
-  const raw = dateTime ?? date ?? '';
+  const raw = dateTime ?? date ?? "";
   if (!raw) return 0;
 
   const dateStr = raw.slice(0, 10);
-  const [year, month, day] = dateStr.split('-').map(Number);
+  const [year, month, day] = dateStr.split("-").map(Number);
   const d = new Date(year, month - 1, day);
   return d.getDay(); // 0=Dom..6=Sáb
 };
 
 const convertEvent = (event: GoogleCalendarEvent): AgendaEvent => {
-  const { type, instructor, eventName } = parseEventTitle(event.summary || 'Sem título');
-  const calendarId = inferCalendarType(event.summary || '');
-  const cancelled = isCancelledEvent(event.summary || '');
-  const noGi = isNoGiEvent(event.summary || '');
+  const { type, instructor, eventName } = parseEventTitle(
+    event.summary || "Sem título"
+  );
+  const calendarId = inferCalendarType(event.summary || "");
+  const cancelled = isCancelledEvent(event.summary || "");
+  const noGi = isNoGiEvent(event.summary || "");
 
   return {
     id: event.id,
@@ -73,7 +84,7 @@ const convertEvent = (event: GoogleCalendarEvent): AgendaEvent => {
 
 /** Formata um Date como YYYY-MM-DD. */
 const fmtDate = (d: Date): string =>
-  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 
 /**
  * Retorna a data do domingo da semana que contém `now`.
@@ -89,7 +100,7 @@ const getSundayOf = (now: Date): string => {
  * Soma `days` a uma data YYYY-MM-DD e retorna YYYY-MM-DD.
  */
 const addDays = (dateStr: string, days: number): string => {
-  const [year, month, day] = dateStr.split('-').map(Number);
+  const [year, month, day] = dateStr.split("-").map(Number);
   const d = new Date(year, month - 1, day);
   d.setDate(d.getDate() + days);
   return fmtDate(d);
@@ -108,7 +119,9 @@ const addDays = (dateStr: string, days: number): string => {
  * - `goToNextWeek`      — navega para a semana seguinte
  */
 export const useAgendaEvents = () => {
-  const [weekStart, setWeekStart] = useState<string>(() => getSundayOf(new Date()));
+  const [weekStart, setWeekStart] = useState<string>(() =>
+    getSundayOf(new Date())
+  );
   const weekEnd = addDays(weekStart, 6);
   const today = fmtDate(new Date());
 
@@ -120,7 +133,10 @@ export const useAgendaEvents = () => {
     const load = async () => {
       try {
         setLoading(true);
-        const events = await calendarService.getEventsByRange(weekStart, weekEnd);
+        const events = await calendarService.getEventsByRange(
+          weekStart,
+          weekEnd
+        );
 
         const grouped: EventsByDay = {};
         for (let i = 0; i <= 6; i++) grouped[i] = [];
@@ -132,14 +148,18 @@ export const useAgendaEvents = () => {
         }
 
         for (const day of Object.keys(grouped)) {
-          grouped[Number(day)].sort((a, b) => a.startTime.localeCompare(b.startTime));
+          grouped[Number(day)].sort((a, b) =>
+            a.startTime.localeCompare(b.startTime)
+          );
         }
 
         setEventsByDay(grouped);
         setError(null);
       } catch (err) {
-        console.error('Erro ao buscar eventos da agenda:', err);
-        setError('Não foi possível carregar a agenda. Tente novamente mais tarde.');
+        console.error("Erro ao buscar eventos da agenda:", err);
+        setError(
+          "Não foi possível carregar a agenda. Tente novamente mais tarde."
+        );
       } finally {
         setLoading(false);
       }
@@ -156,5 +176,14 @@ export const useAgendaEvents = () => {
     setWeekStart((prev) => addDays(prev, 7));
   }, []);
 
-  return { eventsByDay, loading, error, weekStart, weekEnd, today, goToPreviousWeek, goToNextWeek };
+  return {
+    eventsByDay,
+    loading,
+    error,
+    weekStart,
+    weekEnd,
+    today,
+    goToPreviousWeek,
+    goToNextWeek,
+  };
 };

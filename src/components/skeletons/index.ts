@@ -1,1 +1,1 @@
-export { SkeletonNavbar } from './SkeletonNavbar'
+export { SkeletonNavbar } from "./SkeletonNavbar";

@@ -1,14 +1,17 @@
-import { CSSProperties, useEffect, useRef, useState, useMemo } from 'react';
-import { mediaService } from '@/services/mediaService';
-import { useMediaQuery } from '@/hooks/useMediaQuery';
-import { Image } from '@/types/media';
-import { SkeletonHero } from './SkeletonHero.component';
+import { CSSProperties, useEffect, useRef, useState, useMemo } from "react";
+import { mediaService } from "@/services/mediaService";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { Image } from "@/types/media";
+import { SkeletonHero } from "./SkeletonHero.component";
 
 const INTERVAL_MS = 5000;
 const FADE_MS = 1500;
 
 export const Hero = () => {
-  const [images, setImages] = useState<{ desktop: Image[]; mobile: Image[] }>({ desktop: [], mobile: [] });
+  const [images, setImages] = useState<{ desktop: Image[]; mobile: Image[] }>({
+    desktop: [],
+    mobile: [],
+  });
   const [logo, setLogo] = useState<Image | null>(null);
   const [current, setCurrent] = useState(0);
   const [next, setNext] = useState<number | null>(null);
@@ -16,15 +19,19 @@ export const Hero = () => {
   const lockRef = useRef(false);
   const [imagesLoaded, setImagesLoaded] = useState(false);
   const [logoLoaded, setLogoLoaded] = useState(false);
-  const isMediumOrLarger = useMediaQuery('(min-width: 768px)');
+  const isMediumOrLarger = useMediaQuery("(min-width: 768px)");
 
   const isLoaded = imagesLoaded && logoLoaded;
 
   // Memoizar a seleção de imagens e a chave de carrossel
-  const carouselKey = useMemo(() => isMediumOrLarger ? 'desktop' : 'mobile', [isMediumOrLarger]);
-  const imagesToShow = useMemo(() => (
-    isMediumOrLarger ? images.desktop : images.mobile
-  ), [isMediumOrLarger, images]);
+  const carouselKey = useMemo(
+    () => (isMediumOrLarger ? "desktop" : "mobile"),
+    [isMediumOrLarger]
+  );
+  const imagesToShow = useMemo(
+    () => (isMediumOrLarger ? images.desktop : images.mobile),
+    [isMediumOrLarger, images]
+  );
 
   useEffect(() => {
     const loadData = async () => {
@@ -44,7 +51,7 @@ export const Hero = () => {
         }
         setLogoLoaded(true);
       } catch (err) {
-        console.error('Erro ao carregar dados do Hero:', err);
+        console.error("Erro ao carregar dados do Hero:", err);
         setImagesLoaded(true);
         setLogoLoaded(true);
       }
@@ -96,10 +103,10 @@ export const Hero = () => {
     lockRef.current = false;
   }, [carouselKey]);
 
-  const imgStyle = (focalPoint: Image['focalPoint']): CSSProperties => ({
-    objectFit: 'cover',
-    objectPosition: focalPoint ? `${focalPoint.x}% ${focalPoint.y}%` : 'center',
-    filter: 'grayscale(100%)',
+  const imgStyle = (focalPoint: Image["focalPoint"]): CSSProperties => ({
+    objectFit: "cover",
+    objectPosition: focalPoint ? `${focalPoint.x}% ${focalPoint.y}%` : "center",
+    filter: "grayscale(100%)",
   });
 
   if (!isLoaded) {
@@ -107,13 +114,13 @@ export const Hero = () => {
   }
 
   return (
-    <section className="relative h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative flex h-screen items-center justify-center overflow-hidden">
       {/* Imagem atual — sempre opaca, fica embaixo */}
       {imagesToShow.length > 0 && (
         <img
           src={imagesToShow[current].url}
           alt={imagesToShow[current].alternativeText}
-          className="absolute inset-0 w-full h-full z-[1]"
+          className="absolute inset-0 z-[1] h-full w-full"
           style={imgStyle(imagesToShow[current].focalPoint)}
         />
       )}
@@ -123,7 +130,7 @@ export const Hero = () => {
         <img
           src={imagesToShow[next].url}
           alt={imagesToShow[next].alternativeText}
-          className="absolute inset-0 w-full h-full z-[2]"
+          className="absolute inset-0 z-[2] h-full w-full"
           style={{
             ...imgStyle(imagesToShow[next].focalPoint),
             opacity: nextVisible ? 1 : 0,
@@ -134,38 +141,38 @@ export const Hero = () => {
 
       {/* Fallback enquanto carrega */}
       {imagesToShow.length === 0 && (
-        <div className="absolute inset-0 bg-zinc-900 z-[1]" />
+        <div className="absolute inset-0 z-[1] bg-zinc-900" />
       )}
 
       {/* Overlay escuro */}
-      <div className="absolute inset-0 bg-black/70 z-[3]" />
+      <div className="absolute inset-0 z-[3] bg-black/70" />
 
       {/* Conteúdo */}
-      <div className="relative z-[4] text-center px-4 max-w-4xl mx-auto">
+      <div className="relative z-[4] mx-auto max-w-4xl px-4 text-center">
         {logo && (
           <img
             src={logo.url}
-            alt={logo.alternativeText || 'Logo Jiu-Jitsu Unicamp'}
-            className="w-32 h-32 md:w-48 md:h-48 mx-auto mb-8 drop-shadow-2xl"
+            alt={logo.alternativeText || "Logo Jiu-Jitsu Unicamp"}
+            className="mx-auto mb-8 h-32 w-32 drop-shadow-2xl md:h-48 md:w-48"
           />
         )}
-        <h1 className="text-6xl md:text-8xl font-display font-bold text-white mb-6 tracking-tighter">
+        <h1 className="mb-6 font-display text-6xl font-bold tracking-tighter text-white md:text-8xl">
           Jiu-Jitsu <span className="text-primary">Unicamp</span>
         </h1>
-        <p className="text-xl md:text-2xl text-gray-300 mb-10 max-w-2xl mx-auto font-light">
-          Defesa pessoal, competição e comunidade. Junte-se à equipe oficial
-          da universidade.
+        <p className="mx-auto mb-10 max-w-2xl text-xl font-light text-gray-300 md:text-2xl">
+          Defesa pessoal, competição e comunidade. Junte-se à equipe oficial da
+          universidade.
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <div className="flex flex-col justify-center gap-4 sm:flex-row">
           <a
             href="#treinos"
-            className="px-8 py-4 bg-primary text-white font-display uppercase tracking-widest text-lg hover:bg-orange-700 transition-colors rounded"
+            className="rounded bg-primary px-8 py-4 font-display text-lg uppercase tracking-widest text-white transition-colors hover:bg-orange-700"
           >
             Ver Treinos
           </a>
           <a
             href="#perguntas-frequentes"
-            className="px-8 py-4 border border-white text-white font-display uppercase tracking-widest text-lg hover:bg-white/10 transition-colors rounded"
+            className="rounded border border-white px-8 py-4 font-display text-lg uppercase tracking-widest text-white transition-colors hover:bg-white/10"
           >
             Guia do Iniciante
           </a>

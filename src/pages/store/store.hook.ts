@@ -1,5 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
-import { mediaService, ProductInfo, ProductCategories } from "@/services/mediaService";
+import {
+  mediaService,
+  ProductInfo,
+  ProductCategories,
+} from "@/services/mediaService";
 
 export const useProducts = () => {
   const [products, setProducts] = useState<ProductInfo[]>([]);

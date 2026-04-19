@@ -69,10 +69,10 @@ docker compose down
 
 Copie `.env.example` para `.env.local` e preencha os valores. **Nunca commite o `.env.local`** (já está no `.gitignore`).
 
-| Variável | Descrição | Valor para dev |
-|---|---|---|
-| `VITE_API_BASE_URL` | URL base do backend Strapi | `http://localhost:1337` |
-| `VITE_API_TOKEN` | Token de API read-only do Strapi | *(gere em Strapi Admin → API Tokens)* |
+| Variável            | Descrição                        | Valor para dev                        |
+| ------------------- | -------------------------------- | ------------------------------------- |
+| `VITE_API_BASE_URL` | URL base do backend Strapi       | `http://localhost:1337`               |
+| `VITE_API_TOKEN`    | Token de API read-only do Strapi | _(gere em Strapi Admin → API Tokens)_ |
 
 `VITE_API_TOKEN` é opcional: se ausente, as requisições são enviadas sem `Authorization` (funciona quando os endpoints Strapi estão configurados como públicos).
 

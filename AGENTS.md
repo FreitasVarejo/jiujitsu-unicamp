@@ -14,14 +14,15 @@ Frontend SPA for the Jiu-Jitsu Unicamp team website. Built with **React 19 + Vit
 
 **Package manager: `npm`** (never `yarn`/`pnpm`/`bun`).
 
-| Command | Purpose |
-|---------|---------|
-| `npm run dev` | Start Vite dev server at `http://localhost:5173` |
-| `npm run build` | Type-check + bundle to `dist/` (fails on TS/lint errors) |
-| `npm run preview` | Serve production build locally for testing |
-| `npm run lint` | Run ESLint across entire project |
+| Command           | Purpose                                                  |
+| ----------------- | -------------------------------------------------------- |
+| `npm run dev`     | Start Vite dev server at `http://localhost:5173`         |
+| `npm run build`   | Type-check + bundle to `dist/` (fails on TS/lint errors) |
+| `npm run preview` | Serve production build locally for testing               |
+| `npm run lint`    | Run ESLint across entire project                         |
 
 **⚠️ Important:**
+
 - **No tests exist.** Do not add a test runner unless explicitly instructed.
 - Build **fails on TypeScript or ESLint violations**. Always run `npm run lint` and `npm run build` locally before pushing to `main`.
 - ESLint enforces: strict TS mode, no unused vars/params, no `any` (use `unknown`), single quotes, 2-space indents.
@@ -33,20 +34,24 @@ Frontend SPA for the Jiu-Jitsu Unicamp team website. Built with **React 19 + Vit
 **No Prettier.** Match surrounding code manually:
 
 ### Indentation & Spacing
+
 - **2-space indentation** (not 4, not tabs)
 - **Single quotes** for strings
 - **Trailing commas** in multi-line structures
 - No semicolons (ESLint enforces this)
 
 ### Import Order
+
 **External → `@/` absolute → relative.** Do not mix:
+
 ```ts
-import React from 'react'           // External
-import { useService } from '@/services'  // Absolute path alias
-import { LocalComponent } from './local'  // Relative
+import React from "react"; // External
+import { useService } from "@/services"; // Absolute path alias
+import { LocalComponent } from "./local"; // Relative
 ```
 
 ### Exports
+
 - **Named exports only** for components, hooks, utilities
 - Default exports only in `App.tsx`, `Layout.tsx`, `ScrollToTop.tsx` (legacy)
 - Always re-export in barrel `index.ts` files
@@ -67,35 +72,40 @@ import { LocalComponent } from './local'  // Relative
 
 ## Naming Conventions
 
-| Artifact | Convention | Example |
-|---|---|---|
-| Component files | `PascalCase.tsx` or `PascalCase.component.tsx` | `Hero.component.tsx` |
-| Page files | `kebab-case.page.tsx` | `event-details.page.tsx` |
-| Hook files | `kebab-case.hook.ts` | `use-events.hook.ts` |
-| Service/util files | `camelCase.ts` | `mediaService.ts` |
-| Constants files | `kebab-case.ts` | `calendar-type.ts` |
-| Components (exports) | `PascalCase` | `export const Hero = () => ...` |
-| Custom hooks | `use` prefix, camelCase | `useEvents`, `useFontsLoaded` |
-| Enums | `PascalCase` with members | `Belt.Preta`, `Weekday.Segunda` |
-| Enum maps | `SCREAMING_SNAKE_CASE` | `BELT_INFO`, `CALENDAR_TYPE_INFO` |
+| Artifact             | Convention                                     | Example                           |
+| -------------------- | ---------------------------------------------- | --------------------------------- |
+| Component files      | `PascalCase.tsx` or `PascalCase.component.tsx` | `Hero.component.tsx`              |
+| Page files           | `kebab-case.page.tsx`                          | `event-details.page.tsx`          |
+| Hook files           | `kebab-case.hook.ts`                           | `use-events.hook.ts`              |
+| Service/util files   | `camelCase.ts`                                 | `mediaService.ts`                 |
+| Constants files      | `kebab-case.ts`                                | `calendar-type.ts`                |
+| Components (exports) | `PascalCase`                                   | `export const Hero = () => ...`   |
+| Custom hooks         | `use` prefix, camelCase                        | `useEvents`, `useFontsLoaded`     |
+| Enums                | `PascalCase` with members                      | `Belt.Preta`, `Weekday.Segunda`   |
+| Enum maps            | `SCREAMING_SNAKE_CASE`                         | `BELT_INFO`, `CALENDAR_TYPE_INFO` |
 
 ---
 
 ## Error Handling
 
 **In hooks:** `loading / error / data` state with `try/catch/finally`:
+
 ```ts
-const [data, setData] = useState<T | null>(null)
-const [loading, setLoading] = useState(true)
-const [error, setError] = useState<string | null>(null)
+const [data, setData] = useState<T | null>(null);
+const [loading, setLoading] = useState(true);
+const [error, setError] = useState<string | null>(null);
 useEffect(() => {
   const load = async () => {
-    try { setData(await service.fetch()) }
-    catch (err) { setError('Mensagem em português.') }
-    finally { setLoading(false) }
-  }
-  load()
-}, [])
+    try {
+      setData(await service.fetch());
+    } catch (err) {
+      setError("Mensagem em português.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  load();
+}, []);
 ```
 
 **In pages:** Render all three states — spinner, error card, content.
@@ -134,6 +144,7 @@ src/
 ## Environment Variables
 
 Copy `.env.example` to `.env.local` (dev). Production uses GitHub Secrets in `.github/workflows/deploy.yml`:
+
 - `VITE_API_BASE_URL` — Strapi base URL
 - `VITE_API_TOKEN` — Strapi read-only token
 - `VITE_GOOGLE_API_KEY` — Google Calendar API key
@@ -152,13 +163,13 @@ Todas as imagens do Strapi suportam **focal point** (ponto focal) para melhor po
 
 ### Cobertura Implementada
 
-| Contexto | Componente | Uso | CSS |
-|---|---|---|---|
-| **Eventos** | `EventCard`, `event-details.page` | Cover + galeria | `object-cover` + `objectPosition` |
-| **Produtos (card)** | `ProductCard` | Cover image (3:4 ratio) | `object-cover` + `objectPosition` |
-| **Produtos (modal)** | `ProductModal` | Cover + carrossel galeria | `object-contain` + `objectPosition` |
-| **Instrutores** | `InstructorCard` | Avatar circular 16x16 | `object-cover` + `objectPosition` |
-| **Hero carousel** | `Hero.component` | Desktop + mobile | `object-cover` + `objectPosition` |
+| Contexto             | Componente                        | Uso                       | CSS                                 |
+| -------------------- | --------------------------------- | ------------------------- | ----------------------------------- |
+| **Eventos**          | `EventCard`, `event-details.page` | Cover + galeria           | `object-cover` + `objectPosition`   |
+| **Produtos (card)**  | `ProductCard`                     | Cover image (3:4 ratio)   | `object-cover` + `objectPosition`   |
+| **Produtos (modal)** | `ProductModal`                    | Cover + carrossel galeria | `object-contain` + `objectPosition` |
+| **Instrutores**      | `InstructorCard`                  | Avatar circular 16x16     | `object-cover` + `objectPosition`   |
+| **Hero carousel**    | `Hero.component`                  | Desktop + mobile          | `object-cover` + `objectPosition`   |
 
 ### Padrão de Implementação
 
@@ -188,10 +199,12 @@ const imgStyle = (focalPoint: Image['focalPoint']): CSSProperties => ({
 ### Extração de Focal Point
 
 Os adapters (`adapters.handlers.ts`) extraem focal point automaticamente:
+
 - `resolveImage(file)`: Extrai `focalPoint` da resposta Strapi → objeto `Image`
 - `resolveGallery(files[])`: Aplica `resolveImage()` a cada arquivo da galeria
 
 **Endpoints Strapi que enviam focal point:**
+
 - `GET /api/hero-carousel?populate[imagesDesktop]=true&populate[imagesMobile]=true`
 - `GET /api/eventos?populate[cover]=true&populate[gallery]=true`
 - `GET /api/produtos?populate[cover]=true&populate[gallery]=true`

@@ -1,6 +1,6 @@
-import { Users, Loader2, AlertCircle } from 'lucide-react';
-import { SectionHeader, InstructorCard } from '../shared';
-import { useTeam } from './useTeam.hook';
+import { Users, Loader2, AlertCircle } from "lucide-react";
+import { SectionHeader, InstructorCard } from "../shared";
+import { useTeam } from "./useTeam.hook";
 
 export const Team = () => {
   const { instructors, loading, error } = useTeam();
@@ -11,16 +11,18 @@ export const Team = () => {
 
       {loading ? (
         <div className="flex justify-center py-12">
-          <Loader2 className="w-8 h-8 text-primary animate-spin" />
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
       ) : error ? (
-        <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-8 text-center">
-          <AlertCircle className="w-10 h-10 text-red-500 mx-auto mb-3" />
-          <h3 className="text-lg font-display text-white mb-1">Ops! Algo deu errado</h3>
-          <p className="text-gray-400 text-sm">{error.message}</p>
+        <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-8 text-center">
+          <AlertCircle className="mx-auto mb-3 h-10 w-10 text-red-500" />
+          <h3 className="mb-1 font-display text-lg text-white">
+            Ops! Algo deu errado
+          </h3>
+          <p className="text-sm text-gray-400">{error.message}</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {instructors.map((instructor) => (
             <InstructorCard key={instructor.id} instructor={instructor} />
           ))}

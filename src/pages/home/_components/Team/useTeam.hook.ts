@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
-import { mediaService } from '@/services/mediaService';
-import { Instructor } from '@/types/media';
-import { BELT_INFO } from '@/constants';
+import { useEffect, useState } from "react";
+import { mediaService } from "@/services/mediaService";
+import { Instructor } from "@/types/media";
+import { BELT_INFO } from "@/constants";
 
 /**
  * Hook customizado para gerenciar o estado e fetching dos instrutores
@@ -28,8 +28,8 @@ export const useTeam = () => {
         setInstructors(sorted);
         setError(null);
       } catch (err) {
-        console.error('Erro ao carregar instrutores:', err);
-        setError(err instanceof Error ? err : new Error('Erro desconhecido'));
+        console.error("Erro ao carregar instrutores:", err);
+        setError(err instanceof Error ? err : new Error("Erro desconhecido"));
       } finally {
         setLoading(false);
       }

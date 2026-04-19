@@ -1,4 +1,4 @@
-import { LucideIcon } from 'lucide-react';
+import { LucideIcon } from "lucide-react";
 
 interface SectionHeaderProps {
   title: string;
@@ -7,9 +7,9 @@ interface SectionHeaderProps {
 
 export const SectionHeader = ({ title, icon: Icon }: SectionHeaderProps) => {
   return (
-    <div className="flex items-center gap-3 mb-8">
+    <div className="mb-8 flex items-center gap-3">
       <Icon className="text-primary" size={32} />
-      <h2 className="text-4xl font-display text-white">{title}</h2>
+      <h2 className="font-display text-4xl text-white">{title}</h2>
     </div>
   );
 };

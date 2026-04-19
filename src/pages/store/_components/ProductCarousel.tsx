@@ -1,18 +1,21 @@
-import { useCallback, useEffect, useState } from 'react';
-import useEmblaCarousel from 'embla-carousel-react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { ProductInfo } from '@/services/mediaService';
-import { ProductCard } from './ProductCard';
+import { useCallback, useEffect, useState } from "react";
+import useEmblaCarousel from "embla-carousel-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ProductInfo } from "@/services/mediaService";
+import { ProductCard } from "./ProductCard";
 
 interface ProductCarouselProps {
   products: ProductInfo[];
   onProductClick: (product: ProductInfo) => void;
 }
 
-export const ProductCarousel = ({ products, onProductClick }: ProductCarouselProps) => {
+export const ProductCarousel = ({
+  products,
+  onProductClick,
+}: ProductCarouselProps) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({
-    align: 'start',
-    containScroll: 'keepSnaps',
+    align: "start",
+    containScroll: "keepSnaps",
     dragFree: false,
   });
 
@@ -35,33 +38,30 @@ export const ProductCarousel = ({ products, onProductClick }: ProductCarouselPro
       setCanScrollNext(emblaApi.canScrollNext());
     };
 
-    emblaApi.on('select', updateButtons);
-    emblaApi.on('init', updateButtons);
-    emblaApi.on('reInit', updateButtons);
+    emblaApi.on("select", updateButtons);
+    emblaApi.on("init", updateButtons);
+    emblaApi.on("reInit", updateButtons);
     updateButtons();
 
     return () => {
-      emblaApi.off('select', updateButtons);
-      emblaApi.off('init', updateButtons);
-      emblaApi.off('reInit', updateButtons);
+      emblaApi.off("select", updateButtons);
+      emblaApi.off("init", updateButtons);
+      emblaApi.off("reInit", updateButtons);
     };
   }, [emblaApi]);
 
   return (
-    <div className="relative group/carousel">
+    <div className="group/carousel relative">
       {/* Viewport */}
       <div className="overflow-hidden" ref={emblaRef}>
         {/* Container */}
-        <div className="flex -ml-4">
+        <div className="-ml-4 flex">
           {products.map((product) => (
-            <div 
-              key={product.id} 
-              className="flex-[0_0_85%] sm:flex-[0_0_46%] lg:flex-[0_0_31%] xl:flex-[0_0_23%] pl-4 py-2"
+            <div
+              key={product.id}
+              className="flex-[0_0_85%] py-2 pl-4 sm:flex-[0_0_46%] lg:flex-[0_0_31%] xl:flex-[0_0_23%]"
             >
-              <ProductCard 
-                product={product} 
-                onClick={onProductClick}
-              />
+              <ProductCard product={product} onClick={onProductClick} />
             </div>
           ))}
         </div>
@@ -71,7 +71,7 @@ export const ProductCarousel = ({ products, onProductClick }: ProductCarouselPro
       {canScrollPrev && (
         <button
           onClick={scrollPrev}
-          className="absolute -left-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-zinc-900 border border-zinc-800 text-white shadow-xl opacity-0 group-hover/carousel:opacity-100 transition-opacity hover:bg-zinc-800 hidden md:block"
+          className="absolute -left-4 top-1/2 z-20 hidden -translate-y-1/2 rounded-full border border-zinc-800 bg-zinc-900 p-3 text-white opacity-0 shadow-xl transition-opacity hover:bg-zinc-800 group-hover/carousel:opacity-100 md:block"
           aria-label="Anterior"
         >
           <ChevronLeft size={24} />
@@ -80,13 +80,12 @@ export const ProductCarousel = ({ products, onProductClick }: ProductCarouselPro
       {canScrollNext && (
         <button
           onClick={scrollNext}
-          className="absolute -right-4 top-1/2 -translate-y-1/2 z-20 p-3 rounded-full bg-zinc-900 border border-zinc-800 text-white shadow-xl opacity-0 group-hover/carousel:opacity-100 transition-opacity hover:bg-zinc-800 hidden md:block"
+          className="absolute -right-4 top-1/2 z-20 hidden -translate-y-1/2 rounded-full border border-zinc-800 bg-zinc-900 p-3 text-white opacity-0 shadow-xl transition-opacity hover:bg-zinc-800 group-hover/carousel:opacity-100 md:block"
           aria-label="Próximo"
         >
           <ChevronRight size={24} />
         </button>
       )}
-
     </div>
   );
 };

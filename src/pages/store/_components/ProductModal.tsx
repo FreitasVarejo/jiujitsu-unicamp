@@ -1,12 +1,20 @@
-import { useCallback, useEffect, useState, CSSProperties } from 'react';
-import useEmblaCarousel from 'embla-carousel-react';
-import { X, Instagram, ClipboardList, ChevronLeft, ChevronRight } from 'lucide-react';
-import { ProductInfo } from '@/services/mediaService';
+import { useCallback, useEffect, useState, CSSProperties } from "react";
+import useEmblaCarousel from "embla-carousel-react";
+import {
+  X,
+  Instagram,
+  ClipboardList,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
+import { ProductInfo } from "@/services/mediaService";
 
-const INSTAGRAM_URL = 'https://www.instagram.com/jiujitsu.unicamp/';
+const INSTAGRAM_URL = "https://www.instagram.com/jiujitsu.unicamp/";
 
-const imgStyle = (focalPoint: ProductInfo['coverImage']['focalPoint']): CSSProperties => ({
-  objectPosition: focalPoint ? `${focalPoint.x}% ${focalPoint.y}%` : 'center',
+const imgStyle = (
+  focalPoint: ProductInfo["coverImage"]["focalPoint"]
+): CSSProperties => ({
+  objectPosition: focalPoint ? `${focalPoint.x}% ${focalPoint.y}%` : "center",
 });
 
 interface ProductModalProps {
@@ -15,7 +23,11 @@ interface ProductModalProps {
   categoryLabel?: string;
 }
 
-export const ProductModal = ({ product, onClose, categoryLabel }: ProductModalProps) => {
+export const ProductModal = ({
+  product,
+  onClose,
+  categoryLabel,
+}: ProductModalProps) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -31,22 +43,24 @@ export const ProductModal = ({ product, onClose, categoryLabel }: ProductModalPr
   useEffect(() => {
     if (!emblaApi) return;
     const onSelect = () => setCurrentSlide(emblaApi.selectedScrollSnap());
-    emblaApi.on('select', onSelect);
+    emblaApi.on("select", onSelect);
     onSelect();
-    return () => { emblaApi.off('select', onSelect); };
+    return () => {
+      emblaApi.off("select", onSelect);
+    };
   }, [emblaApi]);
 
   // Handle escape key
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
-    window.addEventListener('keydown', handleEsc);
-    document.body.style.overflow = 'hidden';
+    window.addEventListener("keydown", handleEsc);
+    document.body.style.overflow = "hidden";
 
     return () => {
-      window.removeEventListener('keydown', handleEsc);
-      document.body.style.overflow = 'unset';
+      window.removeEventListener("keydown", handleEsc);
+      document.body.style.overflow = "unset";
     };
   }, [onClose]);
 
@@ -65,28 +79,35 @@ export const ProductModal = ({ product, onClose, categoryLabel }: ProductModalPr
       />
 
       {/* Modal Content */}
-      <div className="relative w-full max-w-5xl bg-zinc-900 rounded-2xl overflow-hidden shadow-2xl flex flex-col md:flex-row max-h-[95vh] md:max-h-[90vh]">
+      <div className="relative flex max-h-[95vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl bg-zinc-900 shadow-2xl md:max-h-[90vh] md:flex-row">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 z-[110] p-2 bg-black/50 text-white rounded-full hover:bg-black/80 transition-colors"
+          className="absolute right-3 top-3 z-[110] rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/80"
         >
           <X size={20} />
         </button>
 
         {/* Left Side: Images */}
-        <div className="w-full md:w-3/5 bg-zinc-800 relative shrink-0">
-          <div className="h-[30vh] sm:h-[35vh] md:h-full overflow-hidden" ref={emblaRef}>
+        <div className="relative w-full shrink-0 bg-zinc-800 md:w-3/5">
+          <div
+            className="h-[30vh] overflow-hidden sm:h-[35vh] md:h-full"
+            ref={emblaRef}
+          >
             <div className="flex h-full">
               {images.map((img, idx) => (
-                <div key={idx} className="flex-[0_0_100%] h-full flex items-center justify-center">
+                <div
+                  key={idx}
+                  className="flex h-full flex-[0_0_100%] items-center justify-center"
+                >
                   <img
                     src={img.url}
                     alt={img.alternativeText || `${product.title} - ${idx + 1}`}
-                    className="w-full h-full object-contain"
+                    className="h-full w-full object-contain"
                     style={imgStyle(img.focalPoint)}
                     onError={(e) => {
-                      (e.target as HTMLImageElement).src = `https://placehold.co/800x800/18181b/d26030?text=${product.title.replace(/ /g, '+')}`;
+                      (e.target as HTMLImageElement).src =
+                        `https://placehold.co/800x800/18181b/d26030?text=${product.title.replace(/ /g, "+")}`;
                     }}
                   />
                 </div>
@@ -99,13 +120,13 @@ export const ProductModal = ({ product, onClose, categoryLabel }: ProductModalPr
             <>
               <button
                 onClick={scrollPrev}
-                className="absolute left-3 top-1/2 -translate-y-1/2 p-2 md:p-3 bg-black/40 text-white rounded-full backdrop-blur-sm hover:bg-black/60 transition-colors"
+                className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/40 p-2 text-white backdrop-blur-sm transition-colors hover:bg-black/60 md:p-3"
               >
                 <ChevronLeft size={20} />
               </button>
               <button
                 onClick={scrollNext}
-                className="absolute right-3 top-1/2 -translate-y-1/2 p-2 md:p-3 bg-black/40 text-white rounded-full backdrop-blur-sm hover:bg-black/60 transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/40 p-2 text-white backdrop-blur-sm transition-colors hover:bg-black/60 md:p-3"
               >
                 <ChevronRight size={20} />
               </button>
@@ -114,15 +135,15 @@ export const ProductModal = ({ product, onClose, categoryLabel }: ProductModalPr
 
           {/* Slide indicator dots */}
           {imagensCount > 1 && (
-            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 bg-black/50 backdrop-blur-sm px-3 py-1.5 rounded-full">
+            <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-1.5 rounded-full bg-black/50 px-3 py-1.5 backdrop-blur-sm">
               {images.map((_, idx) => (
                 <button
                   key={idx}
                   onClick={() => emblaApi?.scrollTo(idx)}
                   className={`rounded-full transition-all ${
                     idx === currentSlide
-                      ? 'w-2.5 h-2.5 bg-primary'
-                      : 'w-2 h-2 bg-white/40 hover:bg-white/60'
+                      ? "h-2.5 w-2.5 bg-primary"
+                      : "h-2 w-2 bg-white/40 hover:bg-white/60"
                   }`}
                   aria-label={`Ir para foto ${idx + 1}`}
                 />
@@ -132,15 +153,15 @@ export const ProductModal = ({ product, onClose, categoryLabel }: ProductModalPr
         </div>
 
         {/* Right Side: Details */}
-        <div className="w-full md:w-2/5 p-5 md:p-8 flex flex-col overflow-y-auto">
+        <div className="flex w-full flex-col overflow-y-auto p-5 md:w-2/5 md:p-8">
           <div className="mb-4 md:mb-6">
-            <span className="text-primary font-bold uppercase tracking-wider text-xs md:text-sm">
-              {categoryLabel || 'Coleção Oficial'}
+            <span className="text-xs font-bold uppercase tracking-wider text-primary md:text-sm">
+              {categoryLabel || "Coleção Oficial"}
             </span>
-            <h2 className="text-2xl md:text-4xl font-display text-white mt-1 mb-2">
+            <h2 className="mb-2 mt-1 font-display text-2xl text-white md:text-4xl">
               {product.title}
             </h2>
-            <div className="inline-block bg-black text-white px-4 py-1.5 rounded-full text-lg md:text-xl font-bold shadow-lg border-2 border-primary">
+            <div className="inline-block rounded-full border-2 border-primary bg-black px-4 py-1.5 text-lg font-bold text-white shadow-lg md:text-xl">
               {product.price}
             </div>
           </div>
@@ -148,10 +169,10 @@ export const ProductModal = ({ product, onClose, categoryLabel }: ProductModalPr
           <div className="flex-grow">
             {product.description && (
               <div className="mb-4 md:mb-6">
-                <h4 className="text-gray-400 uppercase text-xs font-bold tracking-widest mb-2">
+                <h4 className="mb-2 text-xs font-bold uppercase tracking-widest text-gray-400">
                   Informações
                 </h4>
-                <p className="text-gray-300 leading-relaxed text-sm md:text-base">
+                <p className="text-sm leading-relaxed text-gray-300 md:text-base">
                   {product.description}
                 </p>
               </div>
@@ -159,14 +180,14 @@ export const ProductModal = ({ product, onClose, categoryLabel }: ProductModalPr
 
             {product.sizes && product.sizes.length > 0 && (
               <div className="mb-4 md:mb-6">
-                <h4 className="text-gray-400 uppercase text-xs font-bold tracking-widest mb-2">
+                <h4 className="mb-2 text-xs font-bold uppercase tracking-widest text-gray-400">
                   Tamanhos Disponíveis
                 </h4>
                 <div className="flex flex-wrap gap-2">
                   {product.sizes.map((tamanho) => (
                     <span
                       key={tamanho}
-                      className="px-3 py-1 bg-zinc-800 border border-zinc-700 text-white text-sm font-bold rounded-md"
+                      className="rounded-md border border-zinc-700 bg-zinc-800 px-3 py-1 text-sm font-bold text-white"
                     >
                       {tamanho}
                     </span>
@@ -175,10 +196,14 @@ export const ProductModal = ({ product, onClose, categoryLabel }: ProductModalPr
               </div>
             )}
 
-            <div className="mt-4 md:mt-6 space-y-3">
-              <div className="flex items-center gap-3 text-xs md:text-sm text-gray-400">
-                <div className={`w-2 h-2 rounded-full shrink-0 ${formsOpen ? 'bg-green-500' : 'bg-zinc-500'}`} />
-                {formsOpen ? 'Encomendas abertas' : 'Encomendas encerradas no momento'}
+            <div className="mt-4 space-y-3 md:mt-6">
+              <div className="flex items-center gap-3 text-xs text-gray-400 md:text-sm">
+                <div
+                  className={`h-2 w-2 shrink-0 rounded-full ${formsOpen ? "bg-green-500" : "bg-zinc-500"}`}
+                />
+                {formsOpen
+                  ? "Encomendas abertas"
+                  : "Encomendas encerradas no momento"}
               </div>
             </div>
           </div>
@@ -189,7 +214,7 @@ export const ProductModal = ({ product, onClose, categoryLabel }: ProductModalPr
                 href={product.formsLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full flex items-center justify-center gap-3 bg-primary hover:bg-primary/90 text-white py-3 md:py-4 rounded-xl transition-all font-display uppercase tracking-wider text-sm md:text-base transform hover:scale-[1.02] active:scale-[0.98]"
+                className="flex w-full transform items-center justify-center gap-3 rounded-xl bg-primary py-3 font-display text-sm uppercase tracking-wider text-white transition-all hover:scale-[1.02] hover:bg-primary/90 active:scale-[0.98] md:py-4 md:text-base"
               >
                 <ClipboardList size={20} />
                 Fazer encomenda
@@ -199,16 +224,16 @@ export const ProductModal = ({ product, onClose, categoryLabel }: ProductModalPr
                 href={INSTAGRAM_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full flex items-center justify-center gap-3 bg-zinc-700 hover:bg-zinc-600 text-white py-3 md:py-4 rounded-xl transition-all font-display uppercase tracking-wider text-sm md:text-base transform hover:scale-[1.02] active:scale-[0.98]"
+                className="flex w-full transform items-center justify-center gap-3 rounded-xl bg-zinc-700 py-3 font-display text-sm uppercase tracking-wider text-white transition-all hover:scale-[1.02] hover:bg-zinc-600 active:scale-[0.98] md:py-4 md:text-base"
               >
                 <Instagram size={20} />
                 Entrar em contato
               </a>
             )}
-            <p className="text-center text-[10px] md:text-xs text-gray-500 mt-3 px-4">
+            <p className="mt-3 px-4 text-center text-[10px] text-gray-500 md:text-xs">
               {formsOpen
-                ? 'Formulário com instruções de pagamento incluso.'
-                : 'Solicite via Direct para participar do grupo de pedidos.'}
+                ? "Formulário com instruções de pagamento incluso."
+                : "Solicite via Direct para participar do grupo de pedidos."}
             </p>
           </div>
         </div>

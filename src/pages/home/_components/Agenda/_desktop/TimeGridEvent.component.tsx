@@ -1,6 +1,13 @@
-import { MapPin, User } from 'lucide-react';
-import { CALENDAR_TYPE_INFO } from '@/constants';
-import { parseEventTitle, getDisplayLocation, buildMapsUrl, isPastEventFromDateTime, isCancelledEvent, isNoGiEvent } from '../agenda-helpers';
+import { MapPin, User } from "lucide-react";
+import { CALENDAR_TYPE_INFO } from "@/constants";
+import {
+  parseEventTitle,
+  getDisplayLocation,
+  buildMapsUrl,
+  isPastEventFromDateTime,
+  isCancelledEvent,
+  isNoGiEvent,
+} from "../agenda-helpers";
 
 /* ── Tipos ── */
 
@@ -33,25 +40,35 @@ interface TimeGridEventProps {
  */
 
 const CANCELLED_COLORS = {
-  container: 'rgba(30, 30, 30, 0.7)',
-  main: 'rgba(100, 100, 100, 0.6)',
-  onContainer: 'rgba(160, 160, 160, 0.7)',
+  container: "rgba(30, 30, 30, 0.7)",
+  main: "rgba(100, 100, 100, 0.6)",
+  onContainer: "rgba(160, 160, 160, 0.7)",
 };
 
 export const TimeGridEvent = ({ calendarEvent }: TimeGridEventProps) => {
-  const cancelled = isCancelledEvent(calendarEvent.title ?? '');
-  const noGi = isNoGiEvent(calendarEvent.title ?? '');
+  const cancelled = isCancelledEvent(calendarEvent.title ?? "");
+  const noGi = isNoGiEvent(calendarEvent.title ?? "");
   const isPast = isPastEventFromDateTime(calendarEvent.startRaw);
   const colors = cancelled
     ? CANCELLED_COLORS
     : isPast
-      ? (CALENDAR_TYPE_INFO[calendarEvent.calendarId as keyof typeof CALENDAR_TYPE_INFO] ?? CALENDAR_TYPE_INFO.fallback).darkColorsRgbaPast
-      : (CALENDAR_TYPE_INFO[calendarEvent.calendarId as keyof typeof CALENDAR_TYPE_INFO] ?? CALENDAR_TYPE_INFO.fallback).darkColorsRgba;
-  const { type, instructor, eventName } = parseEventTitle(calendarEvent.title ?? 'Sem título');
+      ? (
+          CALENDAR_TYPE_INFO[
+            calendarEvent.calendarId as keyof typeof CALENDAR_TYPE_INFO
+          ] ?? CALENDAR_TYPE_INFO.fallback
+        ).darkColorsRgbaPast
+      : (
+          CALENDAR_TYPE_INFO[
+            calendarEvent.calendarId as keyof typeof CALENDAR_TYPE_INFO
+          ] ?? CALENDAR_TYPE_INFO.fallback
+        ).darkColorsRgba;
+  const { type, instructor, eventName } = parseEventTitle(
+    calendarEvent.title ?? "Sem título"
+  );
 
   return (
     <div
-      className="flex flex-col gap-px p-1 h-full overflow-hidden text-xs leading-tight rounded"
+      className="flex h-full flex-col gap-px overflow-hidden rounded p-1 text-xs leading-tight"
       style={{
         backgroundColor: colors.container,
         borderLeft: `3px solid ${colors.main}`,
@@ -60,15 +77,15 @@ export const TimeGridEvent = ({ calendarEvent }: TimeGridEventProps) => {
     >
       {cancelled && (
         <span
-          className="inline-block text-xs font-bold tracking-wider truncate"
-          style={{ color: '#ef4444' }}
+          className="inline-block truncate text-xs font-bold tracking-wider"
+          style={{ color: "#ef4444" }}
         >
           CANCELADO
         </span>
       )}
       <span
-        className="inline-flex items-center gap-1 font-semibold truncate"
-        style={{ textDecoration: cancelled ? 'line-through' : 'none' }}
+        className="inline-flex items-center gap-1 truncate font-semibold"
+        style={{ textDecoration: cancelled ? "line-through" : "none" }}
       >
         {eventName ? (
           <span className="truncate">{eventName}</span>
@@ -78,7 +95,7 @@ export const TimeGridEvent = ({ calendarEvent }: TimeGridEventProps) => {
             <span className="truncate">{instructor}</span>
           </>
         ) : (
-          <span className="font-bold uppercase truncate">{type}</span>
+          <span className="truncate font-bold uppercase">{type}</span>
         )}
       </span>
 
@@ -89,22 +106,28 @@ export const TimeGridEvent = ({ calendarEvent }: TimeGridEventProps) => {
               href={buildMapsUrl(calendarEvent.location)}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-0.5 opacity-80 hover:opacity-100 underline underline-offset-2 transition-opacity"
+              className="inline-flex items-center gap-0.5 underline underline-offset-2 opacity-80 transition-opacity hover:opacity-100"
               onClick={(e) => e.stopPropagation()}
               title={calendarEvent.location}
               style={{
                 color: colors.onContainer,
-                textDecoration: cancelled ? 'line-through' : 'underline',
+                textDecoration: cancelled ? "line-through" : "underline",
               }}
             >
               <MapPin size={10} className="shrink-0" />
-              <span className="truncate">{getDisplayLocation(calendarEvent.location)}</span>
+              <span className="truncate">
+                {getDisplayLocation(calendarEvent.location)}
+              </span>
             </a>
           )}
           {noGi && (
             <span
-              className="shrink-0 text-xs font-medium px-1 py-px rounded"
-              style={{ backgroundColor: 'rgba(255,255,255,0.08)', color: colors.onContainer, opacity: 0.85 }}
+              className="shrink-0 rounded px-1 py-px text-xs font-medium"
+              style={{
+                backgroundColor: "rgba(255,255,255,0.08)",
+                color: colors.onContainer,
+                opacity: 0.85,
+              }}
             >
               NoGi
             </span>

@@ -5,14 +5,14 @@ export default {
     container: {
       center: true,
       padding: {
-        DEFAULT: '1rem',
-        sm: '1.5rem',
-        lg: '2rem',
-        xl: '2rem',
+        DEFAULT: "1rem",
+        sm: "1.5rem",
+        lg: "2rem",
+        xl: "2rem",
       },
       screens: {
-        xl: '1440px',
-        '2xl': '1440px',
+        xl: "1440px",
+        "2xl": "1440px",
       },
     },
     extend: {
