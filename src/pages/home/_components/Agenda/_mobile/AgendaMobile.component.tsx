@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import { Loader2, AlertCircle, ChevronLeft, ChevronRight } from "lucide-react";
-import { EventsByDay } from "../agenda.hook";
 import { EventCard } from "./EventCard.component";
 import {
   performScroll,
@@ -10,28 +9,20 @@ import {
   DAY_LABELS,
   ALL_DAYS,
 } from "./mobile-helpers";
+import { useAgendaEvents } from "./agendaMobile.hook";
 
-interface AgendaMobileProps {
-  eventsByDay: EventsByDay;
-  loading: boolean;
-  error: string | null;
-  weekStart: string;
-  weekEnd: string;
-  today: string;
-  onPreviousWeek: () => void;
-  onNextWeek: () => void;
-}
+export const AgendaMobile = () => {
+  const {
+    eventsByDay,
+    loading,
+    error,
+    weekStart,
+    weekEnd,
+    today,
+    goToPreviousWeek,
+    goToNextWeek,
+  } = useAgendaEvents();
 
-export const AgendaMobile = ({
-  eventsByDay,
-  loading,
-  error,
-  weekStart,
-  weekEnd,
-  today,
-  onPreviousWeek,
-  onNextWeek,
-}: AgendaMobileProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const todayRef = useRef<HTMLDivElement>(null);
 
@@ -102,7 +93,7 @@ export const AgendaMobile = ({
   const navBar = (
     <div className="mb-4 flex items-center justify-between">
       <button
-        onClick={onPreviousWeek}
+        onClick={goToPreviousWeek}
         aria-label="Semana anterior"
         className="rounded-md p-2 text-zinc-400 transition-colors hover:bg-zinc-700 hover:text-white"
       >
@@ -112,7 +103,7 @@ export const AgendaMobile = ({
         {rangeLabel}
       </span>
       <button
-        onClick={onNextWeek}
+        onClick={goToNextWeek}
         aria-label="Próxima semana"
         className="rounded-md p-2 text-zinc-400 transition-colors hover:bg-zinc-700 hover:text-white"
       >

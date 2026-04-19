@@ -2,23 +2,12 @@ import { CalendarDays } from "lucide-react";
 import { SectionHeader } from "../shared";
 import { AgendaMobile } from "./_mobile/AgendaMobile.component";
 import { AgendaDesktop } from "./_desktop/AgendaDesktop.component";
-import { useAgendaEvents } from "./agenda.hook";
 
 const CALENDAR_URL =
   "https://calendar.google.com/calendar/embed?src=f481afb9999dfafe1079be33ac43d3ab2695409949b092b3d894ea42cc903f5c%40group.calendar.google.com&ctz=America%2FFortaleza";
 
 export const Agenda = () => {
   /* Hook para o layout mobile (cards) */
-  const {
-    eventsByDay,
-    loading,
-    error,
-    weekStart,
-    weekEnd,
-    today,
-    goToPreviousWeek,
-    goToNextWeek,
-  } = useAgendaEvents();
 
   return (
     <section className="container">
@@ -35,16 +24,7 @@ export const Agenda = () => {
       </div>
 
       {/* Mobile: cards por dia da semana */}
-      <AgendaMobile
-        eventsByDay={eventsByDay}
-        loading={loading}
-        error={error}
-        weekStart={weekStart}
-        weekEnd={weekEnd}
-        today={today}
-        onPreviousWeek={goToPreviousWeek}
-        onNextWeek={goToNextWeek}
-      />
+      <AgendaMobile />
 
       {/* Desktop: Schedule-X week view */}
       <div className="hidden md:block">

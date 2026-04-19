@@ -9,7 +9,7 @@ import {
   getDisplayLocation,
   isCancelledEvent,
   isNoGiEvent,
-} from "./agenda-helpers";
+} from "./../agenda-helpers";
 
 /* ── Tipos ── */
 

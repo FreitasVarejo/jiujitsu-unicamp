@@ -1,5 +1,5 @@
 import { MapPin, User } from "lucide-react";
-import { AgendaEvent } from "../agenda.hook";
+import { AgendaEvent } from "./agendaMobile.hook";
 import { CALENDAR_TYPE_INFO } from "@/constants";
 import { buildMapsUrl, isPastEventFromDateTime } from "../agenda-helpers";
 
