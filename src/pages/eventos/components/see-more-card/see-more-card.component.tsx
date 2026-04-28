@@ -26,6 +26,13 @@ export const SeeMoreCard = ({
             alt={event.coverImage.alternativeText || event.title}
             loading="lazy"
             className="h-full w-full object-cover blur-[2px] grayscale transition-transform duration-700"
+            style={
+              event.coverImage.focalPoint
+                ? {
+                    objectPosition: `${event.coverImage.focalPoint.x}% ${event.coverImage.focalPoint.y}%`,
+                  }
+                : undefined
+            }
           />
         )}
         <div className="absolute inset-0 bg-black/60 transition-colors group-hover:bg-black/40"></div>

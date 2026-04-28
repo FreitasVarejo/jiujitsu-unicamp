@@ -1,6 +1,6 @@
 import { EventSummaryInfo } from "@/services/mediaService";
-import { EventCard } from "./EventCard";
-import { SeeMoreCard } from "./SeeMoreCard";
+import { EventCard } from "../event-card";
+import { SeeMoreCard } from "../see-more-card";
 
 interface YearSectionProps {
   year: string;

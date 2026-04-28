@@ -1,6 +1,6 @@
 import { AlertCircle } from "lucide-react";
 import { useEvents } from "./event.hook";
-import { YearSection } from "./components/YearSection";
+import { YearSection } from "./components";
 
 export const Eventos = () => {
   const { years, groupedEvents, visibleCounts, loading, error, handleSeeMore } =
@@ -54,3 +54,5 @@ export const Eventos = () => {
     </div>
   );
 };
+
+export * from "./detalhes";
