@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./layouts/Layout";
 import ScrollToTop from "./components/ScrollToTop";
-import { Home, Eventos, Loja, EventDetailsPage, NotFound } from "./pages";
+import { Home, EventsPage, Loja, EventDetailsPage, NotFound } from "./pages";
 
 function App() {
   return (
@@ -10,7 +10,7 @@ function App() {
       <Layout>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/eventos" element={<Eventos />} />
+          <Route path="/eventos" element={<EventsPage />} />
           <Route path="/evento/:id" element={<EventDetailsPage />} />
           <Route path="/loja" element={<Loja />} />
           <Route path="*" element={<NotFound />} />
