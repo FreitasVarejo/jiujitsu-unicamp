@@ -41,7 +41,6 @@ export const useEvents = () => {
     }));
   };
 
-  // Agrupar eventos por ano
   const groupedEvents = events.reduce(
     (acc: Record<string, EventSummaryInfo[]>, event) => {
       const year = event.date.split("-")[0] || "Antigo";
