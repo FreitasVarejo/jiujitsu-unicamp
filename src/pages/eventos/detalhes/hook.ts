@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { mediaService, EventInfo } from "@/services/mediaService";
-import { Image } from "@/types/media";
+import { Image } from "@types/base";
 
 export const useEventDetails = (id?: string) => {
   const [details, setDetails] = useState<EventInfo | null>(null);

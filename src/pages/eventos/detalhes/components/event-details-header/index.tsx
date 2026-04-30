@@ -1,7 +1,7 @@
 import { EventDetailsInfoCard } from "./event-details-info.tsx";
 import { EventDetailsThumbnail } from "./event-details-thumbnail.tsx";
 import { Dispatch, SetStateAction } from "react";
-import { Event } from "@/types/media";
+import { Event } from "@/types/event";
 
 type EventDetailsHeaderProps = {
   setSelectedImage: Dispatch<SetStateAction<string | null>>;

@@ -1,6 +1,6 @@
 import { Hero } from "./_components/Hero";
 import { Agenda } from "./_components/Agenda";
-import { Guia } from "./_components/Guia";
+import { Guia } from "./_components/guia";
 import { Location } from "./_components/Location";
 import { Team } from "./_components/Team";
 

@@ -2,7 +2,7 @@ import {
   BaseMediaService,
   StrapiMediaFile,
 } from "../services/baseMediaService";
-import { Image } from "../types/media";
+import { Image } from "@/types/base";
 
 export const resolveImage = (
   file: StrapiMediaFile | null | undefined

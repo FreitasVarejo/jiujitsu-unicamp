@@ -3,6 +3,7 @@ import {
   calendarService,
   GoogleCalendarEvent,
 } from "@/services/calendarService";
+import { AgendaEvent, EventsByDay } from "@/types/home";
 import {
   inferCalendarType,
   parseEventTitle,
@@ -10,25 +11,6 @@ import {
   isCancelledEvent,
   isNoGiEvent,
 } from "./../agenda-helpers";
-
-/* ── Tipos ── */
-
-export interface AgendaEvent {
-  id: string;
-  type: string;
-  instructor?: string;
-  eventName?: string;
-  startTime: string;
-  endTime: string;
-  location?: string;
-  rawLocation?: string;
-  calendarId: string;
-  startDateTime?: string;
-  cancelled: boolean;
-  noGi: boolean;
-}
-
-export type EventsByDay = Record<number, AgendaEvent[]>;
 
 /* ── Helpers ── */
 

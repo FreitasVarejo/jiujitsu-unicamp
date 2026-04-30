@@ -5,13 +5,7 @@ import {
   productAdapter,
   instructorAdapter,
 } from "../adapters";
-import {
-  Image,
-  Event,
-  EventSummary,
-  Product,
-  Instructor,
-} from "../types/media";
+import { Image, Event, EventSummary, Product, Instructor } from "@types";
 
 export type EventInfo = Event;
 export type EventSummaryInfo = EventSummary;

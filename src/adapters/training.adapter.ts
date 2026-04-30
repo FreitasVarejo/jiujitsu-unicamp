@@ -1,4 +1,4 @@
-import { TrainingSchedule } from "../types/media";
+import { TrainingSchedule } from "../types/home";
 import {
   Weekday,
   WEEKDAY_INFO,

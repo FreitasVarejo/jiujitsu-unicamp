@@ -1,4 +1,5 @@
-import { Event, Image } from "@/types/media";
+import { Event } from "@/types/event";
+import { Image } from "@types/base";
 import { Dispatch, SetStateAction } from "react";
 
 type ImageGridProps = {

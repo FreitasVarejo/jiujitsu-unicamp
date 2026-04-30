@@ -1,4 +1,4 @@
-import { Event } from "@/types/media";
+import { Event } from "@/types/event";
 import { Dispatch, SetStateAction } from "react";
 
 type EventDetailsThumbnailProps = {

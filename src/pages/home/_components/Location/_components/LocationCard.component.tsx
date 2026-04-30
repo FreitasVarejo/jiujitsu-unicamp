@@ -1,4 +1,4 @@
-import type { LocationData } from "../location.constants";
+import type { LocationData } from "@/types/home";
 
 interface LocationCardProps {
   location: LocationData;

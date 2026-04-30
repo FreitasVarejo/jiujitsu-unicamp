@@ -1,4 +1,4 @@
-import { Product } from "../types/media";
+import { Product } from "../types/product";
 import { resolveImage, resolveGallery } from "./adapters.handlers";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

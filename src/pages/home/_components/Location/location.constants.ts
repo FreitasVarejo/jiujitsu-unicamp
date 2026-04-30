@@ -1,10 +1,4 @@
-export interface LocationData {
-  id: string;
-  title: string;
-  address: string;
-  reference: string;
-  mapsEmbedUrl: string;
-}
+import { LocationData } from "@/types/home";
 
 export const LOCATIONS: Record<string, LocationData> = {
   labfef: {

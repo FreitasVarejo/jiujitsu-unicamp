@@ -1,4 +1,4 @@
-import { Instructor } from "../types/media";
+import { Instructor } from "../types/home";
 import { Belt, BELT_INFO } from "@/constants";
 import { resolveImage } from "./adapters.handlers";
 

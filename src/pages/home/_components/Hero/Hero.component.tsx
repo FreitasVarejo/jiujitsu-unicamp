@@ -1,7 +1,7 @@
 import { CSSProperties, useEffect, useRef, useState, useMemo } from "react";
 import { mediaService } from "@/services/mediaService";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-import { Image } from "@/types/media";
+import { Image } from "@types/base";
 import { SkeletonHero } from "./SkeletonHero.component";
 
 const INTERVAL_MS = 5000;

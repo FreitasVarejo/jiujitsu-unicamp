@@ -1,5 +1,5 @@
 import { CSSProperties } from "react";
-import { Instructor } from "@/types/media";
+import { Instructor } from "@types/home";
 import { BELT_INFO } from "@/constants";
 
 interface InstructorCardProps {

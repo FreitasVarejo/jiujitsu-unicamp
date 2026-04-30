@@ -1,4 +1,4 @@
-import { Image } from "@/types/media";
+import { Image } from "@types/base";
 
 type EventCardThumbnailProps = {
   coverImage: Image;
