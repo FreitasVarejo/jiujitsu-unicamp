@@ -1,4 +1,4 @@
-import { Hero } from "./_components/Hero";
+import { Hero } from "./_components/hero";
 import { Agenda } from "./_components/Agenda";
 import { Guia } from "./_components/guia";
 import { Location } from "./_components/Location";

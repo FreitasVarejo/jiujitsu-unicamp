@@ -2,7 +2,7 @@
 export * from "./shared";
 
 // Export feature components
-export * from "./Hero";
+export * from "./hero";
 export * from "./Agenda";
-export * from "./Guia";
+export * from "./guia";
 export * from "./Location";
