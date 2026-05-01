@@ -1,4 +1,4 @@
-import { Belt, Weekday, TrainingType } from "@/constants";
+import { Belt, Weekday, TrainingType } from "@/constants/home";
 import { BaseEntity, Image } from "./base";
 
 export interface TrainingSchedule {

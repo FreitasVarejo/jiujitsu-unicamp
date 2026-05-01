@@ -1,11 +1,11 @@
-import { useEvents } from "./event.hook";
 import {
-  EventsPageLoading,
-  EventsPageTitle,
-  EventsPageError,
   EventsPageNone,
+  EventsPageTitle,
   YearSection,
+  EventsPageLoading,
 } from "./components";
+import { EventsPageError } from "./components/events-page-error.tsx";
+import { useEvents } from "./event.hook";
 
 export const EventsPage = () => {
   const { years, groupedEvents, visibleCounts, loading, error, handleSeeMore } =

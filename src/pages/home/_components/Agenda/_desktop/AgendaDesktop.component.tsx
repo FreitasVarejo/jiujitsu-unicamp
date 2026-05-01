@@ -10,7 +10,7 @@ import {
   calendarService,
   GoogleCalendarEvent,
 } from "@/services/calendarService";
-import { CALENDAR_TYPE_INFO } from "@/constants";
+import { CALENDAR_TYPE_INFO } from "@/constants/home";
 import { inferCalendarType } from "../agenda-helpers";
 import "temporal-polyfill/global";
 import "@schedule-x/theme-default/dist/index.css";

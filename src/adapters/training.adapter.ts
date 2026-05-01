@@ -4,7 +4,7 @@ import {
   WEEKDAY_INFO,
   TrainingType,
   TRAINING_TYPE_INFO,
-} from "../constants";
+} from "../constants/home";
 
 const parseWeekday = (value: unknown): Weekday => {
   if (value == null) return Weekday.SEGUNDA;

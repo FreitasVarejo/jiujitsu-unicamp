@@ -1,5 +1,5 @@
-import { CalendarType, CALENDAR_TYPE_INFO } from "@/constants";
-import { CALENDAR_LOCATION_INFO, ADDRESS_TO_LOCATION } from "@/constants";
+import { CalendarType, CALENDAR_TYPE_INFO } from "@/constants/home";
+import { CALENDAR_LOCATION_INFO, ADDRESS_TO_LOCATION } from "@/constants/home";
 
 /**
  * Verifica se um evento foi cancelado.

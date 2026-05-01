@@ -1,4 +1,4 @@
-import { Event, EventSummary } from "../types/event";
+import { Event, EventSummary } from "@/types/event";
 import { resolveImage, resolveGallery } from "./adapters.handlers";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

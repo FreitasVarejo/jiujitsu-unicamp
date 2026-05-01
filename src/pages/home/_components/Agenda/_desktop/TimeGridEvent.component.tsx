@@ -1,5 +1,5 @@
 import { MapPin, User } from "lucide-react";
-import { CALENDAR_TYPE_INFO } from "@/constants";
+import { CALENDAR_TYPE_INFO } from "@/constants/home";
 import {
   parseEventTitle,
   getDisplayLocation,

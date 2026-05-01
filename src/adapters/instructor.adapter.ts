@@ -1,5 +1,5 @@
-import { Instructor } from "../types/home";
-import { Belt, BELT_INFO } from "@/constants";
+import { Instructor } from "@/types/home";
+import { Belt, BELT_INFO } from "@/constants/home";
 import { resolveImage } from "./adapters.handlers";
 
 const parseBelt = (value: unknown): Belt => {

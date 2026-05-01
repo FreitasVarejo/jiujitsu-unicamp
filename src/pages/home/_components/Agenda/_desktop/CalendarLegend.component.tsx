@@ -1,4 +1,4 @@
-import { CALENDAR_TYPE_INFO, CalendarType } from "@/constants";
+import { CALENDAR_TYPE_INFO, CalendarType } from "@/constants/home";
 
 export const CalendarLegend = () => {
   // Filtra todos os tipos exceto FALLBACK

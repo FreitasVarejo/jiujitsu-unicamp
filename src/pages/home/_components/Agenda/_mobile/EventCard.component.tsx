@@ -1,6 +1,6 @@
 import { MapPin, User } from "lucide-react";
 import { AgendaEvent } from "@/types/home";
-import { CALENDAR_TYPE_INFO } from "@/constants";
+import { CALENDAR_TYPE_INFO } from "@/constants/home";
 import { buildMapsUrl, isPastEventFromDateTime } from "../agenda-helpers";
 
 const CANCELLED_COLORS = {
