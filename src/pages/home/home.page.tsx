@@ -1,8 +1,4 @@
-import { Hero } from "./_components/hero";
-import { Agenda } from "./_components/Agenda";
-import { Guia } from "./_components/guia";
-import { Location } from "./_components/location";
-import { Team } from "./_components/Team";
+import { Agenda, Guia, Hero, Location, Team } from "./_components/";
 
 export const Home = () => {
   return (

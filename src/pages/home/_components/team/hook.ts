@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { mediaService } from "@/services/mediaService";
-import { Instructor } from "@types/home";
+import { Instructor } from "@types";
 import { BELT_INFO } from "@/constants/home";
 
 /**

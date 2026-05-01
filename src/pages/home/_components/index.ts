@@ -6,3 +6,4 @@ export * from "./hero";
 export * from "./Agenda";
 export * from "./guia";
 export * from "./location";
+export * from "./team";
