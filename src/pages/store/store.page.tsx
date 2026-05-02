@@ -2,14 +2,12 @@ import { Loader2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { ProductCarousel } from "./_components/ProductCarousel";
 import { ProductModal } from "./_components/ProductModal";
-import { useProducts } from "./store.hook";
-import { ProductInfo } from "@/services/mediaService";
+import { useProducts } from "@/hooks/data/use-products.hook";
+import { Product } from "@/types/product";
 
 export const Loja = () => {
   const { products, categories, loading, error } = useProducts();
-  const [selectedProduct, setSelectedProduct] = useState<ProductInfo | null>(
-    null
-  );
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   const categoryMap = useMemo(() => {
     return Object.fromEntries(categories.map((c) => [c.slug, c.name]));
@@ -23,12 +21,11 @@ export const Loja = () => {
         acc[slug].push(product);
         return acc;
       },
-      {} as Record<string, ProductInfo[]>
+      {} as Record<string, Product[]>
     );
 
     // Iterate categories in backend order, skip empty ones
-    const sections: { slug: string; name: string; products: ProductInfo[] }[] =
-      [];
+    const sections: { slug: string; name: string; products: Product[] }[] = [];
     for (const cat of categories) {
       const items = productsBySlug[cat.slug];
       if (items && items.length > 0) {
@@ -68,7 +65,7 @@ export const Loja = () => {
         </div>
       ) : error ? (
         <div className="py-20 text-center">
-          <p className="mb-4 text-red-500">{error}</p>
+          <p className="mb-4 text-red-500">{error.message}</p>
           <button
             onClick={() => window.location.reload()}
             className="text-primary hover:underline"

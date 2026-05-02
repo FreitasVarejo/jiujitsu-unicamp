@@ -86,14 +86,132 @@ import { LocalComponent } from "./local"; // Relative
 
 ---
 
-## Error Handling
+## Arquitetura de Dados (Refatorada - 2026)
 
-**In hooks:** `loading / error / data` state with `try/catch/finally`:
+A aplicação segue uma **arquitetura em camadas** com separação clara de responsabilidades:
+
+```
+Services → Adapters → Hooks → Components
+```
+
+### Services Layer (`src/services/`)
+
+**Responsabilidade:** Comunicação HTTP com APIs externas (Strapi, Google Calendar).
+
+**Estrutura:**
+
+- `core/` — Infraestrutura reutilizável
+  - `http-client.ts` — Cliente HTTP genérico com retry automático (2 tentativas, 1s delay)
+  - `strapi-client.ts` — Cliente específico Strapi (auth automática, helpers)
+  - `types.ts` — Tipos genéricos Strapi (`StrapiListResponse`, `StrapiSingleResponse`)
+- `strapi/` — Services específicos do Strapi
+  - `events.service.ts`, `products.service.ts`, `instructors.service.ts`, `media.service.ts`
+- `google/` — Services externos
+  - `calendar.service.ts`
+
+**Padrão:**
 
 ```ts
-const [data, setData] = useState<T | null>(null);
-const [loading, setLoading] = useState(true);
-const [error, setError] = useState<string | null>(null);
+export const eventsService = {
+  getAll: async (): Promise<StrapiEvent[]> => {
+    return StrapiClient.getList<StrapiEvent>('/api/eventos', { params: {...} })
+  },
+  getBySlug: async (slug: string): Promise<StrapiEvent> => {
+    return StrapiClient.getOne<StrapiEvent>('/api/eventos', { params: {...} })
+  },
+}
+```
+
+### Adapters Layer (`src/adapters/`)
+
+**Responsabilidade:** Transformar dados raw (Strapi/Google) em domain models tipados.
+
+**Estrutura:**
+
+- `strapi/` — Adapters Strapi
+  - `media.adapter.ts` — `StrapiMediaFile` → `Image` (resolve URLs + focal point)
+  - `event.adapter.ts`, `product.adapter.ts`, `instructor.adapter.ts`
+
+**Padrão:**
+
+```ts
+export const eventAdapter = (raw: StrapiEvent): Event => {
+  return {
+    id: raw.slug,
+    title: raw.title || "",
+    coverImage: resolveImage(raw.cover) ?? fallbackImage,
+    gallery: resolveGallery(raw.gallery),
+  };
+};
+```
+
+### Hooks Layer (`src/hooks/`)
+
+**Responsabilidade:** Gerenciar estado de fetching, cache e lógica de negócio.
+
+**Estrutura:**
+
+- `core/` — Hooks genéricos reutilizáveis
+  - `use-async.hook.ts` — Hook genérico para operações async (retry, reset)
+  - `use-fetch.hook.ts` — Hook de fetching com cache em memória
+  - `types.ts` — `AsyncState<T>`, `FetchOptions`
+- `data/` — Hooks domain-specific
+  - `use-events.hook.ts`, `use-products.hook.ts`, `use-instructors.hook.ts`, `use-hero.hook.ts`
+- `ui/` — Hooks de UI
+  - `use-fonts-loaded.hook.ts`, `use-media-query.hook.ts`
+
+**Padrão:**
+
+```ts
+export const useEvents = (): UseEventsReturn => {
+  const {
+    data: rawEvents,
+    loading,
+    error,
+  } = useFetch(() => eventsService.getAll(), [], {
+    cache: true,
+    cacheKey: "events-list",
+  });
+
+  const events = useMemo(
+    () => (rawEvents || []).map(eventAdapter),
+    [rawEvents]
+  );
+
+  return { events, loading, error };
+};
+```
+
+### Tipos Intermediários (`src/types/strapi/`)
+
+**Tipos Strapi raw** que representam a estrutura da API antes da conversão:
+
+- `event.ts` → `StrapiEvent`, `StrapiEventSummary`
+- `product.ts` → `StrapiProduct`, `StrapiProductCategory`
+- `instructor.ts` → `StrapiInstructor`
+- `media.ts` → `StrapiMediaFile`, `StrapiImage`
+
+**Domain models** permanecem em `src/types/` (Event, Product, Instructor).
+
+### Adicionando Novo Endpoint
+
+1. **Criar tipo Strapi** em `src/types/strapi/your-entity.ts`
+2. **Criar service** em `src/services/strapi/your-entity.service.ts`
+3. **Criar adapter** em `src/adapters/strapi/your-entity.adapter.ts`
+4. **Criar hook** em `src/hooks/data/use-your-entity.hook.ts`
+5. **Exportar** em barrel files (`index.ts`)
+
+---
+
+## Error Handling
+
+**Padrão de erro padronizado:** `Error | null` (não `string | null`).
+
+**Em hooks (via `useFetch`):**
+
+```ts
+const { data, loading, error } = useFetch(...)
+// error é Error | null (preserva stack trace)
 useEffect(() => {
   const load = async () => {
     try {

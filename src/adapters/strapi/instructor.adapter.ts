@@ -1,6 +1,11 @@
+/**
+ * Adapter para transformar StrapiInstructor em Instructor (domain model).
+ */
+
+import { StrapiInstructor } from "@/types/strapi";
 import { Instructor } from "@/types/home";
 import { Belt, BELT_INFO } from "@/constants/home";
-import { resolveImage } from "./adapters.handlers";
+import { resolveImage } from "./media.adapter";
 
 const parseBelt = (value: unknown): Belt => {
   if (value == null) return Belt.BRANCA;
@@ -11,13 +16,16 @@ const parseBelt = (value: unknown): Belt => {
   return entry ? (Number(entry[0]) as Belt) : Belt.BRANCA;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const instructorAdapter = (raw: any): Instructor => {
+/**
+ * Converte StrapiInstructor para Instructor (domain model).
+ */
+export const instructorAdapter = (raw: StrapiInstructor): Instructor => {
   const belt = parseBelt(raw.belt);
 
   const photo = resolveImage(raw.photo) ?? {
     url: "",
     alternativeText: raw.title || "",
+    focalPoint: null,
   };
 
   return {

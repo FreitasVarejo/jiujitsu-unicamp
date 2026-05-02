@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { calendarService } from "@/services/calendarService";
+import { calendarService } from '@/services/google/calendar.service';
 import { EventsByDay } from "@/types/home";
 import {
   convertGoogleEventToAgendaEvent,

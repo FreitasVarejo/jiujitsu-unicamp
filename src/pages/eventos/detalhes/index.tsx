@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { useEventDetails } from "./hook";
+import { useEventDetails } from "@/hooks/data/use-events.hook";
 import {
   Lightbox,
   ImageGrid,

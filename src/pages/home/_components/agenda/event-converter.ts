@@ -1,4 +1,4 @@
-import { GoogleCalendarEvent } from "@/services/calendarService";
+import { GoogleCalendarEvent } from '@/services/google/calendar.service';
 import { AgendaEvent } from "@/types/home";
 import {
   inferCalendarType,

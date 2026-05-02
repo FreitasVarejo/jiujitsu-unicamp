@@ -1,4 +1,4 @@
-import { useHeroImages } from "./_hooks/use-hero-images.hook";
+import { useHeroImages } from "@/hooks/data/use-hero.hook";
 import { useCarousel } from "./_hooks/use-carousel.hook";
 import { Image } from "@/types";
 
@@ -9,7 +9,7 @@ interface UseHeroCarouselReturn {
   next: number | null;
   nextVisible: boolean;
   isLoaded: boolean;
-  error: string | null;
+  error: Error | null;
   fadeDuration: number;
 }
 

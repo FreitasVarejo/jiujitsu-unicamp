@@ -4,7 +4,7 @@ import { createViewWeek } from "@schedule-x/calendar";
 import { createEventsServicePlugin } from "@schedule-x/events-service";
 import { createCalendarControlsPlugin } from "@schedule-x/calendar-controls";
 import { createCurrentTimePlugin } from "@schedule-x/current-time";
-import { calendarService } from "@/services/calendarService";
+import { calendarService } from '@/services/google/calendar.service';
 import { CALENDAR_TYPE_INFO } from "@/constants/home";
 import "temporal-polyfill/global";
 import { convertToScheduleXEvent } from "../event-converter";

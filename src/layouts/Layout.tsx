@@ -2,7 +2,7 @@ import { useState, ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Instagram, MapPin } from "lucide-react";
 import { SkeletonNavbar } from "@/components/skeletons";
-import { useFontsLoaded } from "@/hooks/useFontsLoaded";
+import { useFontsLoaded } from "@/hooks/ui/use-fonts-loaded.hook";
 
 interface LayoutProps {
   children: ReactNode;
