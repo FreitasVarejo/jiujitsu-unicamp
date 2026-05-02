@@ -1,33 +1,14 @@
 import { MapPin, User } from "lucide-react";
 import { AgendaEvent } from "@/types/home";
-import { CALENDAR_TYPE_INFO } from "@/constants/home";
-import { buildMapsUrl, isPastEventFromDateTime } from "../agenda-helpers";
-
-const CANCELLED_COLORS = {
-  container: "rgba(30, 30, 30, 0.7)",
-  main: "rgba(100, 100, 100, 0.6)",
-  onContainer: "rgba(160, 160, 160, 0.7)",
-};
+import { buildMapsUrl } from "../../agenda-helpers";
+import { getEventColors } from "../../event-colors";
 
 interface EventCardProps {
   event: AgendaEvent;
 }
 
 export const EventCard = ({ event }: EventCardProps) => {
-  const isPast = isPastEventFromDateTime(event.startDateTime);
-  const colors = event.cancelled
-    ? CANCELLED_COLORS
-    : isPast
-      ? (
-          CALENDAR_TYPE_INFO[
-            event.calendarId as keyof typeof CALENDAR_TYPE_INFO
-          ] ?? CALENDAR_TYPE_INFO.fallback
-        ).darkColorsRgbaPast
-      : (
-          CALENDAR_TYPE_INFO[
-            event.calendarId as keyof typeof CALENDAR_TYPE_INFO
-          ] ?? CALENDAR_TYPE_INFO.fallback
-        ).darkColorsRgba;
+  const colors = getEventColors(event);
 
   return (
     <div

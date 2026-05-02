@@ -1,21 +1,17 @@
-import { useCalendarApp, ScheduleXCalendar } from "@schedule-x/react";
+import { useState } from "react";
+import { useCalendarApp } from "@schedule-x/react";
 import { createViewWeek } from "@schedule-x/calendar";
 import { createEventsServicePlugin } from "@schedule-x/events-service";
 import { createCalendarControlsPlugin } from "@schedule-x/calendar-controls";
 import { createCurrentTimePlugin } from "@schedule-x/current-time";
-import { useState } from "react";
-import { TimeGridEvent } from "./TimeGridEvent.component.tsx";
-import { CalendarLegend } from "./CalendarLegend.component";
-import {
-  calendarService,
-  GoogleCalendarEvent,
-} from "@/services/calendarService";
+import { calendarService } from "@/services/calendarService";
 import { CALENDAR_TYPE_INFO } from "@/constants/home";
-import { inferCalendarType } from "../agenda-helpers";
 import "temporal-polyfill/global";
-import "@schedule-x/theme-default/dist/index.css";
+import { convertToScheduleXEvent } from "../event-converter";
 
-/** Paleta de cores para cada tipo de treino (tema escuro). */
+/**
+ * Paleta de cores para cada tipo de treino (tema escuro).
+ */
 const TRAINING_CALENDARS: Record<
   string,
   {
@@ -56,44 +52,17 @@ const getTargetSunday = (): Temporal.PlainDate => {
 };
 
 /**
- * Converte um evento do Google Calendar para o formato Schedule-X,
- * incluindo calendarId derivado do tipo de treino.
+ * Hook que configura e retorna a instância do Schedule-X calendar para desktop.
+ * Encapsula toda a lógica de configuração: plugins, callbacks, views, etc.
  */
-const toScheduleXEvent = (event: GoogleCalendarEvent) => {
-  const startRaw = event.start.dateTime ?? event.start.date ?? "";
-  const endRaw = event.end.dateTime ?? event.end.date ?? "";
-  const calendarId = inferCalendarType(event.summary || "");
-
-  if (event.start.dateTime) {
-    return {
-      id: event.id,
-      title: event.summary || "Sem título",
-      start: Temporal.ZonedDateTime.from(
-        startRaw.replace(/([+-]\d{2}):(\d{2})$/, "$1:$2[America/Fortaleza]")
-      ),
-      end: Temporal.ZonedDateTime.from(
-        endRaw.replace(/([+-]\d{2}):(\d{2})$/, "$1:$2[America/Fortaleza]")
-      ),
-      location: event.location,
-      description: event.description,
-      calendarId,
-      startRaw,
-    };
-  }
-
-  return {
-    id: event.id,
-    title: event.summary || "Sem título",
-    start: Temporal.PlainDate.from(startRaw),
-    end: Temporal.PlainDate.from(endRaw),
-    location: event.location,
-    description: event.description,
-    calendarId,
-    startRaw,
-  };
-};
-
-export const AgendaDesktop = () => {
+export const useScheduleXConfig = (): {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  calendar: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  eventsService: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  calendarControls: any;
+} => {
   const [eventsService] = useState(() => createEventsServicePlugin());
   const [calendarControls] = useState(() => createCalendarControlsPlugin());
   const [currentTime] = useState(() =>
@@ -126,7 +95,7 @@ export const AgendaDesktop = () => {
           const start = String(range.start).slice(0, 10);
           const end = String(range.end).slice(0, 10);
           const events = await calendarService.getEventsByRange(start, end);
-          return events.map(toScheduleXEvent);
+          return events.map(convertToScheduleXEvent);
         } catch (err) {
           console.error("Erro ao buscar eventos da agenda:", err);
           return [];
@@ -135,13 +104,9 @@ export const AgendaDesktop = () => {
     },
   });
 
-  return (
-    <div className="sx-react-calendar-wrapper">
-      <ScheduleXCalendar
-        calendarApp={calendar}
-        customComponents={{ timeGridEvent: TimeGridEvent }}
-      />
-      <CalendarLegend />
-    </div>
-  );
+  return {
+    calendar,
+    eventsService,
+    calendarControls,
+  };
 };

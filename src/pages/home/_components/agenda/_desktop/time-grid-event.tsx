@@ -1,13 +1,12 @@
 import { MapPin, User } from "lucide-react";
-import { CALENDAR_TYPE_INFO } from "@/constants/home";
 import {
   parseEventTitle,
   getDisplayLocation,
   buildMapsUrl,
-  isPastEventFromDateTime,
   isCancelledEvent,
   isNoGiEvent,
 } from "../agenda-helpers";
+import { getScheduleXEventColors } from "../event-colors";
 
 /* ── Tipos ── */
 
@@ -39,29 +38,14 @@ interface TimeGridEventProps {
  * conforme exigido pelo Schedule-X.
  */
 
-const CANCELLED_COLORS = {
-  container: "rgba(30, 30, 30, 0.7)",
-  main: "rgba(100, 100, 100, 0.6)",
-  onContainer: "rgba(160, 160, 160, 0.7)",
-};
-
 export const TimeGridEvent = ({ calendarEvent }: TimeGridEventProps) => {
   const cancelled = isCancelledEvent(calendarEvent.title ?? "");
   const noGi = isNoGiEvent(calendarEvent.title ?? "");
-  const isPast = isPastEventFromDateTime(calendarEvent.startRaw);
-  const colors = cancelled
-    ? CANCELLED_COLORS
-    : isPast
-      ? (
-          CALENDAR_TYPE_INFO[
-            calendarEvent.calendarId as keyof typeof CALENDAR_TYPE_INFO
-          ] ?? CALENDAR_TYPE_INFO.fallback
-        ).darkColorsRgbaPast
-      : (
-          CALENDAR_TYPE_INFO[
-            calendarEvent.calendarId as keyof typeof CALENDAR_TYPE_INFO
-          ] ?? CALENDAR_TYPE_INFO.fallback
-        ).darkColorsRgba;
+  const colors = getScheduleXEventColors(
+    calendarEvent.calendarId ?? "fallback",
+    cancelled,
+    calendarEvent.startRaw
+  );
   const { type, instructor, eventName } = parseEventTitle(
     calendarEvent.title ?? "Sem título"
   );
