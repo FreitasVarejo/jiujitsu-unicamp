@@ -5,7 +5,7 @@ import {
   EventsPageLoading,
 } from "./components";
 import { EventsPageError } from "./components/events-page-error.tsx";
-import { useEvents } from "./event.hook";
+import { useEvents } from "./hook.ts";
 
 export const EventsPage = () => {
   const { years, groupedEvents, visibleCounts, loading, error, handleSeeMore } =
