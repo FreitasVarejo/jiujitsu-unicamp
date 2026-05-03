@@ -8,7 +8,7 @@ interface LayoutProps {
   children: ReactNode;
 }
 
-const Layout = ({ children }: LayoutProps) => {
+export const Layout = ({ children }: LayoutProps) => {
   const fontsLoaded = useFontsLoaded();
   const { isMenuOpen, toggleMenu, closeMenu, isActive, navLinks } =
     useNavigation();
@@ -37,5 +37,3 @@ const Layout = ({ children }: LayoutProps) => {
     </div>
   );
 };
-
-export default Layout;

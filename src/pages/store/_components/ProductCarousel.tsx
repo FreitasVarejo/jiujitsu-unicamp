@@ -3,6 +3,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ProductInfo } from "@/services/mediaService";
 import { ProductCard } from "./ProductCard";
+import { useIsDesktop } from "@/hooks/ui";
 
 interface ProductCarouselProps {
   products: ProductInfo[];
@@ -13,6 +14,7 @@ export const ProductCarousel = ({
   products,
   onProductClick,
 }: ProductCarouselProps) => {
+  const isDesktop = useIsDesktop();
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "start",
     containScroll: "keepSnaps",
@@ -68,19 +70,19 @@ export const ProductCarousel = ({
       </div>
 
       {/* Navigation Buttons — only shown in the direction the user can scroll */}
-      {canScrollPrev && (
+      {isDesktop && canScrollPrev && (
         <button
           onClick={scrollPrev}
-          className="absolute -left-4 top-1/2 z-20 hidden -translate-y-1/2 rounded-full border border-zinc-800 bg-zinc-900 p-3 text-white opacity-0 shadow-xl transition-opacity hover:bg-zinc-800 group-hover/carousel:opacity-100 md:block"
+          className="absolute -left-4 top-1/2 z-20 -translate-y-1/2 rounded-full border border-zinc-800 bg-zinc-900 p-3 text-white opacity-0 shadow-xl transition-opacity hover:bg-zinc-800 group-hover/carousel:opacity-100"
           aria-label="Anterior"
         >
           <ChevronLeft size={24} />
         </button>
       )}
-      {canScrollNext && (
+      {isDesktop && canScrollNext && (
         <button
           onClick={scrollNext}
-          className="absolute -right-4 top-1/2 z-20 hidden -translate-y-1/2 rounded-full border border-zinc-800 bg-zinc-900 p-3 text-white opacity-0 shadow-xl transition-opacity hover:bg-zinc-800 group-hover/carousel:opacity-100 md:block"
+          className="absolute -right-4 top-1/2 z-20 -translate-y-1/2 rounded-full border border-zinc-800 bg-zinc-900 p-3 text-white opacity-0 shadow-xl transition-opacity hover:bg-zinc-800 group-hover/carousel:opacity-100"
           aria-label="Próximo"
         >
           <ChevronRight size={24} />

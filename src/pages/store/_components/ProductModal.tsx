@@ -8,6 +8,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { ProductInfo } from "@/services/mediaService";
+import { useIsDesktop } from "@/hooks/ui";
 
 const INSTAGRAM_URL = "https://www.instagram.com/jiujitsu.unicamp/";
 
@@ -28,6 +29,7 @@ export const ProductModal = ({
   onClose,
   categoryLabel,
 }: ProductModalProps) => {
+  const isDesktop = useIsDesktop();
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -79,7 +81,11 @@ export const ProductModal = ({
       />
 
       {/* Modal Content */}
-      <div className="relative flex max-h-[95vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl bg-zinc-900 shadow-2xl md:max-h-[90vh] md:flex-row">
+      <div
+        className={`relative flex max-h-[95vh] w-full max-w-5xl overflow-hidden rounded-2xl bg-zinc-900 shadow-2xl ${
+          isDesktop ? "max-h-[90vh] flex-row" : "flex-col"
+        }`}
+      >
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -89,9 +95,13 @@ export const ProductModal = ({
         </button>
 
         {/* Left Side: Images */}
-        <div className="relative w-full shrink-0 bg-zinc-800 md:w-3/5">
+        <div
+          className={`relative shrink-0 bg-zinc-800 ${isDesktop ? "w-3/5" : "w-full"}`}
+        >
           <div
-            className="h-[30vh] overflow-hidden sm:h-[35vh] md:h-full"
+            className={`overflow-hidden ${
+              isDesktop ? "h-full" : "h-[30vh] sm:h-[35vh]"
+            }`}
             ref={emblaRef}
           >
             <div className="flex h-full">
@@ -153,7 +163,9 @@ export const ProductModal = ({
         </div>
 
         {/* Right Side: Details */}
-        <div className="flex w-full flex-col overflow-y-auto p-5 md:w-2/5 md:p-8">
+        <div
+          className={`flex w-full flex-col overflow-y-auto p-5 ${isDesktop ? "w-2/5 p-8" : ""}`}
+        >
           <div className="mb-4 md:mb-6">
             <span className="text-xs font-bold uppercase tracking-wider text-primary md:text-sm">
               {categoryLabel || "Coleção Oficial"}

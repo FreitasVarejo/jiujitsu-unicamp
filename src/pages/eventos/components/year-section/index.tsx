@@ -1,6 +1,7 @@
 import { EventSummaryInfo } from "@/services/mediaService";
 import { EventCard } from "../event-card";
 import { SeeMoreCard } from "../see-more-card";
+import { useIsDesktop } from "@/hooks/ui";
 
 interface YearSectionProps {
   year: string;
@@ -15,6 +16,7 @@ export const YearSection = ({
   visibleCount,
   onSeeMore,
 }: YearSectionProps) => {
+  const isDesktop = useIsDesktop();
   const visibleEvents = events.slice(0, visibleCount);
   const hasMore = events.length > visibleCount;
 
@@ -25,7 +27,9 @@ export const YearSection = ({
         <div className="h-px flex-grow bg-zinc-800"></div>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+      <div
+        className={`grid gap-6 ${isDesktop ? "grid-cols-2" : "grid-cols-1"}`}
+      >
         {visibleEvents.map((event, index) => {
           const isLastVisible = index === visibleCount - 1 && hasMore;
           const remaining = events.length - visibleCount;

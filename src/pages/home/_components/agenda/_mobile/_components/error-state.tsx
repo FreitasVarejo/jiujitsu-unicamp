@@ -1,5 +1,6 @@
 import { AlertCircle } from "lucide-react";
 import { ReactNode } from "react";
+import { useIsDesktop } from "@/hooks/ui";
 
 interface ErrorStateProps {
   navBar: ReactNode;
@@ -11,8 +12,14 @@ interface ErrorStateProps {
  * Exibe a barra de navegação e uma mensagem de erro.
  */
 export const ErrorState = ({ navBar, error }: ErrorStateProps) => {
+  const isDesktop = useIsDesktop();
+
+  if (isDesktop) {
+    return null;
+  }
+
   return (
-    <div className="flex flex-col md:hidden">
+    <div className="flex flex-col">
       {navBar}
       <div className="flex-1 rounded-lg border border-red-500/20 bg-red-500/10 p-8 text-center">
         <AlertCircle className="mx-auto mb-3 h-10 w-10 text-red-500" />

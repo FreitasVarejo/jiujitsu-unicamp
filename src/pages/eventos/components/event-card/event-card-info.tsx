@@ -1,11 +1,14 @@
 import { Calendar, MapPin, ChevronRight } from "lucide-react";
 import { EventSummaryInfo } from "@/services/mediaService";
+import { useIsDesktop } from "@/hooks/ui";
 
 interface EventCardInfoProps {
   event: EventSummaryInfo;
 }
 
 export const EventCardInfo = ({ event }: EventCardInfoProps) => {
+  const isDesktop = useIsDesktop();
+
   return (
     <div className="relative z-10 flex w-full items-end justify-between p-6 md:p-8">
       <div className="max-w-2xl">
@@ -26,12 +29,14 @@ export const EventCardInfo = ({ event }: EventCardInfoProps) => {
         </h3>
       </div>
 
-      <div className="hidden items-center gap-2 text-white/90 transition-colors group-hover:text-primary md:flex">
-        <span className="font-display text-sm font-medium uppercase tracking-widest">
-          Ver Fotos
-        </span>
-        <ChevronRight size={20} />
-      </div>
+      {isDesktop && (
+        <div className="flex items-center gap-2 text-white/90 transition-colors group-hover:text-primary">
+          <span className="font-display text-sm font-medium uppercase tracking-widest">
+            Ver Fotos
+          </span>
+          <ChevronRight size={20} />
+        </div>
+      )}
     </div>
   );
 };

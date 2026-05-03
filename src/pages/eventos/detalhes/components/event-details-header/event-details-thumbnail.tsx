@@ -1,5 +1,6 @@
 import { Event } from "@/types/event";
 import { Dispatch, SetStateAction } from "react";
+import { useIsDesktop } from "@/hooks/ui";
 
 type EventDetailsThumbnailProps = {
   setSelectedImage: Dispatch<SetStateAction<string | null>>;
@@ -10,9 +11,13 @@ export const EventDetailsThumbnail = ({
   setSelectedImage,
   details,
 }: EventDetailsThumbnailProps) => {
+  const isDesktop = useIsDesktop();
+
   return (
     <div
-      className="group relative aspect-[16/10] cursor-pointer overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900 lg:w-2/5"
+      className={`group relative aspect-[16/10] cursor-pointer overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900 ${
+        isDesktop ? "w-2/5" : ""
+      }`}
       onClick={() => setSelectedImage(details.coverImage?.url || null)}
     >
       {details.coverImage ? (

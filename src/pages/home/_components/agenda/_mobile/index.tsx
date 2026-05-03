@@ -14,8 +14,10 @@ import {
 import { useAgendaEvents } from "./use-agenda-events.hook";
 import { useAutoScroll } from "./use-auto-scroll.hook";
 import { useWeekNavigation } from "./use-week-navigation.hook";
+import { useIsDesktop } from "@/hooks/ui";
 
 export const AgendaMobile = () => {
+  const isDesktop = useIsDesktop();
   const { weekStart, weekEnd, today, goToPreviousWeek, goToNextWeek } =
     useWeekNavigation();
   const { eventsByDay, loading, error } = useAgendaEvents(weekStart, weekEnd);
@@ -24,6 +26,8 @@ export const AgendaMobile = () => {
   const todayRef = useRef<HTMLDivElement>(null);
 
   useAutoScroll(containerRef, todayRef, today, weekStart, weekEnd);
+
+  if (isDesktop) return null;
 
   const weekStartDate = addDaysToDateString(weekStart, 0);
   const weekEndDate = addDaysToDateString(weekEnd, 0);
@@ -46,7 +50,7 @@ export const AgendaMobile = () => {
   }
 
   return (
-    <div className="flex flex-col md:hidden">
+    <div className="flex flex-col">
       {navBar}
       <div className="max-h-[70vh] overflow-y-auto" ref={containerRef}>
         <div className="space-y-4">

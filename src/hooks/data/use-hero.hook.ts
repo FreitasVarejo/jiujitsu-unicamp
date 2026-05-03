@@ -4,7 +4,7 @@
 
 import { useMemo } from "react";
 import { useFetch } from "@/hooks/core";
-import { useMediaQuery } from "@/hooks/ui/use-media-query.hook";
+import { useIsDesktop } from "@/hooks/ui/use-is-desktop.hook";
 import { mediaService } from "@/services/strapi/media.service";
 import { StrapiClient } from "@/services/core/strapi-client";
 import { Image } from "@/types/base";
@@ -26,7 +26,7 @@ interface UseHeroImagesReturn {
  * Hook para buscar e gerenciar imagens do Hero carousel.
  */
 export const useHeroImages = (): UseHeroImagesReturn => {
-  const isMediumOrLarger = useMediaQuery("(min-width: 768px)");
+  const isMediumOrLarger = useIsDesktop();
 
   const {
     data: rawImages,
