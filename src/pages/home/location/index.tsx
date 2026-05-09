@@ -1,7 +1,7 @@
 import { MapPin } from "lucide-react";
-import { SectionHeader } from "../shared";
 import { LocationCard } from "./location-card";
 import { LOCATIONS } from "@/constants/home";
+import { SectionHeader } from "@/components/SectionHeader.component";
 
 export const Location = () => {
   return (

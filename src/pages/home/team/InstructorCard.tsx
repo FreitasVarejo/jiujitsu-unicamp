@@ -1,6 +1,6 @@
 import { CSSProperties } from "react";
-import { Instructor } from "@types/home";
 import { BELT_INFO } from "@/constants/home";
+import { Instructor } from "@/types";
 
 interface InstructorCardProps {
   instructor: Instructor;

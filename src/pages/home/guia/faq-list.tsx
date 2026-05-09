@@ -1,4 +1,4 @@
-import { AccordionItem } from "../shared";
+import { AccordionItem } from "./accordion-item";
 import { FAQ_ITEMS } from "@/constants/home";
 
 export const FAQCard = () => {

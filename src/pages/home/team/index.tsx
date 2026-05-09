@@ -1,9 +1,10 @@
 import { Users } from "lucide-react";
-import { SectionHeader, InstructorCard } from "../shared";
 import { TeamSkeleton } from "./team-skeleton.tsx";
 import { TeamError } from "./team-error";
 import { useInstructors } from "@/hooks/data/use-instructors.hook";
 import { useIsDesktop } from "@/hooks/ui";
+import { SectionHeader } from "@/components/SectionHeader.component.tsx";
+import { InstructorCard } from "./InstructorCard.tsx";
 
 export const Team = () => {
   const { instructors, loading, error } = useInstructors();
