@@ -1,19 +1,12 @@
 import { Eye } from "lucide-react";
-import { CSSProperties } from "react";
-import { ProductInfo } from "@/services/mediaService";
+import { Product } from "@/types/product";
+import { getImageStyle, getPlaceholderUrl } from "./helpers/image-helpers";
 
 interface ProductCardProps {
-  product: ProductInfo;
+  product: Product;
   categoryLabel?: string;
-  onClick: (product: ProductInfo) => void;
+  onClick: (product: Product) => void;
 }
-
-const imgStyle = (
-  focalPoint: ProductInfo["coverImage"]["focalPoint"]
-): CSSProperties => ({
-  objectFit: "cover",
-  objectPosition: focalPoint ? `${focalPoint.x}% ${focalPoint.y}%` : "center",
-});
 
 export const ProductCard = ({
   product,
@@ -21,8 +14,7 @@ export const ProductCard = ({
   onClick,
 }: ProductCardProps) => {
   const coverImage =
-    product.coverImage?.url ||
-    `https://placehold.co/500x400/18181b/d26030?text=${product.title.replace(/ /g, "+")}`;
+    product.coverImage?.url || getPlaceholderUrl(product.title);
 
   return (
     <div
@@ -34,10 +26,11 @@ export const ProductCard = ({
           src={coverImage}
           alt={product.title}
           className="h-full w-full transition-transform duration-500 group-hover:scale-110"
-          style={imgStyle(product.coverImage?.focalPoint)}
+          style={getImageStyle(product.coverImage?.focalPoint)}
           onError={(e) => {
-            (e.target as HTMLImageElement).src =
-              `https://placehold.co/500x400/18181b/d26030?text=${product.title.replace(/ /g, "+")}`;
+            (e.target as HTMLImageElement).src = getPlaceholderUrl(
+              product.title
+            );
           }}
         />
 

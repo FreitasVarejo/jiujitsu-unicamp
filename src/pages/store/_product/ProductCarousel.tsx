@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { ProductInfo } from "@/services/mediaService";
+import { Product } from "@/types/product";
 import { ProductCard } from "./ProductCard";
 import { useIsDesktop } from "@/hooks/ui";
 
 interface ProductCarouselProps {
-  products: ProductInfo[];
-  onProductClick: (product: ProductInfo) => void;
+  products: Product[];
+  onProductClick: (product: Product) => void;
 }
 
 export const ProductCarousel = ({
