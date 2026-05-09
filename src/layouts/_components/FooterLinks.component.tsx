@@ -1,26 +1,25 @@
 import { Instagram, MapPin } from "lucide-react";
+import { OutboundLink } from "@/components/OutboundLink.component";
 
 export const FooterLinks = () => {
   return (
     <div className="flex items-center gap-6">
-      <a
+      <OutboundLink
         href="https://www.instagram.com/jiujitsu.unicamp/"
-        target="_blank"
-        rel="noopener noreferrer"
+        trackLabel="instagram_footer"
         className="text-gray-400 transition-colors hover:text-primary"
         aria-label="Instagram"
       >
         <Instagram size={24} />
-      </a>
-      <a
+      </OutboundLink>
+      <OutboundLink
         href="https://maps.app.goo.gl/r88brrFBeAUawRVN8"
-        target="_blank"
-        rel="noopener noreferrer"
+        trackLabel="maps_footer"
         className="text-gray-400 transition-colors hover:text-primary"
         aria-label="Localização"
       >
         <MapPin size={24} />
-      </a>
+      </OutboundLink>
     </div>
   );
 };
