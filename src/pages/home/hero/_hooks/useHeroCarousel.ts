@@ -1,6 +1,6 @@
 import { useHeroImages } from "@/hooks/data/use-hero.hook";
-import { useCarousel } from "./_hooks/use-carousel.hook";
 import { Image } from "@/types";
+import { useCarousel } from "./useCarousel";
 
 interface UseHeroCarouselReturn {
   imagesToShow: Image[];
@@ -8,13 +8,13 @@ interface UseHeroCarouselReturn {
   current: number;
   next: number | null;
   nextVisible: boolean;
-  isLoaded: boolean;
+  isLoading: boolean;
   error: Error | null;
   fadeDuration: number;
 }
 
 export const useHeroCarousel = (): UseHeroCarouselReturn => {
-  const { imagesToShow, logo, isLoaded, error } = useHeroImages();
+  const { imagesToShow, logo, isLoading, error } = useHeroImages();
   const { current, next, nextVisible, fadeDuration } =
     useCarousel(imagesToShow);
 
@@ -24,7 +24,7 @@ export const useHeroCarousel = (): UseHeroCarouselReturn => {
     current,
     next,
     nextVisible,
-    isLoaded,
+    isLoading,
     error,
     fadeDuration,
   };

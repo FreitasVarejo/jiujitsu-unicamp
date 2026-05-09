@@ -1,5 +1,5 @@
 import { MapPin } from "lucide-react";
-import { LocationCard } from "./location-card";
+import { LocationCard } from "./LocationCard";
 import { LOCATIONS } from "@/constants/home";
 import { SectionHeader } from "@/components/SectionHeader.component";
 

@@ -1,5 +1,5 @@
-import { AccordionItem } from "./accordion-item";
 import { FAQ_ITEMS } from "@/constants/home";
+import { AccordionItem } from "./AccordionItem";
 
 export const FAQCard = () => {
   return (

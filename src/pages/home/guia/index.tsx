@@ -1,5 +1,5 @@
-import { InfoCard } from "./info-card";
-import { FAQCard } from "./faq-list";
+import { InfoCard } from "./InfoCard";
+import { FAQCard } from "./FaqList";
 
 export const Guia = () => {
   return (

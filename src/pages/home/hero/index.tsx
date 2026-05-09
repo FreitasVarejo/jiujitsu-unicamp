@@ -1,38 +1,23 @@
-import { SkeletonHero, ErrorHero } from "./skeleton.tsx";
-import { useHeroCarousel } from "./hook.tsx";
-import { HeroBackground } from "./hero-background.tsx";
-import { HeroContent } from "./hero-content.tsx";
+import { HeroSkeleton } from "./HeroSkeleton";
+import { useHeroCarousel } from "./_hooks/useHeroCarousel";
+import { HeroContent } from "./HeroContent";
+import { HeroCarousel } from "./HeroCarousel";
+import { HeroError } from "./HeroError";
 
 export const Hero = () => {
-  const {
-    imagesToShow,
-    logo,
-    current,
-    next,
-    nextVisible,
-    isLoaded,
-    error,
-    fadeDuration,
-  } = useHeroCarousel();
+  const { imagesToShow, logo, isLoading, error } = useHeroCarousel();
 
-  if (error) {
-    return <ErrorHero message={error} />;
+  if (!isLoading) {
+    return <HeroSkeleton />;
   }
 
-  if (!isLoaded) {
-    return <SkeletonHero />;
+  if (error) {
+    return <HeroError logo={logo} />;
   }
 
   return (
     <section className="relative flex h-screen items-center justify-center overflow-hidden">
-      <HeroBackground
-        images={imagesToShow}
-        current={current}
-        next={next}
-        nextVisible={nextVisible}
-        fadeDuration={fadeDuration}
-      />
-
+      <HeroCarousel images={imagesToShow} />
       <HeroContent logo={logo} />
     </section>
   );

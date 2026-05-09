@@ -17,7 +17,7 @@ interface HeroImages {
 interface UseHeroImagesReturn {
   imagesToShow: Image[];
   logo: Image | null;
-  isLoaded: boolean;
+  isLoading: boolean;
   error: Error | null;
   carouselKey: "desktop" | "mobile";
 }
@@ -83,13 +83,13 @@ export const useHeroImages = (): UseHeroImagesReturn => {
     [isMediumOrLarger, images]
   );
 
-  const isLoaded = !loadingImages && !loadingLogo;
+  const isLoading = !loadingImages && !loadingLogo;
   const error = errorImages || errorLogo;
 
   return {
     imagesToShow,
     logo,
-    isLoaded,
+    isLoading,
     error,
     carouselKey,
   };

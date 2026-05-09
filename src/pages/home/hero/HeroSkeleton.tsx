@@ -1,4 +1,4 @@
-export const SkeletonHero = () => (
+export const HeroSkeleton = () => (
   <section className="relative flex h-[95vh] items-center justify-center overflow-hidden bg-zinc-900">
     {/* Conteúdo */}
     <div className="relative z-[4] mx-auto max-w-4xl px-4 text-center">
@@ -26,27 +26,3 @@ export const SkeletonHero = () => (
     </div>
   </section>
 );
-
-interface ErrorHeroProps {
-  message: Error | string;
-}
-
-export const ErrorHero = ({ message }: ErrorHeroProps) => {
-  const errorMessage = message instanceof Error ? message.message : message;
-
-  return (
-    <section className="relative flex h-screen items-center justify-center overflow-hidden bg-zinc-900">
-      <div className="relative z-[4] mx-auto max-w-4xl px-4 text-center">
-        <div className="mb-8 rounded-lg bg-red-950/50 px-6 py-8">
-          <h2 className="mb-2 text-2xl font-bold text-red-400">
-            Ops, algo deu errado
-          </h2>
-          <p className="text-sm text-red-300">{errorMessage}</p>
-        </div>
-        <p className="text-base text-zinc-400">
-          Tente recarregar a página ou volte mais tarde.
-        </p>
-      </div>
-    </section>
-  );
-};

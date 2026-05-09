@@ -1,18 +1,18 @@
 import { CSSProperties } from "react";
-import { Image } from "@types";
+import { Image } from "@/types";
 
 interface HeroBackgroundProps {
   images: Image[];
-  current: number;
-  next: number | null;
+  currentIndex: number;
+  nextIndex: number | null;
   nextVisible: boolean;
   fadeDuration: number;
 }
 
 export const HeroBackground = ({
   images,
-  current,
-  next,
+  currentIndex,
+  nextIndex,
   nextVisible,
   fadeDuration,
 }: HeroBackgroundProps) => {
@@ -30,20 +30,20 @@ export const HeroBackground = ({
     <>
       {/* Imagem Atual */}
       <img
-        src={images[current].url}
-        alt={images[current].alternativeText}
+        src={images[currentIndex].url}
+        alt={images[currentIndex].alternativeText}
         className="absolute inset-0 z-[1] h-full w-full"
-        style={getImgStyle(images[current].focalPoint)}
+        style={getImgStyle(images[currentIndex].focalPoint)}
       />
 
       {/* Próxima Imagem (Fade In) */}
-      {next !== null && images[next] && (
+      {nextIndex !== null && images[nextIndex] && (
         <img
-          src={images[next].url}
-          alt={images[next].alternativeText}
+          src={images[nextIndex].url}
+          alt={images[nextIndex].alternativeText}
           className="absolute inset-0 z-[2] h-full w-full"
           style={{
-            ...getImgStyle(images[next].focalPoint),
+            ...getImgStyle(images[nextIndex].focalPoint),
             opacity: nextVisible ? 1 : 0,
             transition: `opacity ${fadeDuration}ms ease-in-out`,
           }}
