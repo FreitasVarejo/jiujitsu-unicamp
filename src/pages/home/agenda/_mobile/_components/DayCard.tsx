@@ -1,7 +1,7 @@
 import { ForwardedRef, forwardRef } from "react";
 import { AgendaEvent } from "@/types/home";
 import { DAY_LABELS, fmtDDMM } from "../../date-helpers";
-import { EventCard } from "./event-card";
+import { EventCard } from "./EventCard";
 
 interface DayCardProps {
   dayDate: Date;

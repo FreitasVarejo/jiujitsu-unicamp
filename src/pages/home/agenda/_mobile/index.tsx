@@ -11,9 +11,9 @@ import {
   fmtDate,
   ALL_DAYS,
 } from "../date-helpers";
-import { useAgendaEvents } from "./use-agenda-events.hook";
-import { useAutoScroll } from "./use-auto-scroll.hook";
-import { useWeekNavigation } from "./use-week-navigation.hook";
+import { useAgendaEvents } from "./useAgendaEvents";
+import { useAutoScroll } from "./useAutoScroll";
+import { useWeekNavigation } from "./useWeekNavigation";
 import { useIsDesktop } from "@/hooks/ui";
 
 export const AgendaMobile = () => {

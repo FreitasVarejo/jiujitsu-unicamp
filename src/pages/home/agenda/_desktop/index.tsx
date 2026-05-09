@@ -1,8 +1,8 @@
 import { ScheduleXCalendar } from "@schedule-x/react";
 import "@schedule-x/theme-default/dist/index.css";
-import { CalendarLegend } from "./calendar-legend";
-import { TimeGridEvent } from "./time-grid-event";
-import { useScheduleXConfig } from "./use-schedule-x-config.hook";
+import { CalendarLegend } from "./CalendarLegend";
+import { TimeGridEvent } from "./TimeGridEvent";
+import { useScheduleXConfig } from "./useScheduleXConfig";
 
 /**
  * Agenda desktop usando Schedule-X com visualização semanal.

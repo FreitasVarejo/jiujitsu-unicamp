@@ -20,7 +20,7 @@ export const LoadingState = ({ navBar }: LoadingStateProps) => {
   return (
     <div className="flex flex-col">
       {navBar}
-      <div className="flex flex-1 justify-center py-12">
+      <div className="flex min-h-[70vh] items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     </div>
