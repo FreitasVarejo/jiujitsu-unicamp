@@ -1,4 +1,6 @@
-export * from './event.adapter';
-export * from './product.adapter';
-export * from './instructor.adapter';
-export * from './training.adapter';
+/**
+ * Barrel export central para todos os adapters.
+ */
+
+export * from "./strapi";
+export * from "./training.adapter";

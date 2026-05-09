@@ -1,0 +1,96 @@
+import { MapPin, User } from "lucide-react";
+import { AgendaEvent } from "@/types/home";
+import { buildMapsUrl } from "../../agenda-helpers";
+import { getEventColors } from "../../event-colors";
+
+interface EventCardProps {
+  event: AgendaEvent;
+}
+
+export const EventCard = ({ event }: EventCardProps) => {
+  const colors = getEventColors(event);
+
+  return (
+    <div
+      className="flex items-start justify-between gap-3 rounded-md p-3"
+      style={{
+        backgroundColor: colors.container,
+        borderLeft: `3px solid ${colors.main}`,
+      }}
+    >
+      <div className="flex min-w-0 flex-col gap-0.5">
+        {event.cancelled && (
+          <span
+            className="inline-block text-xs font-bold tracking-wider"
+            style={{ color: "#ef4444" }}
+          >
+            CANCELADO
+          </span>
+        )}
+        <span
+          className="inline-flex items-center gap-1.5 text-sm font-semibold"
+          style={{
+            color: colors.onContainer,
+            textDecoration: event.cancelled ? "line-through" : "none",
+          }}
+        >
+          {event.eventName || event.type}
+          {event.noGi && (
+            <span
+              className="rounded px-1 py-px text-xs font-medium"
+              style={{
+                backgroundColor: "rgba(255,255,255,0.08)",
+                color: colors.onContainer,
+                opacity: 0.85,
+              }}
+            >
+              NoGi
+            </span>
+          )}
+        </span>
+        <div
+          className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs"
+          style={{ color: colors.onContainer }}
+        >
+          {event.instructor && (
+            <span
+              className="inline-flex items-center gap-0.5 opacity-80"
+              style={{
+                textDecoration: event.cancelled ? "line-through" : "none",
+              }}
+            >
+              <User size={10} className="shrink-0" />
+              <span>{event.instructor}</span>
+            </span>
+          )}
+          {event.location && event.rawLocation && (
+            <a
+              href={buildMapsUrl(event.rawLocation)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-0.5 underline underline-offset-2 opacity-80 transition-opacity hover:opacity-100"
+              style={{
+                color: colors.onContainer,
+                textDecoration: event.cancelled ? "line-through" : "underline",
+              }}
+            >
+              <MapPin size={10} className="shrink-0" />
+              <span>{event.location}</span>
+            </a>
+          )}
+        </div>
+      </div>
+      <span
+        className="shrink-0 whitespace-nowrap text-sm font-medium"
+        style={{
+          color: colors.onContainer,
+          textDecoration: event.cancelled ? "line-through" : "none",
+        }}
+      >
+        {event.endTime && event.endTime !== event.startTime
+          ? `${event.startTime} – ${event.endTime}`
+          : event.startTime}
+      </span>
+    </div>
+  );
+};

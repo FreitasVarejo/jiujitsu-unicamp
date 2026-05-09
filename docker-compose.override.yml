@@ -2,7 +2,7 @@ services:
   web:
     build:
       context: .
-      target: dev  
+      target: dev
     volumes:
       - .:/app
       - /app/node_modules
