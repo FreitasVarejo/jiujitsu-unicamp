@@ -1,4 +1,8 @@
-import { Agenda, Guia, Hero, Location, Team } from "./_components/";
+import { Agenda } from "./agenda";
+import { Guia } from "./guia";
+import { Hero } from "./hero";
+import { Team } from "./team";
+import { Location } from "./location";
 
 export const Home = () => {
   return (
