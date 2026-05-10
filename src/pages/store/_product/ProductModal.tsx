@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { X } from "lucide-react";
 import { Product } from "@/types/product";
 import { useIsDesktop } from "@/hooks/ui";
@@ -7,6 +8,7 @@ import { ProductDescription } from "./components/ProductDescription";
 import { ProductSizes } from "./components/ProductSizes";
 import { ProductStatus } from "./components/ProductStatus";
 import { ProductActions } from "./components/ProductActions";
+import { telemetry } from "@/services/telemetry";
 
 interface ProductModalProps {
   product: Product | null;
@@ -21,6 +23,16 @@ export const ProductModal = ({
 }: ProductModalProps) => {
   const isDesktop = useIsDesktop();
   useProductModalEscape(onClose);
+
+  useEffect(() => {
+    if (product) {
+      telemetry.trackEvent("product_modal_open", {
+        productId: product.id,
+        productTitle: product.title,
+        category: categoryLabel,
+      });
+    }
+  }, [product, categoryLabel]);
 
   if (!product) return null;
 

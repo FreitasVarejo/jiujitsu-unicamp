@@ -1,6 +1,7 @@
 import { Eye } from "lucide-react";
 import { Product } from "@/types/product";
 import { getImageStyle, getPlaceholderUrl } from "./helpers/image-helpers";
+import { telemetry } from "@/services/telemetry";
 
 interface ProductCardProps {
   product: Product;
@@ -18,7 +19,13 @@ export const ProductCard = ({
 
   return (
     <div
-      onClick={() => onClick(product)}
+      onClick={() => {
+        telemetry.trackEvent("product_card_click", {
+          productId: product.id,
+          productTitle: product.title,
+        });
+        onClick(product);
+      }}
       className="group flex h-full cursor-pointer flex-col overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900 transition-all hover:translate-y-[-4px] hover:border-primary/50"
     >
       <div className="relative aspect-[3/4] shrink-0 overflow-hidden bg-zinc-800">

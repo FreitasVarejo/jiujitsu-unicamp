@@ -7,3 +7,4 @@ export * from "./core/strapi-client";
 export * from "./core/types";
 export * from "./strapi";
 export * from "./google";
+export * from "./telemetry";
