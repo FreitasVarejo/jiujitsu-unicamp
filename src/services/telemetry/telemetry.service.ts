@@ -11,6 +11,7 @@
  *   3. Substituir os blocos TODO abaixo pelas chamadas faro.api.*
  */
 
+import { faro } from "@grafana/faro-web-sdk";
 import type {
   ITelemetryService,
   TelemetryApiMetric,
@@ -55,14 +56,14 @@ const createTelemetryService = (): ITelemetryService => ({
     if (isDev) {
       console.log(...LOG_STYLES.pageview, { route });
     }
-    // TODO: Faro — faro.api.pushEvent('pageview', { route })
+    faro.api.pushEvent('pageview', { route });
   },
 
   trackEvent(eventName: string, payload?: Record<string, unknown>): void {
     if (isDev) {
       console.log(...LOG_STYLES.event, eventName, payload ?? {});
     }
-    // TODO: Faro — faro.api.pushEvent(eventName, payload)
+    faro.api.pushEvent(eventName, payload);
   },
 
   trackApiMetric(metric: TelemetryApiMetric): void {
@@ -73,18 +74,18 @@ const createTelemetryService = (): ITelemetryService => ({
         : `${metric.httpStatus} ${metric.latencyMs}ms`;
       console.log(...LOG_STYLES.api, label, metric);
     }
-    // TODO: Faro — faro.api.pushMeasurement({
-    //   type: 'http_request',
-    //   values: { latency_ms: metric.latencyMs, http_status: metric.httpStatus },
-    //   context: { url: metric.url },
-    // })
+    faro.api.pushMeasurement({
+      type: 'http_request',
+      values: { latency_ms: metric.latencyMs, http_status: metric.httpStatus },
+      context: { url: metric.url },
+    });
   },
 
   trackError(error: Error, context?: TelemetryErrorContext): void {
     if (isDev) {
       console.log(...LOG_STYLES.error, error.message, { error, context });
     }
-    // TODO: Faro — faro.api.pushError(error, { context })
+    faro.api.pushError(error, { context });
   },
 });
 
