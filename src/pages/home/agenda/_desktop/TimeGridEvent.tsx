@@ -7,6 +7,7 @@ import {
   isNoGiEvent,
 } from "../agenda-helpers";
 import { getScheduleXEventColors } from "../event-colors";
+import { OutboundLink } from "@/components/OutboundLink.component";
 
 /* ── Tipos ── */
 
@@ -86,10 +87,10 @@ export const TimeGridEvent = ({ calendarEvent }: TimeGridEventProps) => {
       {(calendarEvent.location || noGi) && (
         <span className="inline-flex items-center gap-1">
           {calendarEvent.location && (
-            <a
+            <OutboundLink
               href={buildMapsUrl(calendarEvent.location)}
-              target="_blank"
-              rel="noopener noreferrer"
+              trackLabel="maps_event"
+              trackPayload={{ location: calendarEvent.location }}
               className="inline-flex items-center gap-0.5 underline underline-offset-2 opacity-80 transition-opacity hover:opacity-100"
               onClick={(e) => e.stopPropagation()}
               title={calendarEvent.location}
@@ -102,7 +103,7 @@ export const TimeGridEvent = ({ calendarEvent }: TimeGridEventProps) => {
               <span className="truncate">
                 {getDisplayLocation(calendarEvent.location)}
               </span>
-            </a>
+            </OutboundLink>
           )}
           {noGi && (
             <span

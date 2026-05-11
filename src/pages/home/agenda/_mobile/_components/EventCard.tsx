@@ -2,6 +2,7 @@ import { MapPin, User } from "lucide-react";
 import { AgendaEvent } from "@/types/home";
 import { buildMapsUrl } from "../../agenda-helpers";
 import { getEventColors } from "../../event-colors";
+import { OutboundLink } from "@/components/OutboundLink.component";
 
 interface EventCardProps {
   event: AgendaEvent;
@@ -64,10 +65,10 @@ export const EventCard = ({ event }: EventCardProps) => {
             </span>
           )}
           {event.location && event.rawLocation && (
-            <a
+            <OutboundLink
               href={buildMapsUrl(event.rawLocation)}
-              target="_blank"
-              rel="noopener noreferrer"
+              trackLabel="maps_event"
+              trackPayload={{ location: event.rawLocation }}
               className="inline-flex items-center gap-0.5 underline underline-offset-2 opacity-80 transition-opacity hover:opacity-100"
               style={{
                 color: colors.onContainer,
@@ -76,7 +77,7 @@ export const EventCard = ({ event }: EventCardProps) => {
             >
               <MapPin size={10} className="shrink-0" />
               <span>{event.location}</span>
-            </a>
+            </OutboundLink>
           )}
         </div>
       </div>

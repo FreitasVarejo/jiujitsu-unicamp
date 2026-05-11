@@ -1,27 +1,20 @@
 /**
- * TelemetryPageTracker Component
+ * Componente sem renderização visual que rastreia mudanças de rota SPA.
  *
- * Automatically tracks SPA page navigation via React Router
- * Fires pageview event on every route change
- *
- * Usage: Add to App.tsx or main Layout inside Routes provider
- *   <Routes>
- *     <TelemetryPageTracker />
- *     <Route path="/" element={<Home />} />
- *     ...
- *   </Routes>
+ * Deve ser colocado dentro de <Router> em App.tsx, ao lado de <ScrollToTop />.
+ * Dispara trackPageview() em cada navegação (incluindo o carregamento inicial).
  */
 
-import { useEffect } from 'react'
-import { useLocation } from 'react-router'
-import { telemetry } from '@/services/telemetry'
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import { telemetry } from "@/services/telemetry";
 
 export const TelemetryPageTracker = () => {
-  const location = useLocation()
+  const location = useLocation();
 
   useEffect(() => {
-    telemetry.trackPageview(location.pathname)
-  }, [location.pathname])
+    telemetry.trackPageview(location.pathname);
+  }, [location.pathname]);
 
-  return null
-}
+  return null;
+};

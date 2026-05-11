@@ -1,46 +1,61 @@
 /**
- * OutboundLink Component
+ * Wrapper para links externos (target="_blank") com rastreamento de telemetria.
  *
- * Wrapper for external links with automatic telemetry tracking
- * Fires outbound_link_click event when clicked
+ * Drop-in replacement para <a target="_blank" rel="noopener noreferrer">.
+ * Dispara trackEvent('outbound_link_click') antes de navegar, sem bloquear o navegador.
  *
- * Usage:
- *   <OutboundLink
- *     label="instagram_footer"
- *     url="https://instagram.com/jiujitsu.unicamp"
- *     target="_blank"
- *     rel="noopener noreferrer"
- *   >
- *     Follow us on Instagram
- *   </OutboundLink>
+ * @example
+ * <OutboundLink
+ *   href="https://www.instagram.com/jiujitsu.unicamp/"
+ *   trackLabel="instagram_footer"
+ *   className="text-gray-400 hover:text-primary"
+ *   aria-label="Instagram"
+ * >
+ *   <Instagram size={24} />
+ * </OutboundLink>
  */
 
-import { telemetry } from '@/services/telemetry'
+import { AnchorHTMLAttributes, MouseEvent } from "react";
+import { telemetry } from "@/services/telemetry";
 
-interface OutboundLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
-  /** Identifier for the link (used in telemetry) */
-  label: string
-  /** Full URL destination */
-  url: string
-  /** Link text/content */
-  children?: React.ReactNode
+interface OutboundLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
+  href: string;
+  /**
+   * Identificador semântico do link em snake_case.
+   * Usado como payload.label no evento 'outbound_link_click'.
+   * Ex: 'instagram_footer', 'maps_event', 'product_order_form'
+   */
+  trackLabel: string;
+  /** Payload adicional mesclado ao evento, ex: { productId, category }. */
+  trackPayload?: Record<string, unknown>;
 }
 
 export const OutboundLink = ({
-  label,
-  url,
-  children,
+  href,
+  trackLabel,
+  trackPayload,
   onClick,
-  ...props
+  children,
+  ...rest
 }: OutboundLinkProps) => {
-  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    telemetry.trackEvent('outbound_link_click', { label, url })
-    onClick?.(e)
-  }
+  const handleClick = (e: MouseEvent<HTMLAnchorElement>) => {
+    telemetry.trackEvent("outbound_link_click", {
+      label: trackLabel,
+      url: href,
+      ...trackPayload,
+    });
+    onClick?.(e);
+  };
 
   return (
-    <a href={url} onClick={handleClick} {...props}>
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={handleClick}
+      {...rest}
+    >
       {children}
     </a>
-  )
-}
+  );
+};
