@@ -12,6 +12,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@grafana/faro-web-sdk": "^2.6.3",
+    "@grafana/faro-web-tracing": "^2.6.3",
     "@schedule-x/calendar": "^4.2.0",
     "@schedule-x/calendar-controls": "^4.2.0",
     "@schedule-x/current-time": "^4.2.0",
