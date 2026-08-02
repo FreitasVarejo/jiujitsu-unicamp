@@ -1,42 +1,14 @@
-# =============================================================================
-# Monorepo — stack de produção (usada pelo CI no pi01)
-#
-#   web      → frontend Vite/React (nginx)  → jiujitsuunicamp.com.br
-#   strapi   → CMS headless (Strapi)        → files.jiujitsuunicamp.com.br
-#   postgres → banco de dados do Strapi
-#
-# Os workflows do GitHub Actions alvejam serviços específicos (web, ou
-# strapi+postgres) para redeployar apenas o app que mudou.
-# Para dev local de um app isolado, use o docker-compose.yml dentro de apps/*.
-# =============================================================================
 services:
-  # ---------------------------------------------------------------------------
-  # Frontend — Vite/React servido por nginx
-  # ---------------------------------------------------------------------------
-  web:
-    build:
-      context: ./apps/web
-      target: prod
-    container_name: jiujitsu-unicamp-web
-    restart: unless-stopped
-    networks:
-      - proxy_net
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.jiujitsu.rule=Host(`jiujitsuunicamp.com.br`)"
-      - "traefik.http.routers.jiujitsu.entrypoints=web"
-      - "traefik.http.services.jiujitsu.loadbalancer.server.port=80"
-
   # ---------------------------------------------------------------------------
   # Strapi — CMS headless
   # ---------------------------------------------------------------------------
   strapi:
     build:
-      context: ./apps/cms
+      context: .
       dockerfile: Dockerfile
     container_name: bjju-strapi
     restart: unless-stopped
-    env_file: ./apps/cms/.env
+    env_file: .env
     environment:
       NODE_ENV: production
       DATABASE_CLIENT: postgres
@@ -46,6 +18,7 @@ services:
       DATABASE_USERNAME: ${POSTGRES_USER:-strapi}
       DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
       DATABASE_SSL: "false"
+      URL: ${URL:-https://files.jiujitsuunicamp.com.br}
     volumes:
       # Persiste os uploads de mídia entre deploys
       - strapi-uploads:/app/public/uploads
@@ -82,16 +55,9 @@ services:
       timeout: 5s
       retries: 5
 
-# -----------------------------------------------------------------------------
-# Volumes — nomes FIXADOS para reaproveitar os dados já existentes no pi01,
-# criados pelo antigo projeto compose "bjju-backend". Sem isso, ao unificar no
-# projeto "jiujitsu-unicamp" o Docker criaria volumes novos (vazios).
-# -----------------------------------------------------------------------------
 volumes:
   postgres-data:
-    name: bjju-backend_postgres-data
   strapi-uploads:
-    name: bjju-backend_strapi-uploads
 
 networks:
   default: {}

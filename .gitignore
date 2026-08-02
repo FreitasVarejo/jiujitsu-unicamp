@@ -1,26 +1,12 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
+# Envs (secrets) — cada app tem os seus; nunca versionar
+.env
+.env.local
+.env.*.local
+apps/web/.env
+apps/web/.env.local
+apps/cms/.env
 
-node_modules
-dist
-dist-ssr
-*.local
+# Ferramentas locais
+.mcp-ssh.lock
 
-.env*
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+# Os .gitignore de cada app (apps/web, apps/cms) cobrem node_modules, dist, etc.
