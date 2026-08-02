@@ -1,0 +1,48 @@
+{
+  "kind": "collectionType",
+  "collectionName": "treinos",
+  "info": {
+    "singularName": "treino",
+    "pluralName": "treinos",
+    "displayName": "Treinos"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "weekday": {
+      "type": "enumeration",
+      "enum": [
+        "DOMINGO",
+        "SEGUNDA",
+        "TERCA",
+        "QUARTA",
+        "QUINTA",
+        "SEXTA",
+        "SABADO"
+      ]
+    },
+    "category": {
+      "type": "enumeration",
+      "enum": [
+        "GERAL",
+        "COMPETICAO",
+        "FEMININO",
+        "NOTURNO"
+      ]
+    },
+    "startTime": {
+      "type": "time",
+      "required": true
+    },
+    "endTime": {
+      "type": "time",
+      "required": true
+    },
+    "instructor": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

@@ -1,0 +1,34 @@
+name: Deploy Web to Homeserver
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "apps/web/**"
+      - "docker-compose.yml"
+      - ".github/workflows/deploy-web.yml"
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create apps/web/.env.local with secrets
+        run: |
+          cat > apps/web/.env.local << EOF
+          VITE_API_BASE_URL=${{ secrets.VITE_API_BASE_URL }}
+          VITE_API_TOKEN=${{ secrets.VITE_API_TOKEN }}
+          VITE_GOOGLE_API_KEY=${{ secrets.VITE_GOOGLE_API_KEY }}
+          VITE_FARO_URL=${{ secrets.VITE_FARO_URL }}
+          EOF
+
+      - name: Build and Deploy (web only)
+        run: |
+          cp /home/saul/github-actions/envs/jiujitsu-unicamp.env apps/web/.env.local
+          # O compose da raiz referencia apps/cms/.env (serviço strapi). Num deploy
+          # só-web o strapi não é iniciado, mas o Compose exige que o env_file exista
+          # ao carregar o projeto — garantimos um arquivo vazio.
+          touch apps/cms/.env
+          docker compose -f docker-compose.yml up -d --build --no-deps web
+          docker image prune -f

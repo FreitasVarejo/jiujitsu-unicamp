@@ -1,0 +1,21 @@
+name: Deploy CMS to Homeserver
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "apps/cms/**"
+      - "docker-compose.yml"
+      - ".github/workflows/deploy-cms.yml"
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build and Deploy (strapi + postgres)
+        run: |
+          cp /home/saul/envs/bjju-backend.env apps/cms/.env
+          docker compose -f docker-compose.yml --env-file apps/cms/.env up -d --build strapi postgres
+          docker image prune -f
