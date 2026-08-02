@@ -16,6 +16,6 @@ jobs:
 
       - name: Build and Deploy (strapi + postgres)
         run: |
-          cp /home/saul/envs/bjju-backend.env apps/cms/.env
+          cp /home/saul/github-actions/envs/bjju-backend.env apps/cms/.env
           docker compose -f docker-compose.yml --env-file apps/cms/.env up -d --build strapi postgres
           docker image prune -f
