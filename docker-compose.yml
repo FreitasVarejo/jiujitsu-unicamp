@@ -83,14 +83,19 @@ services:
       retries: 5
 
 # -----------------------------------------------------------------------------
-# Volumes — nomes FIXADOS para reaproveitar os dados já existentes no pi01,
-# criados pelo antigo projeto compose "bjju-backend". Sem isso, ao unificar no
-# projeto "jiujitsu-unicamp" o Docker criaria volumes novos (vazios).
+# Volumes — reaproveitam os dados já existentes no pi01, criados pelo antigo
+# projeto compose "bjju-backend". external: true garante o reuso dos dados e
+# protege contra remoção acidental por `docker compose down -v`.
+# Em um servidor novo, crie-os antes do primeiro deploy:
+#   docker volume create bjju-backend_postgres-data
+#   docker volume create bjju-backend_strapi-uploads
 # -----------------------------------------------------------------------------
 volumes:
   postgres-data:
+    external: true
     name: bjju-backend_postgres-data
   strapi-uploads:
+    external: true
     name: bjju-backend_strapi-uploads
 
 networks:

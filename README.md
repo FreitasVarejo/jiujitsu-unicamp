@@ -31,10 +31,16 @@ são versionados.
 
 ### Volumes (dados persistentes)
 
-Os volumes do Postgres e dos uploads do Strapi têm nomes **fixados**
-(`bjju-backend_postgres-data`, `bjju-backend_strapi-uploads`) para reaproveitar
-os dados já existentes no pi01, criados quando o backend era um repositório
-separado.
+Os volumes do Postgres e dos uploads do Strapi são declarados como
+**`external`** com nomes fixados (`bjju-backend_postgres-data`,
+`bjju-backend_strapi-uploads`) para reaproveitar os dados já existentes no pi01,
+criados quando o backend era um repositório separado. Num servidor novo, crie-os
+antes do primeiro deploy:
+
+```bash
+docker volume create bjju-backend_postgres-data
+docker volume create bjju-backend_strapi-uploads
+```
 
 ## Dev local
 
