@@ -18,7 +18,7 @@ export const HeroContent = ({ logo }: HeroContentProps) => (
     <h1 className="mb-6 font-display text-6xl font-bold tracking-tighter text-white md:text-8xl">
       Jiu-Jitsu <span className="text-primary">Unicamp</span>
     </h1>
-    <p className="mx-auto mb-10 max-w-2xl text-xl font-light text-gray-300 md:text-2xl">
+    <p className="mx-auto mb-10 max-w-2xl text-xl text-gray-300 md:text-2xl">
       Defesa pessoal, competição e comunidade. Junte-se à equipe oficial da
       universidade.
     </p>

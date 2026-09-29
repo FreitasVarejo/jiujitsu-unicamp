@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { initializeFaro, getWebInstrumentations } from '@grafana/faro-web-sdk'
 import { TracingInstrumentation } from '@grafana/faro-web-tracing'
+import '@fontsource-variable/inter'
 import './index.css'
 import App from './App'
 

@@ -15,7 +15,7 @@ export const AccordionItem = ({ title, children }: AccordionItemProps) => {
         onClick={() => setIsOpen(!isOpen)}
         className="flex w-full items-center justify-between bg-zinc-900 px-6 py-4 transition-colors hover:bg-zinc-800"
       >
-        <span className="text-left font-display text-lg tracking-wide text-white">
+        <span className="text-left text-base font-semibold text-white">
           {title}
         </span>
         {isOpen ? (

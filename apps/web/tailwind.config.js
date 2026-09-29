@@ -22,8 +22,8 @@ export default {
         surface: "#e4e4e4", // Light Grey
       },
       fontFamily: {
-        sans: ["Inter", "sans-serif"],
-        display: ["Oswald", "sans-serif"],
+        sans: ["Inter Variable", "Inter", "system-ui", "sans-serif"],
+        display: ["Barlow Condensed", "Arial Narrow", "sans-serif"],
       },
     },
   },
