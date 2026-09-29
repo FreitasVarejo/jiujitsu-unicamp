@@ -1,4 +1,5 @@
-import { Instagram, MapPin } from "lucide-react";
+import { Instagram, MapPin, MessageSquareHeart } from "lucide-react";
+import { FEEDBACK_FORM_URL } from "@/constants";
 import { OutboundLink } from "@/components/OutboundLink.component";
 
 export const FooterLinks = () => {
@@ -19,6 +20,15 @@ export const FooterLinks = () => {
         aria-label="Localização"
       >
         <MapPin size={24} />
+      </OutboundLink>
+      <OutboundLink
+        href={FEEDBACK_FORM_URL}
+        trackLabel="feedback_footer"
+        className="flex items-center gap-2 text-gray-400 transition-colors hover:text-primary"
+        aria-label="Feedback e canal de escuta anônimo"
+      >
+        <MessageSquareHeart size={24} />
+        <span>Feedback</span>
       </OutboundLink>
     </div>
   );

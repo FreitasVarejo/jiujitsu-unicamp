@@ -1,4 +1,11 @@
-import { Info, AlertTriangle, CheckCircle } from "lucide-react";
+import {
+  Info,
+  AlertTriangle,
+  CheckCircle,
+  LucideIcon,
+  MessageSquareHeart,
+} from "lucide-react";
+import { FEEDBACK_FORM_URL } from "../links";
 
 export const FAQ_ITEMS = [
   {
@@ -38,7 +45,20 @@ export const FAQ_ITEMS = [
   },
 ];
 
-export const INFO_CARD_ITEMS = [
+interface InfoCardItem {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+  borderColor: string;
+  iconColor: string;
+  link?: {
+    href: string;
+    label: string;
+    trackLabel: string;
+  };
+}
+
+export const INFO_CARD_ITEMS: InfoCardItem[] = [
   {
     icon: Info,
     title: "Primeiros Passos",
@@ -62,5 +82,18 @@ export const INFO_CARD_ITEMS = [
       "Respeite os graduados, o mestre e seus parceiros e parceiras de treino. O ego fica fora do tatame.",
     borderColor: "border-green-500",
     iconColor: "text-green-500",
+  },
+  {
+    icon: MessageSquareHeart,
+    title: "Canal de Escuta",
+    description:
+      "Elogios, críticas, sugestões ou relatos de situações no tatame. O formulário é anônimo e não coleta dados pessoais.",
+    borderColor: "border-primary",
+    iconColor: "text-primary",
+    link: {
+      href: FEEDBACK_FORM_URL,
+      label: "Abrir formulário",
+      trackLabel: "feedback_guia",
+    },
   },
 ];

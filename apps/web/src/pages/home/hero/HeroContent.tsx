@@ -1,3 +1,5 @@
+import { FEEDBACK_FORM_URL } from "@/constants";
+import { OutboundLink } from "@/components/OutboundLink.component";
 import { Image } from "@/types";
 
 interface HeroContentProps {
@@ -34,5 +36,12 @@ export const HeroContent = ({ logo }: HeroContentProps) => (
         Guia do Iniciante
       </a>
     </div>
+    <OutboundLink
+      href={FEEDBACK_FORM_URL}
+      trackLabel="feedback_hero"
+      className="mt-6 inline-block text-sm text-gray-300 underline-offset-4 transition-colors hover:text-primary hover:underline"
+    >
+      Já treina com a gente? Deixe seu feedback anônimo →
+    </OutboundLink>
   </div>
 );
