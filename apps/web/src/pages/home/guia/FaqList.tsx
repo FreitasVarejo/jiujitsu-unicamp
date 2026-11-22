@@ -1,4 +1,5 @@
 import { FAQ_ITEMS } from "@/constants/home";
+import { Accordion } from "@/components/ui/accordion";
 import { AccordionItem } from "./AccordionItem";
 
 export const FAQCard = () => {
@@ -11,13 +12,17 @@ export const FAQCard = () => {
         Perguntas Frequentes
       </h2>
 
-      <div className="space-y-2">
+      <Accordion multiple className="gap-2">
         {FAQ_ITEMS.map((item, index) => (
-          <AccordionItem key={index} title={item.question}>
+          <AccordionItem
+            key={index}
+            value={String(index)}
+            title={item.question}
+          >
             <p>{item.answer}</p>
           </AccordionItem>
         ))}
-      </div>
+      </Accordion>
     </div>
   );
 };

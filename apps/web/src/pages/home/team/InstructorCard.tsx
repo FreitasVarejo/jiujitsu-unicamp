@@ -1,6 +1,9 @@
 import { CSSProperties } from "react";
 import { BELT_INFO } from "@/constants/home";
 import { Instructor } from "@/types";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 interface InstructorCardProps {
   instructor: Instructor;
@@ -15,17 +18,27 @@ const imgStyle = (
 
 export const InstructorCard = ({ instructor }: InstructorCardProps) => {
   return (
-    <div
-      className={`rounded-lg border-l-4 bg-zinc-900 p-6 ${BELT_INFO[instructor.belt].color || "border-gray-500"} shadow-lg transition-all duration-300 hover:translate-y-[-4px]`}
+    <Card
+      className={cn(
+        "gap-4 rounded-lg border-l-4 shadow-lg ring-0 transition-all duration-300 [--card-spacing:--spacing(6)] hover:-translate-y-1",
+        BELT_INFO[instructor.belt].color || "border-gray-500"
+      )}
     >
-      <div className="mb-4 flex items-start justify-between">
+      <CardHeader className="flex items-start justify-between">
         <div>
-          <h2 className="font-display text-2xl text-white">
+          <CardTitle
+            role="heading"
+            aria-level={2}
+            className="text-2xl leading-8 text-white"
+          >
             {instructor.title}
-          </h2>
-          <span className="mt-1 inline-block rounded-sm bg-zinc-800 px-2 py-1 text-xs font-bold uppercase tracking-wider text-gray-300">
+          </CardTitle>
+          <Badge
+            variant="secondary"
+            className="mt-1 h-auto rounded-sm bg-zinc-800 px-2 py-1 font-bold tracking-wider text-gray-300 uppercase"
+          >
             Faixa {BELT_INFO[instructor.belt].label}
-          </span>
+          </Badge>
         </div>
         <div className="h-16 w-16 overflow-hidden rounded-full border-2 border-zinc-700 bg-zinc-800">
           {instructor.photo.url && (
@@ -37,16 +50,16 @@ export const InstructorCard = ({ instructor }: InstructorCardProps) => {
             />
           )}
         </div>
-      </div>
+      </CardHeader>
 
-      <div className="space-y-2 text-sm text-gray-400">
+      <CardContent className="space-y-2 text-sm text-gray-400">
         <p>
           Curso: <span className="text-white">{instructor.course}</span>
         </p>
         <p>
           Início: <span className="text-white">{instructor.year}</span>
         </p>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
