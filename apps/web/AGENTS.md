@@ -269,7 +269,7 @@ npx shadcn@latest add FreitasVarejo/ui-library/theme-jiujitsu --overwrite
 npx shadcn@latest add FreitasVarejo/ui-library/states FreitasVarejo/ui-library/feedback --overwrite
 ```
 
-After reinstalling the theme, in `src/index.css` delete the `@import "@fontsource/barlow-condensed/..."` lines and remove `@fontsource/barlow-condensed` from `package.json` (the title font is self-hosted in `src/assets/fonts` with `size-adjust`), and keep the `html.dark` block at the end. `lucide-react` is v1, which has no brand icons: the Instagram icon is `src/components/InstagramIcon.component.tsx`.
+The title font (Barlow Condensed) is self-hosted: `@font-face` with `size-adjust` in `src/index.css`, files in `src/assets/fonts`. The theme only names the family, so do not add `@fontsource/barlow-condensed`. After reinstalling the theme, keep the `html.dark` block at the end of `src/index.css`. `lucide-react` is v1, which has no brand icons: the Instagram icon is `src/components/InstagramIcon.component.tsx`.
 
 ---
 

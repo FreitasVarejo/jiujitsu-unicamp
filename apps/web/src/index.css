@@ -3,10 +3,9 @@
  * size-adjust compensa a altura de maiúscula menor que a da Oswald (0,70 vs 0,81 em),
  * para os títulos manterem o tamanho visual sem mexer nas classes text-*.
  *
- * Os @import de fonte abaixo vêm do theme-jiujitsu (ui-library). O do
- * @fontsource/barlow-condensed fica de fora de propósito: a fonte dos títulos
- * é a self-hosted desta página, com size-adjust. Ao reinstalar o tema, apague
- * de novo esses dois imports e o pacote (veja docs do tema no AGENTS.md).
+ * O theme-jiujitsu só nomeia a família (fonte fornecida pelo consumidor) e não
+ * importa a Barlow Condensed: o @font-face desta página, com size-adjust, é o
+ * que vale. Os @import de fonte abaixo são do Inter e da JetBrains Mono.
  */
 @import "tailwindcss";
 @import "tw-animate-css";
