@@ -8,11 +8,11 @@
  * é a self-hosted desta página, com size-adjust. Ao reinstalar o tema, apague
  * de novo esses dois imports e o pacote (veja docs do tema no AGENTS.md).
  */
-@import 'tailwindcss';
-@import 'tw-animate-css';
-@import 'shadcn/tailwind.css';
-@import '@fontsource-variable/inter';
-@import '@fontsource-variable/jetbrains-mono';
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/jetbrains-mono";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -35,23 +35,23 @@
 
 @layer base {
   @font-face {
-    font-family: 'Barlow Condensed';
+    font-family: "Barlow Condensed";
     font-style: normal;
     font-weight: 600;
     font-display: swap;
     size-adjust: 115%;
-    src: url('./assets/fonts/barlow-condensed-latin-600-normal.woff2')
-      format('woff2');
+    src: url("./assets/fonts/barlow-condensed-latin-600-normal.woff2")
+      format("woff2");
   }
 
   @font-face {
-    font-family: 'Barlow Condensed';
+    font-family: "Barlow Condensed";
     font-style: normal;
     font-weight: 700;
     font-display: swap;
     size-adjust: 115%;
-    src: url('./assets/fonts/barlow-condensed-latin-700-normal.woff2')
-      format('woff2');
+    src: url("./assets/fonts/barlow-condensed-latin-700-normal.woff2")
+      format("woff2");
   }
 
   * {
@@ -70,7 +70,7 @@
   }
 
   button:not(:disabled),
-  [role='button']:not(:disabled) {
+  [role="button"]:not(:disabled) {
     cursor: pointer;
   }
 
@@ -81,7 +81,7 @@
   h4,
   h5,
   h6,
-  [data-slot='card-title'] {
+  [data-slot="card-title"] {
     @apply font-display text-primary uppercase;
     font-weight: 700;
   }
@@ -90,9 +90,19 @@
     font-weight: 700;
   }
 
-  [data-slot='button'] {
+  [data-slot="button"] {
     @apply font-display tracking-wider uppercase;
-    font-weight: 600;
+  }
+
+  /* Título dos estados (states): fonte e caixa do site, como os h1-h6. */
+  [data-slot="empty-title"] {
+    @apply font-display text-xl text-white uppercase;
+    font-weight: 700;
+  }
+
+  /* O Base UI embrulha o gatilho num <h3>, que pegaria a fonte de título. */
+  [data-slot="accordion-trigger"] {
+    font-family: var(--font-sans);
   }
 }
 
@@ -143,8 +153,8 @@
  ---break---
  */
 @theme inline {
-  --font-heading: 'Barlow Condensed', sans-serif;
-  --font-sans: 'Inter Variable', sans-serif;
+  --font-heading: "Barlow Condensed", sans-serif;
+  --font-sans: "Inter Variable", sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -183,14 +193,18 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
-  --font-mono: 'JetBrains Mono Variable', monospace;
+  --font-mono: "JetBrains Mono Variable", monospace;
   --spacing: 0.25rem;
   --shadow-2xs: 0 1px 1px 0 oklch(0 0 0 / 0.04);
   --shadow-xs: 0 1px 2px 0 oklch(0 0 0 / 0.05);
-  --shadow-sm: 0 1px 3px 0 oklch(0 0 0 / 0.08), 0 1px 2px -1px oklch(0 0 0 / 0.06);
-  --shadow-md: 0 4px 8px -2px oklch(0 0 0 / 0.08), 0 2px 4px -2px oklch(0 0 0 / 0.06);
-  --shadow-lg: 0 10px 16px -4px oklch(0 0 0 / 0.1), 0 4px 6px -4px oklch(0 0 0 / 0.06);
-  --shadow-xl: 0 20px 24px -6px oklch(0 0 0 / 0.1), 0 8px 8px -6px oklch(0 0 0 / 0.05);
+  --shadow-sm:
+    0 1px 3px 0 oklch(0 0 0 / 0.08), 0 1px 2px -1px oklch(0 0 0 / 0.06);
+  --shadow-md:
+    0 4px 8px -2px oklch(0 0 0 / 0.08), 0 2px 4px -2px oklch(0 0 0 / 0.06);
+  --shadow-lg:
+    0 10px 16px -4px oklch(0 0 0 / 0.1), 0 4px 6px -4px oklch(0 0 0 / 0.06);
+  --shadow-xl:
+    0 20px 24px -6px oklch(0 0 0 / 0.1), 0 8px 8px -6px oklch(0 0 0 / 0.05);
   --shadow-2xl: 0 24px 48px -12px oklch(0 0 0 / 0.2);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-disabled: var(--disabled);
@@ -278,21 +292,23 @@
   --disabled: oklch(0.274 0.006 286.033);
   --disabled-foreground: oklch(0.705 0.015 286.067);
 }
-  [data-slot]:focus-visible {
-    outline: 2px solid var(--ring);
-    outline-offset: 2px;
-    --tw-ring-shadow: 0 0 #0000;
+[data-slot]:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  --tw-ring-shadow: 0 0 #0000;
 }
-  [data-slot="input-group-control"]:focus-visible, [data-slot="command-input"]:focus-visible {
-    outline: none;
+[data-slot="input-group-control"]:focus-visible,
+[data-slot="command-input"]:focus-visible {
+  outline: none;
 }
-  [data-slot="input-group"]:has([data-slot="input-group-control"]:focus-visible), [data-slot="input-group"]:has([data-slot="command-input"]:focus-visible) {
-    outline: 2px solid var(--ring);
-    outline-offset: 2px;
-    --tw-ring-shadow: 0 0 #0000;
+[data-slot="input-group"]:has([data-slot="input-group-control"]:focus-visible),
+[data-slot="input-group"]:has([data-slot="command-input"]:focus-visible) {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  --tw-ring-shadow: 0 0 #0000;
 }
-  [data-slot="field-label"]:has(:focus-visible) {
-    --tw-ring-shadow: 0 0 #0000;
+[data-slot="field-label"]:has(:focus-visible) {
+  --tw-ring-shadow: 0 0 #0000;
 }
 /*
  ---break---
@@ -303,66 +319,174 @@
     border-color: var(--destructive);
   }
 }
-  [data-slot="command-input-wrapper"] [data-slot="input-group"] {
-    background-color: var(--muted);
-    border-color: var(--border);
+[data-slot="command-input-wrapper"] [data-slot="input-group"] {
+  background-color: var(--muted);
+  border-color: var(--border);
 }
-  [data-slot]:is(:disabled, [data-disabled]:not([data-disabled="false"]), [aria-disabled="true"]):not([data-slot="breadcrumb-page"]) {
-    opacity: 1;
+[data-slot]:is(
+    :disabled,
+    [data-disabled]:not([data-disabled="false"]),
+    [aria-disabled="true"]
+  ):not([data-slot="breadcrumb-page"]) {
+  opacity: 1;
 }
-  [data-slot][class~="group/button"]:is(:disabled, [data-disabled]:not([data-disabled="false"]), [aria-disabled="true"]) {
-    color: var(--disabled-foreground);
+[data-slot][class~="group/button"]:is(
+    :disabled,
+    [data-disabled]:not([data-disabled="false"]),
+    [aria-disabled="true"]
+  ) {
+  color: var(--disabled-foreground);
 }
-  [data-slot][class~="group/button"]:is([class~="bg-primary"], [class~="bg-secondary"], [class~="bg-destructive"], [class~="bg-destructive/10"]):is(:disabled, [data-disabled]:not([data-disabled="false"]), [aria-disabled="true"]) {
-    background-color: var(--disabled);
+[data-slot][class~="group/button"]:is(
+    [class~="bg-primary"],
+    [class~="bg-secondary"],
+    [class~="bg-destructive"],
+    [class~="bg-destructive/10"]
+  ):is(
+    :disabled,
+    [data-disabled]:not([data-disabled="false"]),
+    [aria-disabled="true"]
+  ) {
+  background-color: var(--disabled);
 }
-  :is([data-slot="input"], [data-slot="textarea"], [data-slot="select-trigger"]):is(:disabled, [data-disabled]:not([data-disabled="false"]), [aria-disabled="true"]) {
-    background-color: var(--disabled);
-    color: var(--disabled-foreground);
+:is(
+  [data-slot="input"],
+  [data-slot="textarea"],
+  [data-slot="select-trigger"]
+):is(
+  :disabled,
+  [data-disabled]:not([data-disabled="false"]),
+  [aria-disabled="true"]
+) {
+  background-color: var(--disabled);
+  color: var(--disabled-foreground);
 }
-  [data-slot="input-group"]:is(:has(:disabled), [data-disabled]:not([data-disabled="false"])) {
-    background-color: var(--disabled);
-    color: var(--disabled-foreground);
-    opacity: 1;
+[data-slot="input-group"]:is(
+  :has(:disabled),
+  [data-disabled]:not([data-disabled="false"])
+) {
+  background-color: var(--disabled);
+  color: var(--disabled-foreground);
+  opacity: 1;
 }
-  [data-slot="input-group"]:is(:has(:disabled), [data-disabled]:not([data-disabled="false"])) [data-slot="input-group-addon"] {
-    color: var(--disabled-foreground);
+[data-slot="input-group"]:is(
+    :has(:disabled),
+    [data-disabled]:not([data-disabled="false"])
+  )
+  [data-slot="input-group-addon"] {
+  color: var(--disabled-foreground);
 }
-  :is([data-slot="input-group-control"]):is(:disabled, [data-disabled]:not([data-disabled="false"]), [aria-disabled="true"]) {
-    color: var(--disabled-foreground);
+:is([data-slot="input-group-control"]):is(
+  :disabled,
+  [data-disabled]:not([data-disabled="false"]),
+  [aria-disabled="true"]
+) {
+  color: var(--disabled-foreground);
 }
-  :is([data-slot="checkbox"], [data-slot="switch"], [data-slot="radio-group-item"]):is(:disabled, [data-disabled]:not([data-disabled="false"]), [aria-disabled="true"]) {
-    background-color: var(--disabled);
-    border-color: var(--disabled-foreground);
-    color: var(--disabled-foreground);
+:is(
+  [data-slot="checkbox"],
+  [data-slot="switch"],
+  [data-slot="radio-group-item"]
+):is(
+  :disabled,
+  [data-disabled]:not([data-disabled="false"]),
+  [aria-disabled="true"]
+) {
+  background-color: var(--disabled);
+  border-color: var(--disabled-foreground);
+  color: var(--disabled-foreground);
 }
-  [data-slot="switch"]:is(:disabled, [data-disabled]:not([data-disabled="false"]), [aria-disabled="true"]) [data-slot="switch-thumb"] {
-    background-color: var(--disabled-foreground);
+[data-slot="switch"]:is(
+    :disabled,
+    [data-disabled]:not([data-disabled="false"]),
+    [aria-disabled="true"]
+  )
+  [data-slot="switch-thumb"] {
+  background-color: var(--disabled-foreground);
 }
-  :is([data-slot="select-item"], [data-slot="dropdown-menu-item"], [data-slot="dropdown-menu-checkbox-item"], [data-slot="dropdown-menu-radio-item"], [data-slot="dropdown-menu-sub-trigger"], [data-slot="command-item"], [data-slot="command-input"], [data-slot="tabs-trigger"], [data-slot="sidebar-menu-button"], [data-slot="sidebar-menu-sub-button"], [data-slot="toggle"], [data-slot="toggle-group-item"]):is(:disabled, [data-disabled]:not([data-disabled="false"]), [aria-disabled="true"]) {
-    color: var(--disabled-foreground);
+:is(
+  [data-slot="select-item"],
+  [data-slot="dropdown-menu-item"],
+  [data-slot="dropdown-menu-checkbox-item"],
+  [data-slot="dropdown-menu-radio-item"],
+  [data-slot="dropdown-menu-sub-trigger"],
+  [data-slot="command-item"],
+  [data-slot="command-input"],
+  [data-slot="tabs-trigger"],
+  [data-slot="sidebar-menu-button"],
+  [data-slot="sidebar-menu-sub-button"],
+  [data-slot="toggle"],
+  [data-slot="toggle-group-item"]
+):is(
+  :disabled,
+  [data-disabled]:not([data-disabled="false"]),
+  [aria-disabled="true"]
+) {
+  color: var(--disabled-foreground);
 }
-  :is([data-slot="select-item"], [data-slot="dropdown-menu-item"], [data-slot="dropdown-menu-checkbox-item"], [data-slot="dropdown-menu-radio-item"], [data-slot="dropdown-menu-sub-trigger"], [data-slot="command-item"], [data-slot="command-input"], [data-slot="tabs-trigger"], [data-slot="sidebar-menu-button"], [data-slot="sidebar-menu-sub-button"], [data-slot="toggle"], [data-slot="toggle-group-item"]):is(:disabled, [data-disabled]:not([data-disabled="false"]), [aria-disabled="true"]) svg {
-    color: var(--disabled-foreground);
+:is(
+    [data-slot="select-item"],
+    [data-slot="dropdown-menu-item"],
+    [data-slot="dropdown-menu-checkbox-item"],
+    [data-slot="dropdown-menu-radio-item"],
+    [data-slot="dropdown-menu-sub-trigger"],
+    [data-slot="command-item"],
+    [data-slot="command-input"],
+    [data-slot="tabs-trigger"],
+    [data-slot="sidebar-menu-button"],
+    [data-slot="sidebar-menu-sub-button"],
+    [data-slot="toggle"],
+    [data-slot="toggle-group-item"]
+  ):is(
+    :disabled,
+    [data-disabled]:not([data-disabled="false"]),
+    [aria-disabled="true"]
+  )
+  svg {
+  color: var(--disabled-foreground);
 }
-  .peer:is(:disabled, [data-disabled]:not([data-disabled="false"]), [aria-disabled="true"]) ~ [data-slot="label"], [data-disabled="true"] [data-slot="label"], [data-disabled="true"] [data-slot="field-label"] {
-    color: var(--disabled-foreground);
-    opacity: 1;
+.peer:is(
+    :disabled,
+    [data-disabled]:not([data-disabled="false"]),
+    [aria-disabled="true"]
+  )
+  ~ [data-slot="label"],
+[data-disabled="true"] [data-slot="label"],
+[data-disabled="true"] [data-slot="field-label"] {
+  color: var(--disabled-foreground);
+  opacity: 1;
 }
-  [data-slot][class~="group/button"], [data-slot="input"], [data-slot="select-trigger"], [data-slot="toggle"], [data-slot="toggle-group-item"], [data-slot="select-item"], [data-slot="dropdown-menu-item"], [data-slot="dropdown-menu-checkbox-item"], [data-slot="dropdown-menu-radio-item"], [data-slot="dropdown-menu-sub-trigger"], [data-slot="command-item"], [data-slot="tabs-trigger"], [data-slot="sidebar-menu-button"], [data-slot="sidebar-menu-sub-button"] {
-    min-height: 44px;
+[data-slot][class~="group/button"],
+[data-slot="input"],
+[data-slot="select-trigger"],
+[data-slot="toggle"],
+[data-slot="toggle-group-item"],
+[data-slot="select-item"],
+[data-slot="dropdown-menu-item"],
+[data-slot="dropdown-menu-checkbox-item"],
+[data-slot="dropdown-menu-radio-item"],
+[data-slot="dropdown-menu-sub-trigger"],
+[data-slot="command-item"],
+[data-slot="tabs-trigger"],
+[data-slot="sidebar-menu-button"],
+[data-slot="sidebar-menu-sub-button"] {
+  min-height: 44px;
 }
-  [data-slot="textarea"] {
-    min-height: max(44px, calc(var(--spacing) * 16));
+[data-slot="textarea"] {
+  min-height: max(44px, calc(var(--spacing) * 16));
 }
-  [data-slot][class~="group/button"][class~="size-6"], [data-slot][class~="group/button"][class~="size-7"], [data-slot][class~="group/button"][class~="size-8"], [data-slot][class~="group/button"][class~="size-9"], [data-slot="toggle"] {
-    min-width: 44px;
+[data-slot][class~="group/button"][class~="size-6"],
+[data-slot][class~="group/button"][class~="size-7"],
+[data-slot][class~="group/button"][class~="size-8"],
+[data-slot][class~="group/button"][class~="size-9"],
+[data-slot="toggle"] {
+  min-width: 44px;
 }
-  [data-slot="checkbox"]::after {
-    inset: calc((16px - 44px) / 2);
+[data-slot="checkbox"]::after {
+  inset: calc((16px - 44px) / 2);
 }
-  [data-slot="tabs-list"] {
-    height: auto;
+[data-slot="tabs-list"] {
+  height: auto;
 }
 
 /*
@@ -382,4 +506,34 @@ html.dark {
   --sidebar-primary: #c45322;
   --sidebar-primary-foreground: #fff;
   --sidebar-ring: #c45322;
+}
+
+/*
+ * Fora de @layer para valer sobre as classes dos componentes do shadcn
+ * (font-medium do Button e do CardTitle): títulos e botões do site são 700.
+ * O fundo do diálogo é o preto 90% com desfoque que o site já usava.
+ */
+[data-slot="button"],
+[data-slot="card-title"],
+[data-slot="dialog-title"] {
+  font-weight: 700;
+}
+
+[data-slot="dialog-title"] {
+  @apply font-display;
+}
+
+[data-slot="dialog-overlay"] {
+  background-color: rgb(0 0 0 / 0.9);
+  backdrop-filter: blur(4px);
+}
+
+[data-slot="accordion-trigger"] [data-slot="accordion-trigger-icon"] {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+[data-slot="accordion-trigger"][aria-expanded="true"]
+  [data-slot="accordion-trigger-icon"] {
+  color: var(--primary);
 }
