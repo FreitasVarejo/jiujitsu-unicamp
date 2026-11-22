@@ -81,7 +81,7 @@
   h5,
   h6,
   [data-slot="card-title"] {
-    @apply font-display text-primary uppercase;
+    @apply font-display text-primary-text uppercase;
     font-weight: 700;
   }
 
@@ -177,6 +177,7 @@
   --color-muted: var(--muted);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-secondary: var(--secondary);
+  --color-primary-text: var(--primary-text);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
   --color-popover-foreground: var(--popover-foreground);
@@ -214,42 +215,43 @@
  ---break---
  */
 :root {
-  --background: oklch(0.985 0 0);
-  --foreground: oklch(0.141 0.005 285.823);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.141 0.005 285.823);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.141 0.005 285.823);
+  --background: oklch(0.141 0.005 285.823);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.21 0.006 285.885);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.21 0.006 285.885);
+  --popover-foreground: oklch(0.985 0 0);
   --primary: oklch(0.581 0.157 41.437);
   --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.967 0.001 286.375);
-  --secondary-foreground: oklch(0.21 0.006 285.885);
-  --muted: oklch(0.967 0.001 286.375);
-  --muted-foreground: oklch(0.442 0.017 285.786);
-  --accent: oklch(0.967 0.001 286.375);
-  --accent-foreground: oklch(0.21 0.006 285.885);
-  --destructive: oklch(0.54 0.22 27);
-  --border: oklch(0.92 0.004 286.32);
+  --secondary: oklch(0.274 0.006 286.033);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.274 0.006 286.033);
+  --muted-foreground: oklch(0.705 0.015 286.067);
+  --accent: oklch(0.274 0.006 286.033);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
   --input: oklch(0.552 0.016 285.938);
   --ring: oklch(0.581 0.157 41.437);
-  --chart-1: oklch(0.62 0.14 41.437);
-  --chart-2: oklch(0.62 0.14 96.437);
-  --chart-3: oklch(0.62 0.14 151.437);
-  --chart-4: oklch(0.62 0.14 241.437);
-  --chart-5: oklch(0.62 0.14 341.437);
+  --chart-1: oklch(0.72 0.14 41.437);
+  --chart-2: oklch(0.72 0.14 96.437);
+  --chart-3: oklch(0.72 0.14 151.437);
+  --chart-4: oklch(0.72 0.14 241.437);
+  --chart-5: oklch(0.72 0.14 341.437);
   --radius: 0.5rem;
-  --sidebar: oklch(0.967 0.001 286.375);
-  --sidebar-foreground: oklch(0.21 0.006 285.885);
+  --sidebar: oklch(0.21 0.006 285.885);
+  --sidebar-foreground: oklch(0.985 0 0);
   --sidebar-primary: oklch(0.581 0.157 41.437);
   --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.92 0.004 286.32);
-  --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
-  --sidebar-border: oklch(0.92 0.004 286.32);
+  --sidebar-accent: oklch(0.274 0.006 286.033);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.581 0.157 41.437);
-  --destructive-foreground: oklch(1 0 0);
-  --destructive-soft-hover: oklch(0.54 0.22 27 / 10%);
-  --disabled: oklch(0.92 0.004 286.32);
-  --disabled-foreground: oklch(0.442 0.017 285.786);
+  --destructive-foreground: oklch(0.141 0.005 285.823);
+  --destructive-soft-hover: oklch(0.704 0.191 22.216 / 20%);
+  --disabled: oklch(0.274 0.006 286.033);
+  --disabled-foreground: oklch(0.705 0.015 286.067);
+  --primary-text: oklch(0.621 0.157 41.437);
 }
 /*
  ---break---
@@ -261,8 +263,8 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.21 0.006 285.885);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.72 0.157 41.437);
-  --primary-foreground: oklch(0.141 0.005 285.823);
+  --primary: oklch(0.581 0.157 41.437);
+  --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.274 0.006 286.033);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.274 0.006 286.033);
@@ -272,7 +274,7 @@
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(0.552 0.016 285.938);
-  --ring: oklch(0.72 0.157 41.437);
+  --ring: oklch(0.581 0.157 41.437);
   --chart-1: oklch(0.72 0.14 41.437);
   --chart-2: oklch(0.72 0.14 96.437);
   --chart-3: oklch(0.72 0.14 151.437);
@@ -280,16 +282,17 @@
   --chart-5: oklch(0.72 0.14 341.437);
   --sidebar: oklch(0.21 0.006 285.885);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.72 0.157 41.437);
-  --sidebar-primary-foreground: oklch(0.141 0.005 285.823);
+  --sidebar-primary: oklch(0.581 0.157 41.437);
+  --sidebar-primary-foreground: oklch(1 0 0);
   --sidebar-accent: oklch(0.274 0.006 286.033);
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.72 0.157 41.437);
+  --sidebar-ring: oklch(0.581 0.157 41.437);
   --destructive-foreground: oklch(0.141 0.005 285.823);
   --destructive-soft-hover: oklch(0.704 0.191 22.216 / 20%);
   --disabled: oklch(0.274 0.006 286.033);
   --disabled-foreground: oklch(0.705 0.015 286.067);
+  --primary-text: oklch(0.621 0.157 41.437);
 }
 [data-slot]:focus-visible {
   outline: 2px solid var(--ring);
@@ -308,6 +311,12 @@
 }
 [data-slot="field-label"]:has(:focus-visible) {
   --tw-ring-shadow: 0 0 #0000;
+}
+[data-slot][class~="group/button"][class~="text-primary"],
+[data-slot="badge"][class~="text-primary"],
+[data-slot="field-description"] > a:hover,
+[data-slot="empty-description"] > a:hover {
+  color: var(--primary-text);
 }
 /*
  ---break---
@@ -490,21 +499,15 @@
 
 /*
  * ── Site: só escuro, preto e laranja ──
- * <html class="dark"> fixa o modo escuro do tema. Os valores abaixo ficam em
- * `html.dark` (mais específico que `.dark`) para valerem sobre o tema
- * gerado, em qualquer ordem. Primária e texto sobre ela são a decisão do dono
- * (#c45322 com texto branco, 4,5:1); o escuro do tema usaria um laranja mais
- * claro com texto escuro.
+ * <html class="dark"> fixa o modo escuro do tema. Primária, texto sobre ela,
+ * anel de foco e `--primary-text` (o laranja usado como texto) vêm do tema
+ * (marca `scheme: "dark"`). Aqui ficam só o fundo preto puro e o texto base,
+ * que em `html.dark` (mais específico que `.dark`) valem sobre o tema gerado,
+ * em qualquer ordem, e só aumentam o contraste.
  */
 html.dark {
   --background: #000;
   --foreground: #e4e4e4;
-  --primary: #c45322;
-  --primary-foreground: #fff;
-  --ring: #c45322;
-  --sidebar-primary: #c45322;
-  --sidebar-primary-foreground: #fff;
-  --sidebar-ring: #c45322;
 }
 
 /*
@@ -534,5 +537,5 @@ html.dark {
 
 [data-slot="accordion-trigger"][aria-expanded="true"]
   [data-slot="accordion-trigger-icon"] {
-  color: var(--primary);
+  color: var(--primary-text);
 }
