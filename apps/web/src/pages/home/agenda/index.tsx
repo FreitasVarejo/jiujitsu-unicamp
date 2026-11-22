@@ -18,7 +18,7 @@ export const Agenda = () => {
         <OutboundLink
           href={CALENDAR_URL}
           trackLabel="google_calendar_full"
-          className="font-display text-sm uppercase tracking-widest text-primary transition-colors hover:text-orange-400"
+          className="font-display text-sm uppercase tracking-widest text-primary-text transition-colors hover:text-orange-400"
         >
           Ver agenda completa →
         </OutboundLink>

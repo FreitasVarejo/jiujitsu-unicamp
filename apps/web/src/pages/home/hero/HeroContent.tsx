@@ -17,7 +17,7 @@ export const HeroContent = ({ logo }: HeroContentProps) => (
       />
     )}
     <h1 className="mb-6 font-display text-6xl font-bold tracking-tighter text-white md:text-8xl">
-      Jiu-Jitsu <span className="text-primary">Unicamp</span>
+      Jiu-Jitsu <span className="text-primary-text">Unicamp</span>
     </h1>
     <p className="mx-auto mb-10 max-w-2xl text-xl text-gray-300 md:text-2xl">
       Defesa pessoal, competição e comunidade. Junte-se à equipe oficial da
@@ -45,7 +45,7 @@ export const HeroContent = ({ logo }: HeroContentProps) => (
     <OutboundLink
       href={FEEDBACK_FORM_URL}
       trackLabel="feedback_hero"
-      className="mt-6 inline-block text-sm text-gray-300 underline-offset-4 transition-colors hover:text-primary hover:underline"
+      className="mt-6 inline-block text-sm text-gray-300 underline-offset-4 transition-colors hover:text-primary-text hover:underline"
     >
       Já treina com a gente? Deixe seu feedback anônimo →
     </OutboundLink>

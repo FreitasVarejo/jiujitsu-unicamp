@@ -10,7 +10,7 @@ export const NotFound = () => {
         className="min-h-0 [&_[data-slot=empty-description]]:text-base [&_[data-slot=empty-header]]:max-w-md [&_[data-slot=empty-title]]:text-3xl"
         icon={null}
         code={
-          <span className="font-display text-8xl font-bold text-primary">
+          <span className="font-display text-8xl font-bold text-primary-text">
             404
           </span>
         }

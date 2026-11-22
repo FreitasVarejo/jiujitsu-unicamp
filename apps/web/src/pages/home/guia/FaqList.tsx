@@ -7,7 +7,7 @@ export const FAQCard = () => {
     <div className="lg:col-span-8">
       <h2
         id="perguntas-frequentes"
-        className="mb-8 scroll-mt-24 border-b border-zinc-800 pb-2 font-display text-3xl text-primary"
+        className="mb-8 scroll-mt-24 border-b border-zinc-800 pb-2 font-display text-3xl text-primary-text"
       >
         Perguntas Frequentes
       </h2>

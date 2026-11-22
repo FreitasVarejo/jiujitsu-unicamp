@@ -26,7 +26,7 @@ export const Navbar = ({
           <div className="shrink-0">
             <Link
               to="/"
-              className="font-display text-3xl font-bold tracking-wider text-primary"
+              className="font-display text-3xl font-bold tracking-wider text-primary-text"
             >
               BJJ <span className="text-white">UNICAMP</span>
             </Link>
@@ -48,7 +48,7 @@ export const Navbar = ({
               variant="ghost"
               size="icon"
               onClick={onToggleMenu}
-              className="text-foreground hover:bg-transparent hover:text-primary dark:hover:bg-transparent"
+              className="text-foreground hover:bg-transparent hover:text-primary-text dark:hover:bg-transparent"
               aria-label={isMenuOpen ? "Fechar menu" : "Abrir menu"}
             >
               {isMenuOpen ? (

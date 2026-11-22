@@ -11,7 +11,7 @@ export const EventDetailsInfoCard = ({
   return (
     <div className="flex-1">
       <header>
-        <div className="mb-4 flex items-center gap-4 text-sm font-medium text-primary">
+        <div className="mb-4 flex items-center gap-4 text-sm font-medium text-primary-text">
           <span className="flex items-center gap-1">
             <Calendar size={16} />
             {new Date(details.date).toLocaleDateString("pt-BR")}

@@ -89,7 +89,7 @@ export const INFO_CARD_ITEMS: InfoCardItem[] = [
     description:
       "Elogios, críticas, sugestões ou relatos de situações no tatame. O formulário é anônimo e não coleta dados pessoais.",
     borderColor: "border-primary",
-    iconColor: "text-primary",
+    iconColor: "text-primary-text",
     link: {
       href: FEEDBACK_FORM_URL,
       label: "Abrir formulário",

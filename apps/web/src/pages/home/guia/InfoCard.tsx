@@ -30,7 +30,7 @@ export const InfoCard = () => {
                 <OutboundLink
                   href={card.link.href}
                   trackLabel={card.link.trackLabel}
-                  className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-primary transition-colors hover:text-orange-400"
+                  className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-primary-text transition-colors hover:text-orange-400"
                 >
                   {card.link.label}
                   <ArrowRight size={16} />

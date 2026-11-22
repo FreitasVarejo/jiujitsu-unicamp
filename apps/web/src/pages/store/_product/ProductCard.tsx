@@ -63,7 +63,7 @@ export const ProductCard = ({
       </div>
 
       <div className="flex grow flex-col p-4">
-        <h3 className="mb-3 line-clamp-1 font-display text-lg text-white transition-colors group-hover:text-primary">
+        <h3 className="mb-3 line-clamp-1 font-display text-lg text-white transition-colors group-hover:text-primary-text">
           {product.title}
         </h3>
 
@@ -71,7 +71,7 @@ export const ProductCard = ({
           <span className="text-sm font-medium text-zinc-500">
             Ver detalhes
           </span>
-          <div className="text-primary transition-transform group-hover:translate-x-1">
+          <div className="text-primary-text transition-transform group-hover:translate-x-1">
             <Eye size={18} />
           </div>
         </div>

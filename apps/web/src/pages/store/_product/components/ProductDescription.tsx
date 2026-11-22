@@ -14,7 +14,7 @@ export const ProductDescription = ({
 }: ProductDescriptionProps) => {
   return (
     <div className="mb-4 md:mb-6">
-      <span className="text-xs font-bold tracking-wider text-primary uppercase md:text-sm">
+      <span className="text-xs font-bold tracking-wider text-primary-text uppercase md:text-sm">
         {categoryLabel || "Coleção Oficial"}
       </span>
       <DialogTitle className="mt-1 mb-2 text-2xl leading-8 text-white uppercase md:text-4xl md:leading-10">
