@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,6 +14,8 @@ interface LightboxProps {
 }
 
 export const Lightbox = ({ selectedImage, onClose }: LightboxProps) => {
+  const popupRef = useRef<HTMLDivElement>(null);
+
   return (
     <Dialog
       open={Boolean(selectedImage)}
@@ -20,6 +23,8 @@ export const Lightbox = ({ selectedImage, onClose }: LightboxProps) => {
     >
       {selectedImage && (
         <DialogContent
+          ref={popupRef}
+          initialFocus={popupRef}
           showCloseButton={false}
           className="top-0 left-0 flex h-dvh w-screen max-w-none translate-x-0 translate-y-0 items-center justify-center gap-0 rounded-none bg-transparent p-4 shadow-none ring-0 sm:max-w-none"
           onClick={(e) => e.target === e.currentTarget && onClose()}

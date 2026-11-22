@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { X } from "lucide-react";
 import { Product } from "@/types/product";
 import { useIsDesktop } from "@/hooks/ui";
@@ -24,6 +24,7 @@ export const ProductModal = ({
   categoryLabel,
 }: ProductModalProps) => {
   const isDesktop = useIsDesktop();
+  const popupRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (product) {
@@ -42,6 +43,8 @@ export const ProductModal = ({
   return (
     <Dialog open onOpenChange={(open) => !open && onClose()}>
       <DialogContent
+        ref={popupRef}
+        initialFocus={popupRef}
         showCloseButton={false}
         className={cn(
           "z-100 flex max-h-[95vh] w-full max-w-[calc(100%-1rem)] gap-0 overflow-hidden rounded-2xl bg-zinc-900 p-0 shadow-2xl ring-0 sm:max-w-5xl",
