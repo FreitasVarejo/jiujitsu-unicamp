@@ -6,7 +6,7 @@ Coding agent reference for the `jiujitsu-unicamp` repository. Read this before m
 
 ## Project Overview
 
-Frontend SPA for the Jiu-Jitsu Unicamp team website. Built with **React 19 + Vite 7 + Tailwind CSS v3**. Data is fetched from the companion `jiujitsu-backend` Strapi v5 CMS via REST API. No backend code lives in this repo. Deployed via Docker + Nginx through GitHub Actions on every push to `main`.
+Frontend SPA for the Jiu-Jitsu Unicamp team website. Built with **React 19 + Vite 7 + Tailwind CSS v4 + shadcn/ui (Base UI)**. Data is fetched from the companion `jiujitsu-backend` Strapi v5 CMS via REST API. No backend code lives in this repo. Deployed via Docker + Nginx through GitHub Actions on every push to `main`.
 
 ---
 
@@ -253,9 +253,23 @@ src/
 ## Key Principles
 
 1. **Component patterns:** Function components only, no class components. Page in `pages/<feature>/<feature>.page.tsx`, data hook in `<feature>.hook.ts`.
-2. **Styling:** Tailwind utilities only. No CSS modules/inline styles except for dynamic Schedule-X colors.
-3. **No hardcoded data:** Use enums in `src/constants/` with companion info maps (e.g., `BELT_INFO`, `CALENDAR_TYPE_INFO`).
-4. **Parallel fetches:** Wrap each in `try/catch` returning `null` so one failure doesn't abort `Promise.all`.
+2. **Styling:** Tailwind utilities only. No CSS modules/inline styles except for dynamic Schedule-X colors. The site is dark-only (`<html class="dark">`); colors come from the `theme-jiujitsu` tokens (`bg-background`, `text-primary`, `bg-card`...), overridden for the site in `html.dark` at the end of `src/index.css`.
+3. **UI components:** use the shadcn components in `src/components/ui/` (Button, Card, Badge, Accordion, Dialog, Separator, Skeleton) and the `states` blocks (`LoadingState`, `EmptyState`, `ErrorState`, `NotFoundState`) for loading, empty and error. `src/components/{ui,states,feedback}/` and `src/lib/icons.ts` are copied from the `ui-library` registry: do not edit them, adapt through `className` or the site CSS.
+4. **No hardcoded data:** Use enums in `src/constants/` with companion info maps (e.g., `BELT_INFO`, `CALENDAR_TYPE_INFO`).
+5. **Parallel fetches:** Wrap each in `try/catch` returning `null` so one failure doesn't abort `Promise.all`.
+
+---
+
+## ui-library (shadcn registry)
+
+Theme and blocks come from `github.com/FreitasVarejo/ui-library` (brand `jiujitsu`):
+
+```bash
+npx shadcn@latest add FreitasVarejo/ui-library/theme-jiujitsu --overwrite
+npx shadcn@latest add FreitasVarejo/ui-library/states FreitasVarejo/ui-library/feedback --overwrite
+```
+
+After reinstalling the theme, in `src/index.css` delete the `@import "@fontsource/barlow-condensed/..."` lines and remove `@fontsource/barlow-condensed` from `package.json` (the title font is self-hosted in `src/assets/fonts` with `size-adjust`), and keep the `html.dark` block at the end. `lucide-react` is v1, which has no brand icons: the Instagram icon is `src/components/InstagramIcon.component.tsx`.
 
 ---
 
