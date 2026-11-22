@@ -20,7 +20,7 @@ export const CategorySection = ({
         <h2 className="font-display text-3xl uppercase tracking-tight text-white">
           {name}
         </h2>
-        <div className="h-px flex-grow bg-zinc-800" />
+        <div className="h-px grow bg-zinc-800" />
         <span className="font-mono text-sm text-gray-500">
           {products.length} {products.length === 1 ? "item" : "itens"}
         </span>

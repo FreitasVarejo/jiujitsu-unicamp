@@ -7,7 +7,7 @@ interface HeroContentProps {
 }
 
 export const HeroContent = ({ logo }: HeroContentProps) => (
-  <div className="relative z-[4] mx-auto max-w-4xl px-4 text-center">
+  <div className="relative z-4 mx-auto max-w-4xl px-4 text-center">
     {logo && (
       <img
         src={logo.url}
@@ -25,13 +25,13 @@ export const HeroContent = ({ logo }: HeroContentProps) => (
     <div className="flex flex-col justify-center gap-4 sm:flex-row">
       <a
         href="#treinos"
-        className="rounded bg-primary px-8 py-4 font-display text-lg uppercase tracking-widest text-white transition-colors hover:bg-orange-700"
+        className="rounded-sm bg-primary px-8 py-4 font-display text-lg uppercase tracking-widest text-white transition-colors hover:bg-orange-700"
       >
         Ver Treinos
       </a>
       <a
         href="#perguntas-frequentes"
-        className="rounded border border-white px-8 py-4 font-display text-lg uppercase tracking-widest text-white transition-colors hover:bg-white/10"
+        className="rounded-sm border border-white px-8 py-4 font-display text-lg uppercase tracking-widest text-white transition-colors hover:bg-white/10"
       >
         Guia do Iniciante
       </a>

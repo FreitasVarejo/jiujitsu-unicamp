@@ -22,7 +22,7 @@ export const EventCardThumbnail = ({ coverImage }: EventCardThumbnailProps) => {
           }
         />
       )}
-      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent opacity-90"></div>
+      <div className="absolute inset-0 bg-linear-to-t from-black via-black/80 to-transparent opacity-90"></div>
     </div>
   );
 };

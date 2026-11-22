@@ -39,10 +39,10 @@ export const ProductModal = ({
   const formsOpen = Boolean(product.formsLink);
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-2 sm:p-4 md:p-8">
+    <div className="fixed inset-0 z-100 flex items-center justify-center p-2 sm:p-4 md:p-8">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/90 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/90 backdrop-blur-xs"
         onClick={onClose}
       />
 
@@ -55,7 +55,7 @@ export const ProductModal = ({
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute right-3 top-3 z-[110] rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/80"
+          className="absolute right-3 top-3 z-110 rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/80"
         >
           <X size={20} />
         </button>
@@ -73,7 +73,7 @@ export const ProductModal = ({
         >
           <ProductDescription product={product} categoryLabel={categoryLabel} />
 
-          <div className="flex-grow">
+          <div className="grow">
             <ProductSizes sizes={product.sizes} />
             <ProductStatus formsOpen={formsOpen} />
           </div>

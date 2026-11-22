@@ -24,7 +24,7 @@ export const EventCardInfo = ({ event }: EventCardInfoProps) => {
             </span>
           )}
         </div>
-        <h3 className="font-display text-2xl uppercase tracking-tight text-white drop-shadow-sm md:text-3xl">
+        <h3 className="font-display text-2xl uppercase tracking-tight text-white drop-shadow-xs md:text-3xl">
           {event.title}
         </h3>
       </div>

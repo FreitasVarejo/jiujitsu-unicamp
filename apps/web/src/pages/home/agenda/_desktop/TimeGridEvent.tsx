@@ -53,7 +53,7 @@ export const TimeGridEvent = ({ calendarEvent }: TimeGridEventProps) => {
 
   return (
     <div
-      className="flex h-full flex-col gap-px overflow-hidden rounded p-1 text-xs leading-tight"
+      className="flex h-full flex-col gap-px overflow-hidden rounded-sm p-1 text-xs leading-tight"
       style={{
         backgroundColor: colors.container,
         borderLeft: `3px solid ${colors.main}`,
@@ -107,7 +107,7 @@ export const TimeGridEvent = ({ calendarEvent }: TimeGridEventProps) => {
           )}
           {noGi && (
             <span
-              className="shrink-0 rounded px-1 py-px text-xs font-medium"
+              className="shrink-0 rounded-sm px-1 py-px text-xs font-medium"
               style={{
                 backgroundColor: "rgba(255,255,255,0.08)",
                 color: colors.onContainer,

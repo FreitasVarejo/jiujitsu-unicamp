@@ -18,7 +18,7 @@ export const ImageGrid = ({
         <div
           key={index}
           onClick={() => setSelectedImage(img.url)}
-          className="group aspect-[4/3] cursor-pointer overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900"
+          className="group aspect-4/3 cursor-pointer overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900"
         >
           <img
             src={img.url}

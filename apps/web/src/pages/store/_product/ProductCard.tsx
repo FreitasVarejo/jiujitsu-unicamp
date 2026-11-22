@@ -28,7 +28,7 @@ export const ProductCard = ({
       }}
       className="group flex h-full cursor-pointer flex-col overflow-hidden rounded-lg border border-zinc-800 bg-zinc-900 transition-all hover:translate-y-[-4px] hover:border-primary/50"
     >
-      <div className="relative aspect-[3/4] shrink-0 overflow-hidden bg-zinc-800">
+      <div className="relative aspect-3/4 shrink-0 overflow-hidden bg-zinc-800">
         <img
           src={coverImage}
           alt={product.title}
@@ -51,13 +51,13 @@ export const ProductCard = ({
 
         {/* Badge for multiple photos */}
         {product.gallery.length > 1 && (
-          <div className="absolute bottom-3 right-3 rounded border border-white/5 bg-zinc-900/80 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-white/70 backdrop-blur">
+          <div className="absolute bottom-3 right-3 rounded-sm border border-white/5 bg-zinc-900/80 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-white/70 backdrop-blur-sm">
             +{product.gallery.length - 1} fotos
           </div>
         )}
       </div>
 
-      <div className="flex flex-grow flex-col p-4">
+      <div className="flex grow flex-col p-4">
         <h3 className="mb-3 line-clamp-1 font-display text-lg text-white transition-colors group-hover:text-primary">
           {product.title}
         </h3>

@@ -24,7 +24,7 @@ export const YearSection = ({
     <section key={year}>
       <div className="mb-6 flex items-center gap-4">
         <h2 className="font-display text-2xl text-primary">{year}</h2>
-        <div className="h-px flex-grow bg-zinc-800"></div>
+        <div className="h-px grow bg-zinc-800"></div>
       </div>
 
       <div

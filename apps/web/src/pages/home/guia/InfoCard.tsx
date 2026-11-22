@@ -10,7 +10,7 @@ export const InfoCard = () => {
           key={card.title}
           className={`rounded-lg border-t-4 bg-zinc-900 p-6 ${card.borderColor} flex gap-4`}
         >
-          <card.icon className={`${card.iconColor} flex-shrink-0`} size={32} />
+          <card.icon className={`${card.iconColor} shrink-0`} size={32} />
           <div>
             <h3 className="mb-2 font-display text-xl text-white">
               {card.title}

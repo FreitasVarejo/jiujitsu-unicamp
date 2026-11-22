@@ -18,11 +18,11 @@ export const Navbar = ({
   navLinks,
 }: NavbarProps) => {
   return (
-    <nav className="sticky top-0 z-50 border-b border-white/10 bg-black/95 backdrop-blur-sm">
+    <nav className="sticky top-0 z-50 border-b border-white/10 bg-black/95 backdrop-blur-xs">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between">
           {/* Logo */}
-          <div className="flex-shrink-0">
+          <div className="shrink-0">
             <Link
               to="/"
               className="font-display text-3xl font-bold tracking-wider text-primary"

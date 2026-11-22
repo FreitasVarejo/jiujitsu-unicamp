@@ -32,7 +32,7 @@ export const Lightbox = ({ selectedImage, onClose }: LightboxProps) => {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm transition-opacity duration-300"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-xs transition-opacity duration-300"
       onClick={onClose}
     >
       <button

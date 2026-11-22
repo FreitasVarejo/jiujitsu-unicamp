@@ -24,13 +24,13 @@ export const Layout = ({ children }: LayoutProps) => {
             isActive={isActive}
             navLinks={navLinks}
           />
-          <main className="flex-grow">{children}</main>
+          <main className="grow">{children}</main>
           <Footer />
         </>
       ) : (
         <>
           <SkeletonNavbar />
-          <main className="flex-grow" />
+          <main className="grow" />
           <Footer />
         </>
       )}
