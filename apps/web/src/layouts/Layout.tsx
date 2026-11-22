@@ -14,7 +14,7 @@ export const Layout = ({ children }: LayoutProps) => {
     useNavigation();
 
   return (
-    <div className="flex min-h-screen flex-col bg-background font-sans text-surface">
+    <div className="flex min-h-screen flex-col bg-background font-sans text-foreground">
       {fontsLoaded ? (
         <>
           <Navbar
@@ -24,13 +24,13 @@ export const Layout = ({ children }: LayoutProps) => {
             isActive={isActive}
             navLinks={navLinks}
           />
-          <main className="flex-grow">{children}</main>
+          <main className="grow">{children}</main>
           <Footer />
         </>
       ) : (
         <>
           <SkeletonNavbar />
-          <main className="flex-grow" />
+          <main className="grow" />
           <Footer />
         </>
       )}

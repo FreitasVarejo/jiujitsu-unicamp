@@ -8,7 +8,7 @@
  * <OutboundLink
  *   href="https://www.instagram.com/jiujitsu.unicamp/"
  *   trackLabel="instagram_footer"
- *   className="text-gray-400 hover:text-primary"
+ *   className="text-gray-400 hover:text-primary-text"
  *   aria-label="Instagram"
  * >
  *   <Instagram size={24} />

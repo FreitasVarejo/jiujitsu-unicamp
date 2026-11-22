@@ -1,5 +1,6 @@
 import { Menu, X } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import { NavLinkList } from "./NavLinkList.component";
 
 interface NavbarProps {
@@ -18,14 +19,14 @@ export const Navbar = ({
   navLinks,
 }: NavbarProps) => {
   return (
-    <nav className="sticky top-0 z-50 border-b border-white/10 bg-black/95 backdrop-blur-sm">
+    <nav className="sticky top-0 z-50 border-b border-white/10 bg-black/95 backdrop-blur-xs">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between">
           {/* Logo */}
-          <div className="flex-shrink-0">
+          <div className="shrink-0">
             <Link
               to="/"
-              className="font-display text-3xl font-bold tracking-wider text-primary"
+              className="font-display text-3xl font-bold tracking-wider text-primary-text"
             >
               BJJ <span className="text-white">UNICAMP</span>
             </Link>
@@ -43,13 +44,19 @@ export const Navbar = ({
 
           {/* Mobile Menu Button */}
           <div className="md:hidden">
-            <button
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={onToggleMenu}
-              className="p-2 text-surface hover:text-primary"
+              className="text-foreground hover:bg-transparent hover:text-primary-text dark:hover:bg-transparent"
               aria-label={isMenuOpen ? "Fechar menu" : "Abrir menu"}
             >
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+              {isMenuOpen ? (
+                <X className="size-6" />
+              ) : (
+                <Menu className="size-6" />
+              )}
+            </Button>
           </div>
         </div>
 

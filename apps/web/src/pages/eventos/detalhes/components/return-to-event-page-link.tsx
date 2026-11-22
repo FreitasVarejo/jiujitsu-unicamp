@@ -5,7 +5,7 @@ export const ReturnToEventPageLink = () => {
   return (
     <Link
       to="/eventos"
-      className="group mb-8 inline-flex items-center gap-2 text-zinc-500 transition-colors hover:text-primary"
+      className="group mb-8 inline-flex items-center gap-2 text-zinc-500 transition-colors hover:text-primary-text"
     >
       <ChevronLeft
         size={20}

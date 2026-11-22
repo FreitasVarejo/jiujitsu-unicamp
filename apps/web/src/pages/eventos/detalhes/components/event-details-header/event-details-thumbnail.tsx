@@ -15,7 +15,7 @@ export const EventDetailsThumbnail = ({
 
   return (
     <div
-      className={`group relative aspect-[16/10] cursor-pointer overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900 ${
+      className={`group relative aspect-16/10 cursor-pointer overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900 ${
         isDesktop ? "w-2/5" : ""
       }`}
       onClick={() => setSelectedImage(details.coverImage?.url || null)}

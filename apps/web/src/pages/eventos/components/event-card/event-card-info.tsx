@@ -12,7 +12,7 @@ export const EventCardInfo = ({ event }: EventCardInfoProps) => {
   return (
     <div className="relative z-10 flex w-full items-end justify-between p-6 md:p-8">
       <div className="max-w-2xl">
-        <div className="mb-2 flex items-center gap-4 text-sm font-semibold text-primary">
+        <div className="mb-2 flex items-center gap-4 text-sm font-semibold text-primary-text">
           <span className="flex items-center gap-1">
             <Calendar size={14} />
             {new Date(event.date).toLocaleDateString("pt-BR")}
@@ -24,13 +24,13 @@ export const EventCardInfo = ({ event }: EventCardInfoProps) => {
             </span>
           )}
         </div>
-        <h3 className="font-display text-2xl uppercase tracking-tight text-white drop-shadow-sm md:text-3xl">
+        <h3 className="font-display text-2xl uppercase tracking-tight text-white drop-shadow-xs md:text-3xl">
           {event.title}
         </h3>
       </div>
 
       {isDesktop && (
-        <div className="flex items-center gap-2 text-white/90 transition-colors group-hover:text-primary">
+        <div className="flex items-center gap-2 text-white/90 transition-colors group-hover:text-primary-text">
           <span className="font-display text-sm font-medium uppercase tracking-widest">
             Ver Fotos
           </span>

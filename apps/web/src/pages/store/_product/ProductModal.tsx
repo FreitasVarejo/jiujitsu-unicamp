@@ -1,8 +1,10 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { X } from "lucide-react";
 import { Product } from "@/types/product";
 import { useIsDesktop } from "@/hooks/ui";
-import { useProductModalEscape } from "./hooks/use-product-modal-escape.hook";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogClose, DialogContent } from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
 import { ProductGalleryCarousel } from "./components/ProductGalleryCarousel";
 import { ProductDescription } from "./components/ProductDescription";
 import { ProductSizes } from "./components/ProductSizes";
@@ -22,7 +24,7 @@ export const ProductModal = ({
   categoryLabel,
 }: ProductModalProps) => {
   const isDesktop = useIsDesktop();
-  useProductModalEscape(onClose);
+  const popupRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (product) {
@@ -39,26 +41,29 @@ export const ProductModal = ({
   const formsOpen = Boolean(product.formsLink);
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-2 sm:p-4 md:p-8">
-      {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-black/90 backdrop-blur-sm"
-        onClick={onClose}
-      />
-
-      {/* Modal Content */}
-      <div
-        className={`relative flex max-h-[95vh] w-full max-w-5xl overflow-hidden rounded-2xl bg-zinc-900 shadow-2xl ${
+    <Dialog open onOpenChange={(open) => !open && onClose()}>
+      <DialogContent
+        ref={popupRef}
+        initialFocus={popupRef}
+        showCloseButton={false}
+        className={cn(
+          "z-100 flex max-h-[95vh] w-full max-w-[calc(100%-1rem)] gap-0 overflow-hidden rounded-2xl bg-zinc-900 p-0 shadow-2xl ring-0 sm:max-w-5xl",
           isDesktop ? "max-h-[90vh] flex-row" : "flex-col"
-        }`}
+        )}
       >
         {/* Close Button */}
-        <button
-          onClick={onClose}
-          className="absolute right-3 top-3 z-[110] rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/80"
+        <DialogClose
+          render={
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute top-3 right-3 z-110 rounded-full bg-black/50 text-white hover:bg-black/80 hover:text-white"
+            />
+          }
         >
-          <X size={20} />
-        </button>
+          <X className="size-5" />
+          <span className="sr-only">Fechar</span>
+        </DialogClose>
 
         {/* Left Side: Images */}
         <ProductGalleryCarousel
@@ -73,14 +78,14 @@ export const ProductModal = ({
         >
           <ProductDescription product={product} categoryLabel={categoryLabel} />
 
-          <div className="flex-grow">
+          <div className="grow">
             <ProductSizes sizes={product.sizes} />
             <ProductStatus formsOpen={formsOpen} />
           </div>
 
           <ProductActions product={product} />
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 };

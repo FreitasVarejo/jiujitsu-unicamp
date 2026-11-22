@@ -15,7 +15,7 @@ export const CalendarLegend = () => {
         <div key={item.type} className="flex items-center gap-2">
           {/* Swatch de cor minimalista */}
           <div
-            className="h-3 w-3 flex-shrink-0 rounded-full"
+            className="h-3 w-3 shrink-0 rounded-full"
             style={{ backgroundColor: item.darkColors.main }}
           />
           {/* Label discreto */}

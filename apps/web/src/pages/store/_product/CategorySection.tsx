@@ -1,3 +1,4 @@
+import { Separator } from "@/components/ui/separator";
 import { Product } from "@/types/product";
 import { ProductCarousel } from "./ProductCarousel";
 
@@ -17,10 +18,10 @@ export const CategorySection = ({
   return (
     <div key={slug} className="flex flex-col">
       <div className="mb-8 flex items-center gap-4">
-        <h2 className="font-display text-3xl uppercase tracking-tight text-white">
+        <h2 className="font-display text-3xl tracking-tight text-white uppercase">
           {name}
         </h2>
-        <div className="h-px flex-grow bg-zinc-800" />
+        <Separator className="flex-1" />
         <span className="font-mono text-sm text-gray-500">
           {products.length} {products.length === 1 ? "item" : "itens"}
         </span>

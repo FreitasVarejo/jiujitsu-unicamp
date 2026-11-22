@@ -38,7 +38,7 @@ export const EventCard = ({ event }: EventCardProps) => {
           {event.eventName || event.type}
           {event.noGi && (
             <span
-              className="rounded px-1 py-px text-xs font-medium"
+              className="rounded-sm px-1 py-px text-xs font-medium"
               style={{
                 backgroundColor: "rgba(255,255,255,0.08)",
                 color: colors.onContainer,

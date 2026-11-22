@@ -40,12 +40,12 @@ export const SeeMoreCard = ({
 
       <div className="absolute inset-0 z-20 flex flex-col items-center justify-center">
         <div className="mb-3 rounded-full bg-primary/20 p-4 transition-transform group-hover:scale-110">
-          <ChevronRight size={32} className="rotate-90 text-primary" />
+          <ChevronRight size={32} className="rotate-90 text-primary-text" />
         </div>
         <span className="font-display text-xl uppercase tracking-widest text-white">
           Ver mais {year}
         </span>
-        <span className="mt-1 font-sans text-sm text-primary/80">
+        <span className="mt-1 font-sans text-sm text-primary-text/80">
           +{remaining} eventos registrados
         </span>
       </div>

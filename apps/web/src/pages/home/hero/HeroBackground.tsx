@@ -23,7 +23,7 @@ export const HeroBackground = ({
   });
 
   if (images.length === 0) {
-    return <div className="absolute inset-0 z-[1] bg-zinc-900" />;
+    return <div className="absolute inset-0 z-1 bg-zinc-900" />;
   }
 
   return (
@@ -32,7 +32,7 @@ export const HeroBackground = ({
       <img
         src={images[currentIndex].url}
         alt={images[currentIndex].alternativeText}
-        className="absolute inset-0 z-[1] h-full w-full"
+        className="absolute inset-0 z-1 h-full w-full"
         style={getImgStyle(images[currentIndex].focalPoint)}
       />
 
@@ -41,7 +41,7 @@ export const HeroBackground = ({
         <img
           src={images[nextIndex].url}
           alt={images[nextIndex].alternativeText}
-          className="absolute inset-0 z-[2] h-full w-full"
+          className="absolute inset-0 z-2 h-full w-full"
           style={{
             ...getImgStyle(images[nextIndex].focalPoint),
             opacity: nextVisible ? 1 : 0,
@@ -51,7 +51,7 @@ export const HeroBackground = ({
       )}
 
       {/* Overlay de contraste */}
-      <div className="absolute inset-0 z-[3] bg-black/70" />
+      <div className="absolute inset-0 z-3 bg-black/70" />
     </>
   );
 };

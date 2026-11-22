@@ -1,6 +1,7 @@
 import { ForwardedRef, forwardRef } from "react";
 import { AgendaEvent } from "@/types/home";
 import { DAY_LABELS, fmtDDMM } from "../../date-helpers";
+import { Card } from "@/components/ui/card";
 import { EventCard } from "./EventCard";
 
 interface DayCardProps {
@@ -22,15 +23,15 @@ export const DayCard = forwardRef(
     const dateLabel = fmtDDMM(dayDate);
 
     return (
-      <div
+      <Card
         ref={ref}
-        className={`rounded-lg border-2 p-4 ${
+        className={`gap-0 rounded-lg border-2 p-4 ring-0 ${
           isToday ? "border-primary bg-zinc-700" : "border-zinc-700 bg-zinc-800"
         }`}
       >
         <h3 className="mb-3 flex items-baseline gap-2 font-display text-lg text-white">
           {DAY_LABELS[dayOfWeek]}
-          <span className="font-sans text-sm normal-case tracking-normal text-zinc-400">
+          <span className="font-sans text-sm tracking-normal text-zinc-400 normal-case">
             {dateLabel}
           </span>
         </h3>
@@ -44,7 +45,7 @@ export const DayCard = forwardRef(
         ) : (
           <p className="text-sm text-zinc-400">Sem treino neste dia.</p>
         )}
-      </div>
+      </Card>
     );
   }
 );

@@ -1,3 +1,4 @@
+import { Separator } from "@/components/ui/separator";
 import { EventSummaryInfo } from "@/services/mediaService";
 import { EventCard } from "../event-card";
 import { SeeMoreCard } from "../see-more-card";
@@ -23,8 +24,8 @@ export const YearSection = ({
   return (
     <section key={year}>
       <div className="mb-6 flex items-center gap-4">
-        <h2 className="font-display text-2xl text-primary">{year}</h2>
-        <div className="h-px flex-grow bg-zinc-800"></div>
+        <h2 className="font-display text-2xl text-primary-text">{year}</h2>
+        <Separator className="flex-1" />
       </div>
 
       <div

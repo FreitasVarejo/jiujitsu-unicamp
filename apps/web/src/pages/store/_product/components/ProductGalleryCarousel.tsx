@@ -1,4 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Image } from "@/types/base";
 import { useProductGalleryCarousel } from "../hooks/use-product-gallery-carousel.hook";
 import { getImageStyle, getPlaceholderUrl } from "../helpers/image-helpers";
@@ -52,24 +53,30 @@ export const ProductGalleryCarousel = ({
       {/* Nav Buttons */}
       {imagensCount > 1 && (
         <>
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={scrollPrev}
-            className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/40 p-2 text-white backdrop-blur-sm transition-colors hover:bg-black/60 md:p-3"
+            aria-label="Foto anterior"
+            className="absolute top-1/2 left-3 -translate-y-1/2 rounded-full bg-black/40 text-white backdrop-blur-xs transition-colors hover:bg-black/60 hover:text-white dark:hover:bg-black/60"
           >
-            <ChevronLeft size={20} />
-          </button>
-          <button
+            <ChevronLeft className="size-5" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={scrollNext}
-            className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/40 p-2 text-white backdrop-blur-sm transition-colors hover:bg-black/60 md:p-3"
+            aria-label="Próxima foto"
+            className="absolute top-1/2 right-3 -translate-y-1/2 rounded-full bg-black/40 text-white backdrop-blur-xs transition-colors hover:bg-black/60 hover:text-white dark:hover:bg-black/60"
           >
-            <ChevronRight size={20} />
-          </button>
+            <ChevronRight className="size-5" />
+          </Button>
         </>
       )}
 
       {/* Slide indicator dots */}
       {imagensCount > 1 && (
-        <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-1.5 rounded-full bg-black/50 px-3 py-1.5 backdrop-blur-sm">
+        <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-1.5 rounded-full bg-black/50 px-3 py-1.5 backdrop-blur-xs">
           {images.map((_, idx) => (
             <button
               key={idx}

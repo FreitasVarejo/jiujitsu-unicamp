@@ -1,4 +1,5 @@
-import { Instagram, MapPin, MessageSquareHeart } from "lucide-react";
+import { MapPin, MessageSquareHeart } from "lucide-react";
+import { InstagramIcon } from "@/components/InstagramIcon.component";
 import { FEEDBACK_FORM_URL } from "@/constants";
 import { OutboundLink } from "@/components/OutboundLink.component";
 
@@ -8,15 +9,15 @@ export const FooterLinks = () => {
       <OutboundLink
         href="https://www.instagram.com/jiujitsu.unicamp/"
         trackLabel="instagram_footer"
-        className="text-gray-400 transition-colors hover:text-primary"
+        className="text-gray-400 transition-colors hover:text-primary-text"
         aria-label="Instagram"
       >
-        <Instagram size={24} />
+        <InstagramIcon size={24} />
       </OutboundLink>
       <OutboundLink
         href="https://maps.app.goo.gl/r88brrFBeAUawRVN8"
         trackLabel="maps_footer"
-        className="text-gray-400 transition-colors hover:text-primary"
+        className="text-gray-400 transition-colors hover:text-primary-text"
         aria-label="Localização"
       >
         <MapPin size={24} />
@@ -24,7 +25,7 @@ export const FooterLinks = () => {
       <OutboundLink
         href={FEEDBACK_FORM_URL}
         trackLabel="feedback_footer"
-        className="flex items-center gap-2 text-gray-400 transition-colors hover:text-primary"
+        className="flex items-center gap-2 text-gray-400 transition-colors hover:text-primary-text"
         aria-label="Feedback e canal de escuta anônimo"
       >
         <MessageSquareHeart size={24} />

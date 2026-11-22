@@ -1,5 +1,6 @@
 import { FEEDBACK_FORM_URL } from "@/constants";
 import { OutboundLink } from "@/components/OutboundLink.component";
+import { Button } from "@/components/ui/button";
 import { Image } from "@/types";
 
 interface HeroContentProps {
@@ -7,7 +8,7 @@ interface HeroContentProps {
 }
 
 export const HeroContent = ({ logo }: HeroContentProps) => (
-  <div className="relative z-[4] mx-auto max-w-4xl px-4 text-center">
+  <div className="relative z-4 mx-auto max-w-4xl px-4 text-center">
     {logo && (
       <img
         src={logo.url}
@@ -16,30 +17,35 @@ export const HeroContent = ({ logo }: HeroContentProps) => (
       />
     )}
     <h1 className="mb-6 font-display text-6xl font-bold tracking-tighter text-white md:text-8xl">
-      Jiu-Jitsu <span className="text-primary">Unicamp</span>
+      Jiu-Jitsu <span className="text-primary-text">Unicamp</span>
     </h1>
     <p className="mx-auto mb-10 max-w-2xl text-xl text-gray-300 md:text-2xl">
       Defesa pessoal, competição e comunidade. Junte-se à equipe oficial da
       universidade.
     </p>
     <div className="flex flex-col justify-center gap-4 sm:flex-row">
-      <a
-        href="#treinos"
-        className="rounded bg-primary px-8 py-4 font-display text-lg uppercase tracking-widest text-white transition-colors hover:bg-orange-700"
+      <Button
+        size="lg"
+        className="h-auto px-8 py-4 text-lg tracking-widest"
+        nativeButton={false}
+        render={<a href="#treinos" />}
       >
         Ver Treinos
-      </a>
-      <a
-        href="#perguntas-frequentes"
-        className="rounded border border-white px-8 py-4 font-display text-lg uppercase tracking-widest text-white transition-colors hover:bg-white/10"
+      </Button>
+      <Button
+        variant="outline"
+        size="lg"
+        className="h-auto border-white bg-transparent px-8 py-4 text-lg tracking-widest text-white hover:bg-white/10 dark:border-white dark:bg-transparent dark:hover:bg-white/10"
+        nativeButton={false}
+        render={<a href="#perguntas-frequentes" />}
       >
         Guia do Iniciante
-      </a>
+      </Button>
     </div>
     <OutboundLink
       href={FEEDBACK_FORM_URL}
       trackLabel="feedback_hero"
-      className="mt-6 inline-block text-sm text-gray-300 underline-offset-4 transition-colors hover:text-primary hover:underline"
+      className="mt-6 inline-block text-sm text-gray-300 underline-offset-4 transition-colors hover:text-primary-text hover:underline"
     >
       Já treina com a gente? Deixe seu feedback anônimo →
     </OutboundLink>
