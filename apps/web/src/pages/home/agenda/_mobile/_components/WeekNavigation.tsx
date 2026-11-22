@@ -1,4 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface WeekNavigationProps {
   rangeLabel: string;
@@ -16,23 +17,27 @@ export const WeekNavigation = ({
 }: WeekNavigationProps) => {
   return (
     <div className="mb-4 flex items-center justify-between">
-      <button
+      <Button
+        variant="ghost"
+        size="icon"
         onClick={onPrevious}
         aria-label="Semana anterior"
-        className="rounded-md p-2 text-zinc-400 transition-colors hover:bg-zinc-700 hover:text-white"
+        className="rounded-md text-zinc-400 hover:bg-zinc-700 hover:text-white dark:hover:bg-zinc-700"
       >
-        <ChevronLeft size={20} />
-      </button>
-      <span className="font-display text-sm uppercase tracking-widest text-zinc-300">
+        <ChevronLeft className="size-5" />
+      </Button>
+      <span className="font-display text-sm tracking-widest text-zinc-300 uppercase">
         {rangeLabel}
       </span>
-      <button
+      <Button
+        variant="ghost"
+        size="icon"
         onClick={onNext}
         aria-label="Próxima semana"
-        className="rounded-md p-2 text-zinc-400 transition-colors hover:bg-zinc-700 hover:text-white"
+        className="rounded-md text-zinc-400 hover:bg-zinc-700 hover:text-white dark:hover:bg-zinc-700"
       >
-        <ChevronRight size={20} />
-      </button>
+        <ChevronRight className="size-5" />
+      </Button>
     </div>
   );
 };

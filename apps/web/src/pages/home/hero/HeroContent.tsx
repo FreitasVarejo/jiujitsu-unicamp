@@ -1,5 +1,6 @@
 import { FEEDBACK_FORM_URL } from "@/constants";
 import { OutboundLink } from "@/components/OutboundLink.component";
+import { Button } from "@/components/ui/button";
 import { Image } from "@/types";
 
 interface HeroContentProps {
@@ -23,18 +24,23 @@ export const HeroContent = ({ logo }: HeroContentProps) => (
       universidade.
     </p>
     <div className="flex flex-col justify-center gap-4 sm:flex-row">
-      <a
-        href="#treinos"
-        className="rounded-sm bg-primary px-8 py-4 font-display text-lg uppercase tracking-widest text-white transition-colors hover:bg-orange-700"
+      <Button
+        size="lg"
+        className="h-auto px-8 py-4 text-lg tracking-widest"
+        nativeButton={false}
+        render={<a href="#treinos" />}
       >
         Ver Treinos
-      </a>
-      <a
-        href="#perguntas-frequentes"
-        className="rounded-sm border border-white px-8 py-4 font-display text-lg uppercase tracking-widest text-white transition-colors hover:bg-white/10"
+      </Button>
+      <Button
+        variant="outline"
+        size="lg"
+        className="h-auto border-white bg-transparent px-8 py-4 text-lg tracking-widest text-white hover:bg-white/10 dark:border-white dark:bg-transparent dark:hover:bg-white/10"
+        nativeButton={false}
+        render={<a href="#perguntas-frequentes" />}
       >
         Guia do Iniciante
-      </a>
+      </Button>
     </div>
     <OutboundLink
       href={FEEDBACK_FORM_URL}

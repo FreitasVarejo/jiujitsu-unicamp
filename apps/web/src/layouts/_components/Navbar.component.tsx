@@ -1,5 +1,6 @@
 import { Menu, X } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import { NavLinkList } from "./NavLinkList.component";
 
 interface NavbarProps {
@@ -43,13 +44,19 @@ export const Navbar = ({
 
           {/* Mobile Menu Button */}
           <div className="md:hidden">
-            <button
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={onToggleMenu}
-              className="p-2 text-foreground hover:text-primary"
+              className="text-foreground hover:bg-transparent hover:text-primary dark:hover:bg-transparent"
               aria-label={isMenuOpen ? "Fechar menu" : "Abrir menu"}
             >
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+              {isMenuOpen ? (
+                <X className="size-6" />
+              ) : (
+                <Menu className="size-6" />
+              )}
+            </Button>
           </div>
         </div>
 

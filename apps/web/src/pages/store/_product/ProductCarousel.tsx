@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Product } from "@/types/product";
 import { ProductCard } from "./ProductCard";
 import { useIsDesktop } from "@/hooks/ui";
@@ -71,22 +72,26 @@ export const ProductCarousel = ({
 
       {/* Navigation Buttons — only shown in the direction the user can scroll */}
       {isDesktop && canScrollPrev && (
-        <button
+        <Button
+          variant="outline"
+          size="icon-lg"
           onClick={scrollPrev}
-          className="absolute -left-4 top-1/2 z-20 -translate-y-1/2 rounded-full border border-zinc-800 bg-zinc-900 p-3 text-white opacity-0 shadow-xl transition-opacity hover:bg-zinc-800 group-hover/carousel:opacity-100"
+          className="absolute top-1/2 -left-4 z-20 size-12 -translate-y-1/2 rounded-full border-zinc-800 bg-zinc-900 text-white opacity-0 shadow-xl transition-opacity group-hover/carousel:opacity-100 hover:bg-zinc-800 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:bg-zinc-800"
           aria-label="Anterior"
         >
-          <ChevronLeft size={24} />
-        </button>
+          <ChevronLeft className="size-6" />
+        </Button>
       )}
       {isDesktop && canScrollNext && (
-        <button
+        <Button
+          variant="outline"
+          size="icon-lg"
           onClick={scrollNext}
-          className="absolute -right-4 top-1/2 z-20 -translate-y-1/2 rounded-full border border-zinc-800 bg-zinc-900 p-3 text-white opacity-0 shadow-xl transition-opacity hover:bg-zinc-800 group-hover/carousel:opacity-100"
+          className="absolute top-1/2 -right-4 z-20 size-12 -translate-y-1/2 rounded-full border-zinc-800 bg-zinc-900 text-white opacity-0 shadow-xl transition-opacity group-hover/carousel:opacity-100 hover:bg-zinc-800 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:bg-zinc-800"
           aria-label="Próximo"
         >
-          <ChevronRight size={24} />
-        </button>
+          <ChevronRight className="size-6" />
+        </Button>
       )}
     </div>
   );
