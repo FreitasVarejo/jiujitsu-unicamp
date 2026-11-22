@@ -59,4 +59,13 @@ export default defineConfig([
       ],
     },
   },
+  {
+    // Código copiado da ui-library (shadcn e blocos): não é do site.
+    files: [
+      "src/components/ui/**",
+      "src/components/states/**",
+      "src/components/feedback/**",
+    ],
+    rules: { "react-refresh/only-export-components": "off" },
+  },
 ]);

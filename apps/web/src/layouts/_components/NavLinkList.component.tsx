@@ -24,7 +24,7 @@ export const NavLinkList = ({
             to={link.path}
             onClick={onClose}
             className={`block px-3 py-2 text-lg ${baseClasses} ${
-              isActive(link.path) ? "text-primary" : "text-surface"
+              isActive(link.path) ? "text-primary" : "text-foreground"
             }`}
           >
             {link.label}
@@ -41,7 +41,7 @@ export const NavLinkList = ({
           key={link.path}
           to={link.path}
           className={`tracking-wide hover:text-primary ${baseClasses} ${
-            isActive(link.path) ? "text-primary" : "text-surface"
+            isActive(link.path) ? "text-primary" : "text-foreground"
           }`}
         >
           {link.label}

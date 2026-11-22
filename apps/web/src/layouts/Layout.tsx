@@ -14,7 +14,7 @@ export const Layout = ({ children }: LayoutProps) => {
     useNavigation();
 
   return (
-    <div className="flex min-h-screen flex-col bg-background font-sans text-surface">
+    <div className="flex min-h-screen flex-col bg-background font-sans text-foreground">
       {fontsLoaded ? (
         <>
           <Navbar

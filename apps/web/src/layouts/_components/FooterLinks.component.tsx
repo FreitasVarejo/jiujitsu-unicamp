@@ -1,4 +1,5 @@
-import { Instagram, MapPin, MessageSquareHeart } from "lucide-react";
+import { MapPin, MessageSquareHeart } from "lucide-react";
+import { InstagramIcon } from "@/components/InstagramIcon.component";
 import { FEEDBACK_FORM_URL } from "@/constants";
 import { OutboundLink } from "@/components/OutboundLink.component";
 
@@ -11,7 +12,7 @@ export const FooterLinks = () => {
         className="text-gray-400 transition-colors hover:text-primary"
         aria-label="Instagram"
       >
-        <Instagram size={24} />
+        <InstagramIcon size={24} />
       </OutboundLink>
       <OutboundLink
         href="https://maps.app.goo.gl/r88brrFBeAUawRVN8"

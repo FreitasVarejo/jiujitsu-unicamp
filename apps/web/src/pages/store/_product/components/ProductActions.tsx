@@ -1,4 +1,5 @@
-import { Instagram, ClipboardList } from "lucide-react";
+import { ClipboardList } from "lucide-react";
+import { InstagramIcon } from "@/components/InstagramIcon.component";
 import { Product } from "@/types/product";
 import { OutboundLink } from "@/components/OutboundLink.component";
 
@@ -30,7 +31,7 @@ export const ProductActions = ({ product }: ProductActionsProps) => {
           trackPayload={{ productId: product.id, productTitle: product.title }}
           className="flex w-full transform items-center justify-center gap-3 rounded-xl bg-zinc-700 py-3 font-display text-sm uppercase tracking-wider text-white transition-all hover:scale-[1.02] hover:bg-zinc-600 active:scale-[0.98] md:py-4 md:text-base"
         >
-          <Instagram size={20} />
+          <InstagramIcon size={20} />
           Entrar em contato
         </OutboundLink>
       )}

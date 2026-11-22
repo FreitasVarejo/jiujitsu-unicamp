@@ -22,7 +22,7 @@ export const NotFound = () => {
           </Link>
           <button
             onClick={() => window.history.back()}
-            className="inline-flex items-center justify-center gap-2 rounded-sm border border-white/20 px-6 py-3 font-display uppercase tracking-wide text-surface transition-colors hover:border-white/40"
+            className="inline-flex items-center justify-center gap-2 rounded-sm border border-white/20 px-6 py-3 font-display uppercase tracking-wide text-foreground transition-colors hover:border-white/40"
           >
             <ArrowLeft size={18} />
             Voltar

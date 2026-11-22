@@ -45,7 +45,7 @@ export const Navbar = ({
           <div className="md:hidden">
             <button
               onClick={onToggleMenu}
-              className="p-2 text-surface hover:text-primary"
+              className="p-2 text-foreground hover:text-primary"
               aria-label={isMenuOpen ? "Fechar menu" : "Abrir menu"}
             >
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
